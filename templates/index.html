@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GharFix - Home Services at Your Doorstep</title>
+    <meta name="description"
+        content="Book trusted home service professionals â€” electricians, plumbers, maids and more.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --ink: #0f0f0f;
+            --ink-soft: #374151;
+            --muted: #6b7280;
+            --gold: #b8860b;
+            --gold-lt: #fef9ee;
+            --gold-mid: #f59e0b;
+            --border: #e5e7eb;
+            --surface: #ffffff;
+            --bg: #f7f7f5;
+            --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.06);
+            --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.07);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.10);
+            --radius: 14px;
+            --t: all 0.22s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            line-height: 1.6;
+        }
+
+        /* â”€â”€ FLASH â”€â”€ */
+        .flash-messages {
+            position: fixed;
+            top: 76px;
+            right: 20px;
+            z-index: 2000;
+        }
+
+        .flash {
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: var(--shadow-sm);
+            animation: slideIn .3s ease;
+        }
+
+        .flash.success {
+            background: #14532d;
+            color: #fff;
+        }
+
+        .flash.error {
+            background: #7f1d1d;
+            color: #fff;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0)
+            }
+        }
+
+        /* â”€â”€ NAVBAR â”€â”€ */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 64px;
+            height: 64px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--ink);
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            text-decoration: none;
+            letter-spacing: -0.4px;
+        }
+
+        .logo-mark {
+            width: 34px;
+            height: 34px;
+            background: var(--ink);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-mark i {
+            color: var(--gold-mid);
+            font-size: 15px;
+        }
+
+        .logo em {
+            font-style: normal;
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 26px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--muted);
+            font-weight: 500;
+            font-size: 14px;
+            transition: var(--t);
+        }
+
+        .nav-links a:hover {
+            color: var(--ink);
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            border: none;
+            transition: var(--t);
+            text-decoration: none;
+            font-family: inherit;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--ink-soft);
+            border: 1.5px solid var(--border);
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--ink);
+            color: var(--ink);
+            background: var(--bg);
+        }
+
+        .btn-dark {
+            background: var(--ink);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+        }
+
+        .btn-dark:hover {
+            background: #222;
+            transform: translateY(-1px);
+        }
+
+        .btn-gold {
+            background: var(--gold-mid);
+            color: var(--ink);
+            font-weight: 700;
+            box-shadow: 0 2px 10px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-gold:hover {
+            background: #e08e0b;
+            transform: translateY(-1px);
+        }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .u-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--ink);
+            color: var(--gold-mid);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .u-name {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--ink-soft);
+        }
+
+        /* â”€â”€ HERO â”€â”€ */
+        .hero {
+            background: #111;
+            padding: 80px 64px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 70% 80% at 80% 50%, rgba(245, 158, 11, 0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 5px 14px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.4px;
+            margin-bottom: 22px;
+        }
+
+        .hero-tag i {
+            color: var(--gold-mid);
+        }
+
+        .hero h1 {
+            font-size: 50px;
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.08;
+            letter-spacing: -1.5px;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 em {
+            font-style: normal;
+            color: var(--gold-mid);
+        }
+
+        .hero p {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.55);
+            margin-bottom: 36px;
+            max-width: 440px;
+            line-height: 1.7;
+        }
+
+        .search-wrap {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border-radius: 12px;
+            padding: 5px 5px 5px 18px;
+            max-width: 520px;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+        }
+
+        .search-wrap i {
+            color: var(--muted);
+            font-size: 15px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .search-wrap input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--ink);
+            background: transparent;
+        }
+
+        .search-wrap input::placeholder {
+            color: #9ca3af;
+        }
+
+        .search-wrap button {
+            padding: 10px 22px;
+            border-radius: 8px;
+            background: var(--ink);
+            color: #fff;
+            border: none;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: var(--t);
+            white-space: nowrap;
+        }
+
+        .search-wrap button:hover {
+            background: #222;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            margin-top: 48px;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 26px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+
+        .stat span {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            font-weight: 500;
+        }
+
+        .stat-div {
+            width: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* â”€â”€ TRUST BAR â”€â”€ */
+        .trust-bar {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            padding: 30px 64px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .trust-item i {
+            font-size: 16px;
+            color: var(--gold);
+        }
+
+        .trust-item strong {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .trust-item span {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* â”€â”€ SECTION SHARED â”€â”€ */
+        .section {
+            padding: 72px 64px;
+        }
+
+        .section-alt {
+            background: var(--surface);
+        }
+
+        .sec-head {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .sec-label {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .sec-head h2 {
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--ink);
+            letter-spacing: -0.5px;
+        }
+
+        .sec-head p {
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        /* â”€â”€ SERVICES â”€â”€ */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 14px;
+            max-width: 1160px;
+            margin: 0 auto;
+        }
+
+        .svc-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 24px 10px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            transition: var(--t);
+        }
+
+        .svc-card:hover {
+            border-color: var(--gold-mid);
+            box-shadow: 0 6px 24px rgba(245, 158, 11, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .svc-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 13px;
+            background: var(--bg);
+            color: var(--ink-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: var(--t);
+        }
+
+        .svc-card:hover .svc-icon {
+            background: var(--gold-lt);
+            color: var(--gold);
+        }
+
+        .svc-card h3 {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--ink-soft);
+            text-align: center;
+        }
+
+        /* â”€â”€ HOW IT WORKS â”€â”€ */
+        .steps-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--border);
+            max-width: 1000px;
+            margin: 0 auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .step {
+            background: var(--surface);
+            text-align: center;
+            padding: 36px 20px;
+            position: relative;
+        }
+
+        .step-num {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--ink);
+            color: var(--gold-mid);
+            font-size: 16px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .step h3 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .step p {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* â”€â”€ WORKERS â”€â”€ */
+        .worker-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .worker-card {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            transition: var(--t);
+            box-shadow: var(--shadow-xs);
+        }
+
+        .worker-card:hover {
+            border-color: #d1b85c;
+            box-shadow: 0 10px 36px rgba(0, 0, 0, 0.10);
+            transform: translateY(-5px);
+        }
+
+        .wc-top {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, #fafafa 0%, #fff 100%);
+        }
+
+        .wc-img {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2.5px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .wc-meta h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .wc-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--gold-lt);
+            color: var(--gold);
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 4px;
+            border: 1px solid #e9c97a;
+        }
+
+        .wc-stars {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--ink-soft);
+        }
+
+        .wc-stars i {
+            color: var(--gold-mid);
+            font-size: 11px;
+        }
+
+        .wc-body {
+            padding: 16px 24px 20px;
+        }
+
+        .wc-details {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 14px;
+        }
+
+        .wc-detail {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .wc-detail i {
+            color: var(--gold);
+            font-size: 11px;
+        }
+
+        .book-btn {
+            width: 100%;
+            padding: 11px;
+            border-radius: 9px;
+            background: var(--ink);
+            color: #fff;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            transition: var(--t);
+            letter-spacing: 0.2px;
+        }
+
+        .book-btn:hover {
+            background: #222;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* â”€â”€ REVIEWS (dark panel) â”€â”€ */
+        .reviews-section {
+            padding: 72px 64px;
+            background: #111;
+        }
+
+        .reviews-section .sec-label {
+            color: var(--gold-mid);
+        }
+
+        .reviews-section .sec-head h2 {
+            color: #fff;
+        }
+
+        .reviews-section .sec-head p {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .review-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .review-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 28px;
+            transition: var(--t);
+        }
+
+        .review-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+            transform: translateY(-3px);
+        }
+
+        .review-stars {
+            color: var(--gold-mid);
+            font-size: 13px;
+            margin-bottom: 14px;
+        }
+
+        .review-card p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.75;
+            margin-bottom: 20px;
+        }
+
+        .reviewer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rev-av {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold-mid);
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .rev-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .rev-label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        /* â”€â”€ FOOTER â”€â”€ */
+        .footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 24px 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .footer-logo {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--ink);
+        }
+
+        .footer-logo em {
+            font-style: normal;
+            color: var(--gold);
+        }
+
+        .footer a {
+            color: var(--muted);
+            text-decoration: none;
+            margin-left: 18px;
+            transition: var(--t);
+        }
+
+        .footer a:hover {
+            color: var(--ink);
+        }
+
+        /* â”€â”€ POPUPS â”€â”€ */
+        .popup {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .popup.active {
+            display: flex;
+        }
+
+        .popup-box {
+            background: var(--surface);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+            animation: popIn .28s cubic-bezier(.34, 1.56, .64, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(.92) translateY(16px)
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0)
+            }
+        }
+
+        .ph {
+            padding: 28px 28px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .ph-title h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--ink);
+            letter-spacing: -0.4px;
+        }
+
+        .ph-title p {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        .ph-close {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ink-soft);
+            font-size: 14px;
+            transition: var(--t);
+            flex-shrink: 0;
+        }
+
+        .ph-close:hover {
+            background: var(--border);
+        }
+
+        .pb {
+            padding: 20px 28px 28px;
+        }
+
+        .fg {
+            margin-bottom: 13px;
+        }
+
+        .fg label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--ink-soft);
+            margin-bottom: 5px;
+            letter-spacing: 0.2px;
+        }
+
+        .fg input,
+        .fg select {
+            width: 100%;
+            padding: 11px 13px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--ink);
+            background: var(--bg);
+            transition: var(--t);
+            outline: none;
+        }
+
+        .fg input:focus,
+        .fg select:focus {
+            border-color: var(--gold-mid);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+
+        .fg input[readonly] {
+            background: var(--gold-lt);
+            color: var(--gold);
+            font-weight: 700;
+            border-color: #e9c97a;
+        }
+
+        .pop-btn {
+            width: 100%;
+            padding: 13px;
+            border-radius: 9px;
+            background: var(--ink);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            transition: var(--t);
+            margin-top: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .pop-btn:hover {
+            background: #222;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .pop-foot {
+            text-align: center;
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 14px;
+        }
+
+        .pop-foot a {
+            color: var(--gold);
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .pop-foot a:hover {
+            text-decoration: underline;
+        }
+
+        .worker-preview {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg);
+            border-radius: 9px;
+            padding: 11px 13px;
+            margin-bottom: 14px;
+            border: 1px solid var(--border);
+        }
+
+        .worker-preview img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .wp-name {
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .wp-service {
+            font-size: 11px;
+            color: var(--gold);
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}{% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}{% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="/" class="logo">
+            <div class="logo-mark"><i class="fa-solid fa-house-chimney"></i></div>
+            Ghar<em>Fix</em>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#services">Services</a></li>
+            <li><a href="#workers">Professionals</a></li>
+            <li><a href="#reviews">Reviews</a></li>
+            {% if current_user.is_authenticated %}
+            <li><a href="{{ url_for('my_bookings') }}">My Bookings</a></li>
+            {% endif %}
+        </ul>
+        <div class="nav-right">
+            {% if current_user.is_authenticated %}
+            <div class="user-chip">
+                <div class="u-avatar">{{ current_user.name[0].upper() }}</div>
+                <span class="u-name">{{ current_user.name.split()[0] }}</span>
+                <a href="{{ url_for('logout') }}" class="btn btn-ghost">Logout</a>
+            </div>
+            {% else %}
+            <button class="btn btn-ghost" onclick="openPopup('loginBox')">Sign In</button>
+            <button class="btn btn-gold" onclick="openPopup('signupBox')">Get Started</button>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-tag"><i class="fa-solid fa-circle-check"></i> Trusted by 10,000+ households</div>
+            <h1>Home Services,<br><em>Done Right.</em></h1>
+            <p>Book verified, background-checked professionals for every home need &mdash; fast, reliable, and at fair
+                prices.</p>
+
+            <div class="search-wrap">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input id="searchInput" type="text" placeholder="Search for electrician, plumber, AC repairâ€¦">
+                <button onclick="searchServices()">Search</button>
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat"><strong>10K+</strong><span>Happy Customers</span></div>
+                <div class="stat-div"></div>
+                <div class="stat"><strong>500+</strong><span>Verified Professionals</span></div>
+                <div class="stat-div"></div>
+                <div class="stat"><strong>4.8 â˜…</strong><span>Avg. Rating</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TRUST BAR -->
+    <div class="trust-bar">
+        <div class="trust-item"><i class="fa-solid fa-shield-halved"></i>
+            <div><strong>Background Verified</strong><br><span>All professionals are ID checked</span></div>
+        </div>
+        <div class="trust-item"><i class="fa-solid fa-rotate-left"></i>
+            <div><strong>Re-service Guarantee</strong><br><span>Not satisfied? We'll fix it</span></div>
+        </div>
+        <div class="trust-item"><i class="fa-solid fa-tag"></i>
+            <div><strong>Transparent Pricing</strong><br><span>No hidden charges, ever</span></div>
+        </div>
+        <div class="trust-item"><i class="fa-solid fa-headset"></i>
+            <div><strong>24 / 7 Support</strong><br><span>We're always here to help</span></div>
+        </div>
+    </div>
+
+    <!-- SERVICES -->
+    <section class="section section-alt" id="services">
+        <div class="sec-head">
+            <div class="sec-label">Services</div>
+            <h2>What can we help you with?</h2>
+            <p>Choose from our most-booked home service categories</p>
+        </div>
+        <div class="service-grid">
+            {% set svc_icons = {'Electrician':'fa-bolt','Plumber':'fa-droplet','Carpenter':'fa-hammer','AC
+            Service':'fa-snowflake','House
+            Maid':'fa-broom','Laundry':'fa-shirt','Labour':'fa-person-digging','Contractor':'fa-building'} %}
+            {% for service in services %}
+            <div class="svc-card" onclick="selectService('{{ service.name }}')">
+                <div class="svc-icon"><i class="fa-solid {{ svc_icons.get(service.name,'fa-star') }}"></i></div>
+                <h3>{{ service.name }}</h3>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section">
+        <div class="sec-head">
+            <div class="sec-label">How It Works</div>
+            <h2>Booking in 4 simple steps</h2>
+        </div>
+        <div class="steps-row">
+            <div class="step">
+                <div class="step-num">1</div>
+                <h3>Choose a Service</h3>
+                <p>Pick from 8+ home service categories</p>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <h3>Select a Pro</h3>
+                <p>Browse verified, rated professionals</p>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <h3>Pick a Slot</h3>
+                <p>Choose a date & time that suits you</p>
+            </div>
+            <div class="step">
+                <div class="step-num">4</div>
+                <h3>Relax</h3>
+                <p>Your expert arrives right on time</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- WORKERS -->
+    <section class="section section-alt" id="workers">
+        <div class="sec-head">
+            <div class="sec-label">Professionals</div>
+            <h2>Top Rated Near You</h2>
+            <p>Handpicked experts, trusted by thousands of homeowners</p>
+        </div>
+        <div class="worker-grid">
+            {% for worker in workers %}
+            <div class="worker-card">
+                <div class="wc-top">
+                    <img class="wc-img" src="{{ worker.image_url }}" alt="{{ worker.name }}">
+                    <div class="wc-meta">
+                        <h3>{{ worker.name }}</h3>
+                        <div class="wc-tag"><i class="fa-solid fa-circle-check"></i> {{ worker.service }}</div>
+                        <div class="wc-stars">
+                            <i class="fa-solid fa-star"></i>
+                            <strong>{{ worker.rating }}</strong>&nbsp;Â·&nbsp;<span style="color:var(--muted)">{{
+                                worker.experience }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="wc-body">
+                    <div class="wc-details">
+                        <div class="wc-detail"><i class="fa-solid fa-briefcase"></i> {{ worker.experience }}</div>
+                        <div class="wc-detail"><i class="fa-solid fa-circle-check"></i> ID Verified</div>
+                    </div>
+                    <button class="book-btn"
+                        onclick="openBooking({{ worker.id }},'{{ worker.name }}','{{ worker.service }}','{{ worker.image_url }}')">
+                        Book {{ worker.service }}
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- REVIEWS -->
+    <section class="reviews-section" id="reviews">
+        <div class="sec-head">
+            <div class="sec-label">Testimonials</div>
+            <h2>What customers say</h2>
+            <p>Real reviews from real homeowners</p>
+        </div>
+        <div class="review-grid">
+            {% set initials = ['A','B','C','D','E'] %}
+            {% for review in reviews %}
+            <div class="review-card">
+                <div class="review-stars">
+                    {% for i in range(review.rating|int) %}<i class="fa-solid fa-star"></i>{% endfor %}
+                    {% if review.rating % 1 != 0 %}<i class="fa-solid fa-star-half-stroke"></i>{% endif %}
+                </div>
+                <p>"{{ review.comment }}"</p>
+                <div class="reviewer">
+                    <div class="rev-av">V</div>
+                    <div>
+                        <div class="rev-name">Verified Customer</div>
+                        <div class="rev-label">GharFix User</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-logo">Ghar<em>Fix</em></div>
+        <span>Â© 2026 GharFix. All rights reserved.</span>
+        <div>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Contact</a>
+        </div>
+    </footer>
+
+    <!-- LOGIN POPUP -->
+    <div class="popup" id="loginBox">
+        <div class="popup-box">
+            <div class="ph">
+                <div class="ph-title">
+                    <h2>Welcome back</h2>
+                    <p>Sign in to your GharFix account</p>
+                </div>
+                <button class="ph-close" onclick="closePopup('loginBox')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="pb">
+                <form action="{{ url_for('login') }}" method="POST">
+                    <div class="fg"><label>Email Address</label><input type="email" name="email"
+                            placeholder="you@example.com" required></div>
+                    <div class="fg"><label>Password</label><input type="password" name="password"
+                            placeholder="Your password" required></div>
+                    <button type="submit" class="pop-btn">Sign In</button>
+                </form>
+                <p class="pop-foot">Don't have an account? <a onclick="switchPopup('loginBox','signupBox')">Create one
+                        free</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIGNUP POPUP -->
+    <div class="popup" id="signupBox">
+        <div class="popup-box">
+            <div class="ph">
+                <div class="ph-title">
+                    <h2>Create Account</h2>
+                    <p>Join thousands of happy homeowners</p>
+                </div>
+                <button class="ph-close" onclick="closePopup('signupBox')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="pb">
+                <form action="{{ url_for('register') }}" method="POST">
+                    <div class="fg"><label>Full Name</label><input type="text" name="name" placeholder="Your full name"
+                            required></div>
+                    <div class="fg"><label>Email Address</label><input type="email" name="email"
+                            placeholder="you@example.com" required></div>
+                    <div class="fg"><label>Phone Number</label><input type="tel" name="phone"
+                            placeholder="+91 98765 43210" required></div>
+                    <div class="fg"><label>Password</label><input type="password" name="password"
+                            placeholder="Create a password" required></div>
+                    <div class="fg"><label>Confirm Password</label><input type="password" name="confirm_password"
+                            placeholder="Repeat password" required></div>
+                    <button type="submit" class="pop-btn">Create Account</button>
+                </form>
+                <p class="pop-foot">Already have an account? <a onclick="switchPopup('signupBox','loginBox')">Sign
+                        in</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOOKING POPUP -->
+    <div class="popup" id="bookingBox">
+        <div class="popup-box">
+            <div class="ph">
+                <div class="ph-title">
+                    <h2>Book Service</h2>
+                    <p>Fill in your details below</p>
+                </div>
+                <button class="ph-close" onclick="closePopup('bookingBox')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="pb">
+                <div class="worker-preview" id="workerPreview">
+                    <img id="previewImg" src="" alt="">
+                    <div>
+                        <div class="wp-name" id="previewName"></div>
+                        <div class="wp-service" id="previewService"></div>
+                    </div>
+                </div>
+                <form action="{{ url_for('book_service') }}" method="POST">
+                    <input type="hidden" name="worker_id" id="bookingWorkerId">
+                    <div class="fg"><label>Service</label><input type="text" name="service" id="bookingService"
+                            readonly></div>
+                    <div class="fg"><label>Your Address</label><input type="text" name="address"
+                            placeholder="House no., street, area" required></div>
+                    <div class="fg"><label>City</label><input type="text" name="city" placeholder="Enter your city"
+                            required></div>
+                    <div class="fg"><label>Preferred Date</label><input type="date" name="date" required></div>
+                    <div class="fg"><label>Preferred Time</label><input type="time" name="time" required></div>
+                    <button type="submit" class="pop-btn">Confirm Booking</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openPopup(id) { document.getElementById(id).classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closePopup(id) { document.getElementById(id).classList.remove('active'); document.body.style.overflow = ''; }
+        function switchPopup(a, b) { closePopup(a); setTimeout(() => openPopup(b), 180); }
+        function openBooking(id, name, service, img) {
+            {% if current_user.is_authenticated %}
+            document.getElementById('bookingWorkerId').value = id;
+            document.getElementById('bookingService').value = service;
+            document.getElementById('previewName').textContent = name;
+            document.getElementById('previewService').textContent = service;
+            document.getElementById('previewImg').src = img;
+            openPopup('bookingBox');
+            {% else %}
+            openPopup('loginBox');
+            {% endif %}
+        }
+        function selectService(n) { showRadar(n); }
+        function searchServices() { const q = document.getElementById('searchInput').value; if (q) document.getElementById('workers').scrollIntoView({ behavior: 'smooth' }); }
+        document.querySelectorAll('.popup').forEach(p => p.addEventListener('click', e => { if (e.target === p) closePopup(p.id); }));
+        setTimeout(() => { document.querySelectorAll('.flash').forEach(f => { f.style.opacity = '0'; f.style.transition = 'opacity .4s'; setTimeout(() => f.remove(), 400); }); }, 4000);
+    </script>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- â”€â”€â”€ MAP SEARCH MODAL â”€â”€â”€ -->
+    <div id="mapModal">
+        <div id="mapCard">
+            <!-- Header -->
+            <div id="mapHeader">
+                <div id="mapHeaderLeft">
+                    <div id="mapServiceChip">
+                        <i class="fa-solid fa-location-crosshairs"></i>
+                        <span id="mapServiceName"></span>
+                    </div>
+                    <div id="mapStatusRow">
+                        <span id="mapStatusDot"></span>
+                        <span id="mapStatusText">Getting your locationâ€¦</span>
+                    </div>
+                </div>
+                <button id="mapCloseBtn" onclick="closeMapModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Map -->
+            <div id="mapContainer"></div>
+
+            <!-- Footer -->
+            <div id="mapFooter">
+                <div id="mapFooterInfo">
+                    <i class="fa-solid fa-circle-info"></i>
+                    Showing verified professionals near you
+                </div>
+                <button id="mapViewBtn" class="hidden" onclick="closeMapModal(true)">
+                    <i class="fa-solid fa-users"></i>
+                    <span id="mapViewBtnText">View Professionals</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* â”€â”€ MAP MODAL â”€â”€ */
+        #mapModal {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            background: rgba(5, 5, 10, 0.75);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(6px);
+            padding: 20px;
+        }
+
+        #mapModal.active {
+            display: flex;
+        }
+
+        #mapCard {
+            background: #fff;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 700px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            animation: popIn .3s cubic-bezier(.34, 1.56, .64, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        #mapHeader {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            background: #fff;
+        }
+
+        #mapHeaderLeft {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        #mapServiceChip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: var(--gold-lt);
+            color: var(--gold);
+            border: 1px solid #e9c97a;
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        #mapStatusRow {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 12px;
+            color: var(--muted);
+            padding-left: 2px;
+        }
+
+        #mapStatusDot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #f59e0b;
+            box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+            animation: dotPulse 1.2s infinite;
+        }
+
+        #mapStatusDot.found {
+            background: #10b981;
+            animation: none;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        @keyframes dotPulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5);
+            }
+
+            70% {
+                box-shadow: 0 0 0 8px rgba(245, 158, 11, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+            }
+        }
+
+        #mapCloseBtn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: 1.5px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ink-soft);
+            font-size: 15px;
+            transition: var(--t);
+            flex-shrink: 0;
+        }
+
+        #mapCloseBtn:hover {
+            background: var(--border);
+        }
+
+        /* Map tile */
+        #mapContainer {
+            width: 100%;
+            height: 420px;
+            background: #e5e3df;
+            position: relative;
+        }
+
+        /* Footer */
+        #mapFooter {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            border-top: 1px solid var(--border);
+            background: #fff;
+            gap: 12px;
+        }
+
+        #mapFooterInfo {
+            font-size: 12px;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        #mapFooterInfo i {
+            color: var(--gold);
+        }
+
+        #mapViewBtn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border-radius: 9px;
+            background: var(--ink);
+            color: #fff;
+            border: none;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: var(--t);
+            white-space: nowrap;
+        }
+
+        #mapViewBtn:hover {
+            background: #222;
+        }
+
+        #mapViewBtn.hidden {
+            display: none;
+        }
+
+        /* Custom Leaflet markers */
+        .user-marker-wrap,
+        .worker-marker-wrap {
+            position: relative;
+        }
+
+        .user-pulse {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #3b82f6;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
+            animation: userPulse 2s infinite;
+        }
+
+        @keyframes userPulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
+            }
+
+            70% {
+                box-shadow: 0 0 0 12px rgba(59, 130, 246, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+            }
+        }
+
+        .worker-pin {
+            width: 32px;
+            height: 32px;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border: 2.5px solid #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: markerDrop .4s cubic-bezier(.34, 1.56, .64, 1);
+        }
+
+        .worker-pin i {
+            transform: rotate(45deg);
+            color: #fff;
+            font-size: 13px;
+        }
+
+        @keyframes markerDrop {
+            from {
+                opacity: 0;
+                transform: rotate(-45deg) scale(0) translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: rotate(-45deg) scale(1) translateY(0);
+            }
+        }
+
+        /* Leaflet popup tweak */
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 13px !important;
+            padding: 2px 4px !important;
+        }
+
+        .leaflet-popup-content {
+            margin: 10px 14px !important;
+        }
+
+        .popup-worker-name {
+            font-weight: 700;
+            color: #0f0f0f;
+        }
+
+        .popup-worker-info {
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .popup-worker-badge {
+            display: inline-block;
+            margin-top: 6px;
+            background: #fef9ee;
+            color: #b8860b;
+            border: 1px solid #e9c97a;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+    </style>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        /* â”€â”€ MAP SEARCH LOGIC â”€â”€ */
+        let _map = null;
+        let _mapTimers = [];
+        const WORKER_DATA = [
+            { name: 'Ramesh Kumar', dist: '0.4 km', rating: '4.5â˜…' },
+            { name: 'Suresh Patel', dist: '0.7 km', rating: '4.7â˜…' },
+            { name: 'Amit Sharma', dist: '1.1 km', rating: '4.6â˜…' },
+            { name: 'Raj Malhotra', dist: '1.4 km', rating: '4.8â˜…' },
+            { name: 'Priya Singh', dist: '0.9 km', rating: '4.9â˜…' },
+            { name: 'Vikram Joshi', dist: '1.8 km', rating: '4.4â˜…' },
+        ];
+
+        function selectService(n) {
+            document.getElementById('searchInput').value = n;
+            showMapSearch(n);
+        }
+
+        function showMapSearch(serviceName) {
+            // Reset UI
+            document.getElementById('mapServiceName').textContent = serviceName;
+            document.getElementById('mapStatusText').textContent = 'Getting your locationâ€¦';
+            document.getElementById('mapStatusDot').className = '';
+            document.getElementById('mapViewBtn').classList.add('hidden');
+            document.getElementById('mapModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            _mapTimers.forEach(clearTimeout); _mapTimers = [];
+
+            // Destroy old map
+            if (_map) { _map.remove(); _map = null; }
+
+            // Try geolocation, fallback to New Delhi
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    pos => initMap(pos.coords.latitude, pos.coords.longitude, serviceName),
+                    () => initMap(28.6139, 77.2090, serviceName),
+                    { timeout: 6000 }
+                );
+            } else {
+                initMap(28.6139, 77.2090, serviceName);
+            }
+        }
+
+        function initMap(lat, lng, serviceName) {
+            document.getElementById('mapStatusText').textContent = 'Searching nearby professionalsâ€¦';
+
+            _map = L.map('mapContainer', {
+                zoomControl: true,
+                attributionControl: true
+            }).setView([lat, lng], 14);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: 'Â© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                maxZoom: 19
+            }).addTo(_map);
+
+            // User "You are here" marker
+            const userIcon = L.divIcon({
+                html: '<div class="user-pulse"></div>',
+                className: '', iconSize: [18, 18], iconAnchor: [9, 9]
+            });
+            L.marker([lat, lng], { icon: userIcon })
+                .addTo(_map)
+                .bindPopup('<span style="font-weight:700;font-size:13px">ðŸ“ You are here</span>')
+                .openPopup();
+
+            // Scatter worker markers around the user
+            const offsets = [
+                [-0.003, 0.005], [0.004, -0.003], [-0.005, -0.006],
+                [0.006, 0.004], [-0.002, 0.008], [0.007, -0.005]
+            ];
+            const count = 4 + Math.floor(Math.random() * 3);
+            const workerIcon = L.divIcon({
+                html: '<div class="worker-pin"><i class="fa-solid fa-person"></i></div>',
+                className: '', iconSize: [32, 32], iconAnchor: [16, 32]
+            });
+
+            offsets.slice(0, count).forEach((off, i) => {
+                const t = setTimeout(() => {
+                    const wLat = lat + off[0] + (Math.random() - 0.5) * 0.002;
+                    const wLng = lng + off[1] + (Math.random() - 0.5) * 0.002;
+                    const w = WORKER_DATA[i % WORKER_DATA.length];
+                    L.marker([wLat, wLng], { icon: workerIcon })
+                        .addTo(_map)
+                        .bindPopup(`
+                        <div class="popup-worker-name">${w.name}</div>
+                        <div class="popup-worker-info">${w.dist} away Â· ${w.rating}</div>
+                        <div class="popup-worker-badge">${serviceName}</div>
+                    `);
+
+                    // After last marker â€” show "found" state
+                    if (i === count - 1) {
+                        const t2 = setTimeout(() => {
+                            document.getElementById('mapStatusDot').className = 'found';
+                            document.getElementById('mapStatusText').textContent =
+                                count + ' professionals found nearby';
+                            const btn = document.getElementById('mapViewBtn');
+                            document.getElementById('mapViewBtnText').textContent =
+                                'View ' + count + ' Professionals';
+                            btn.classList.remove('hidden');
+                        }, 600);
+                        _mapTimers.push(t2);
+                    }
+                }, 800 + i * 500);
+                _mapTimers.push(t);
+            });
+        }
+
+        function closeMapModal(scrollToWorkers = false) {
+            _mapTimers.forEach(clearTimeout); _mapTimers = [];
+            if (_map) { _map.remove(); _map = null; }
+            document.getElementById('mapModal').classList.remove('active');
+            document.body.style.overflow = '';
+            if (scrollToWorkers) {
+                setTimeout(() => document.getElementById('workers')
+                    .scrollIntoView({ behavior: 'smooth' }), 200);
+            }
+        }
+
+        // Close on backdrop
+        document.getElementById('mapModal').addEventListener('click', function (e) {
+            if (e.target === this) closeMapModal();
+        });
+    </script>
+
+</body>
+
+</html>

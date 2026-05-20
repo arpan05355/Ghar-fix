@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings — GharFix</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --ink:      #0f0f0f;
+            --ink-soft: #374151;
+            --muted:    #6b7280;
+            --gold:     #b8860b;
+            --gold-lt:  #fef9ee;
+            --gold-mid: #f59e0b;
+            --border:   #e5e7eb;
+            --surface:  #ffffff;
+            --bg:       #f7f7f5;
+            --shadow-xs: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-sm: 0 4px 16px rgba(0,0,0,0.07);
+            --shadow-md: 0 8px 32px rgba(0,0,0,0.10);
+            --radius: 14px;
+            --t: all 0.22s ease;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--ink); }
+
+        .flash-messages { position:fixed; top:76px; right:20px; z-index:2000; }
+        .flash { padding:12px 18px; border-radius:8px; margin-bottom:8px; font-size:13px; font-weight:500; box-shadow:var(--shadow-sm); animation:slideIn .3s ease; }
+        .flash.success { background:#14532d; color:#fff; }
+        .flash.error   { background:#7f1d1d; color:#fff; }
+        @keyframes slideIn { from{opacity:0;transform:translateX(50px)} to{opacity:1;transform:translateX(0)} }
+
+        /* NAVBAR */
+        .navbar {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:0 64px; height:64px; background:var(--surface);
+            border-bottom:1px solid var(--border);
+            position:sticky; top:0; z-index:100;
+        }
+        .logo { font-size:20px; font-weight:800; color:var(--ink); display:flex; align-items:center; gap:9px; text-decoration:none; letter-spacing:-0.4px; }
+        .logo-mark { width:34px; height:34px; background:var(--ink); border-radius:9px; display:flex; align-items:center; justify-content:center; }
+        .logo-mark i { color:var(--gold-mid); font-size:15px; }
+        .logo em { font-style:normal; color:var(--gold); }
+        .nav-links { display:flex; gap:26px; list-style:none; }
+        .nav-links a { text-decoration:none; color:var(--muted); font-weight:500; font-size:14px; transition:var(--t); }
+        .nav-links a:hover, .nav-links a.active { color:var(--ink); }
+        .nav-right { display:flex; gap:10px; align-items:center; }
+        .btn { display:inline-flex; align-items:center; gap:6px; padding:8px 18px; border-radius:8px; font-weight:600; font-size:13px; cursor:pointer; border:none; transition:var(--t); text-decoration:none; font-family:inherit; }
+        .btn-ghost { background:transparent; color:var(--ink-soft); border:1.5px solid var(--border); }
+        .btn-ghost:hover { border-color:var(--ink); color:var(--ink); }
+        .btn-dark { background:var(--ink); color:#fff; }
+        .btn-dark:hover { background:#222; }
+        .user-chip { display:flex; align-items:center; gap:10px; }
+        .u-avatar { width:32px; height:32px; border-radius:50%; background:var(--ink); color:var(--gold-mid); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; }
+        .u-name { font-weight:600; font-size:13px; color:var(--ink-soft); }
+
+        /* PAGE HEADER */
+        .page-header {
+            padding:52px 64px 48px;
+            background:#111;
+            border-bottom:1px solid rgba(255,255,255,0.06);
+        }
+        .page-header h1 { font-size:32px; font-weight:900; color:#fff; letter-spacing:-0.5px; }
+        .page-header p { color:rgba(255,255,255,0.45); font-size:14px; margin-top:6px; }
+
+        /* CONTENT */
+        .content { max-width:860px; margin:0 auto; padding:48px 20px 80px; }
+
+        /* BOOKING CARD */
+        .booking-card {
+            background:var(--surface); border-radius:18px;
+            border:1.5px solid var(--border);
+            box-shadow:var(--shadow-xs); margin-bottom:18px;
+            overflow:hidden; transition:var(--t);
+        }
+        .booking-card:hover {
+            box-shadow:var(--shadow-md);
+            border-color:#d1b85c;
+            transform:translateY(-3px);
+        }
+        .bc-header {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:18px 24px; border-bottom:1px solid var(--border);
+        }
+        .bc-title { display:flex; align-items:center; gap:12px; }
+        .bc-icon {
+            width:42px; height:42px; border-radius:11px;
+            background:var(--gold-lt); color:var(--gold);
+            display:flex; align-items:center; justify-content:center; font-size:16px;
+            border:1px solid #e9c97a;
+        }
+        .bc-title h3 { font-size:16px; font-weight:700; }
+        .bc-title p  { font-size:12px; color:var(--muted); margin-top:2px; }
+
+        .status-badge {
+            padding:5px 14px; border-radius:50px;
+            font-size:12px; font-weight:600;
+            display:flex; align-items:center; gap:5px;
+        }
+        .status-badge.pending   { background:#fef9c3; color:#92400e; border:1px solid #fde68a; }
+        .status-badge.confirmed { background:#d1fae5; color:#065f46; border:1px solid #6ee7b7; }
+        .status-badge.completed { background:var(--gold-lt); color:var(--gold); border:1px solid #e9c97a; }
+
+        .bc-body {
+            display:grid; grid-template-columns:repeat(2,1fr);
+            border-top:1px solid var(--border);
+        }
+        .detail-cell {
+            display:flex; align-items:center; gap:12px;
+            padding:14px 24px; border-right:1px solid var(--border);
+            border-bottom:1px solid var(--border);
+        }
+        .detail-cell:nth-child(even)     { border-right:none; }
+        .detail-cell:nth-last-child(-n+2) { border-bottom:none; }
+        .dc-icon {
+            width:32px; height:32px; border-radius:50%;
+            background:var(--bg); color:var(--gold);
+            display:flex; align-items:center; justify-content:center;
+            font-size:13px; flex-shrink:0;
+            border:1px solid var(--border);
+        }
+        .dc-label { font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); font-weight:600; }
+        .dc-value { font-size:13px; font-weight:600; color:var(--ink); }
+
+        /* EMPTY STATE */
+        .empty-state { text-align:center; padding:80px 20px; }
+        .empty-icon { width:88px; height:88px; border-radius:50%; background:var(--gold-lt); border:1px solid #e9c97a; margin:0 auto 24px; display:flex; align-items:center; justify-content:center; font-size:34px; color:var(--gold); }
+        .empty-state h2 { font-size:22px; font-weight:800; margin-bottom:8px; }
+        .empty-state p   { color:var(--muted); margin-bottom:24px; font-size:14px; }
+
+        /* FOOTER */
+        .footer { background:var(--surface); border-top:1px solid var(--border); padding:22px 64px; display:flex; align-items:center; justify-content:space-between; font-size:13px; color:var(--muted); }
+        .footer-logo { font-size:16px; font-weight:800; color:var(--ink); }
+        .footer-logo em { font-style:normal; color:var(--gold); }
+    </style>
+</head>
+<body>
+
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}{% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}{% endif %}
+        {% endwith %}
+    </div>
+
+    <nav class="navbar">
+        <a href="/" class="logo">
+            <div class="logo-mark"><i class="fa-solid fa-house-chimney"></i></div>
+            Ghar<em>Fix</em>
+        </a>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/#services">Services</a></li>
+            <li><a href="/#workers">Professionals</a></li>
+            <li><a href="{{ url_for('my_bookings') }}" class="active">My Bookings</a></li>
+        </ul>
+        <div class="nav-right">
+            {% if current_user.is_authenticated %}
+            <div class="user-chip">
+                <div class="u-avatar">{{ current_user.name[0].upper() }}</div>
+                <span class="u-name">{{ current_user.name.split()[0] }}</span>
+                <a href="{{ url_for('logout') }}" class="btn btn-ghost">Logout</a>
+            </div>
+            {% else %}
+            <a href="{{ url_for('login') }}" class="btn btn-ghost">Sign In</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <h1>My Bookings</h1>
+        <p>Track and manage all your service appointments</p>
+    </div>
+
+    <div class="content">
+        {% if bookings %}
+        {% set icons = {'Electrician':'fa-bolt','Plumber':'fa-droplet','Carpenter':'fa-hammer','AC Service':'fa-snowflake','House Maid':'fa-broom','Laundry':'fa-shirt','Labour':'fa-person-digging','Contractor':'fa-building'} %}
+        {% for booking in bookings %}
+        <div class="booking-card">
+            <div class="bc-header">
+                <div class="bc-title">
+                    <div class="bc-icon"><i class="fa-solid {{ icons.get(booking.service_name,'fa-star') }}"></i></div>
+                    <div>
+                        <h3>{{ booking.service_name }}</h3>
+                        <p>with {{ booking.worker.name }}</p>
+                    </div>
+                </div>
+                <span class="status-badge {{ booking.status }}">
+                    <i class="fa-solid fa-circle" style="font-size:7px"></i>
+                    {{ booking.status | capitalize }}
+                </span>
+            </div>
+            <div class="bc-body">
+                <div class="detail-cell">
+                    <div class="dc-icon"><i class="fa-solid fa-calendar"></i></div>
+                    <div><div class="dc-label">Date</div><div class="dc-value">{{ booking.booking_date.strftime('%d %b %Y') }}</div></div>
+                </div>
+                <div class="detail-cell">
+                    <div class="dc-icon"><i class="fa-solid fa-clock"></i></div>
+                    <div><div class="dc-label">Time</div><div class="dc-value">{{ booking.booking_time.strftime('%I:%M %p') }}</div></div>
+                </div>
+                <div class="detail-cell">
+                    <div class="dc-icon"><i class="fa-solid fa-location-dot"></i></div>
+                    <div><div class="dc-label">Address</div><div class="dc-value">{{ booking.address }}</div></div>
+                </div>
+                <div class="detail-cell">
+                    <div class="dc-icon"><i class="fa-solid fa-city"></i></div>
+                    <div><div class="dc-label">City</div><div class="dc-value">{{ booking.city }}</div></div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon"><i class="fa-solid fa-calendar-plus"></i></div>
+            <h2>No bookings yet</h2>
+            <p>Browse our top-rated professionals and book your first service.</p>
+            <a href="/#workers" class="btn btn-dark">Browse Professionals</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <footer class="footer">
+        <div class="footer-logo">Ghar<em>Fix</em></div>
+        <span>© 2026 GharFix. All rights reserved.</span>
+    </footer>
+
+    <script>
+        setTimeout(()=>{
+            document.querySelectorAll('.flash').forEach(f=>{
+                f.style.opacity='0'; f.style.transition='opacity .4s';
+                setTimeout(()=>f.remove(),400);
+            });
+        },4000);
+    </script>
+</body>
+</html>

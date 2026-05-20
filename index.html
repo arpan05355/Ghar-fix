@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>GharFix</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #222;
+            --accent: #f59e0b;
+            --accent-hover: #d97706;
+            --bg-light: #f9fafb;
+            --text-dark: #1f2937;
+            --text-muted: #6b7280;
+            --white: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 20px 5px rgba(245, 158, 11, 0.2);
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* NAVBAR */
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 70px;
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .logo i {
+            color: var(--accent);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .logo:hover {
+            transform: scale(1.02);
+        }
+
+        .menu {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: var(--transition);
+        }
+
+        .menu a:hover {
+            color: var(--accent);
+        }
+
+        .menu a:hover::after {
+            width: 100%;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .login {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .login:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .login.primary-btn {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--white);
+            animation: pulse-glow 2s infinite;
+        }
+
+        .login.primary-btn:hover {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+            animation: none;
+        }
+
+        /* HERO */
+
+        .hero {
+            text-align: center;
+            padding: 90px 20px;
+            background: linear-gradient(135deg, #fff 0%, #fef3c7 50%, #fff 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.05) 0%, transparent 50%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .hero h1 {
+            font-size: 52px;
+            margin-bottom: 16px;
+            font-weight: 800;
+            color: var(--text-dark);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 20px;
+            margin-bottom: 32px;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .search-box {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            animation: fadeInUp 0.8s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .search-box input {
+            padding: 16px 24px;
+            width: 380px;
+            border-radius: 50px;
+            border: 2px solid #e5e7eb;
+            font-size: 16px;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+        }
+
+        .search-box button {
+            padding: 16px 32px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .search-box button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        /* SERVICES */
+
+        .services {
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .services h2 {
+            font-size: 32px;
+            margin-bottom: 48px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .services h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .service-card {
+            background: var(--white);
+            padding: 32px 24px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-card i {
+            font-size: 40px;
+            margin-bottom: 16px;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .service-card:hover i {
+            color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .service-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* WORKERS */
+
+        .workers {
+            padding: 80px 60px;
+            text-align: center;
+            background: var(--white);
+        }
+
+        .workers h2 {
+            font-size: 32px;
+            margin-bottom: 48px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .workers h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .worker-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .worker-card {
+            background: var(--white);
+            padding: 32px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            border: 2px solid #f3f4f6;
+        }
+
+        .worker-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent);
+        }
+
+        .worker-card img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid var(--accent);
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .worker-card:hover img {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+        }
+
+        .worker-card h3 {
+            margin-top: 16px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .worker-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .star {
+            color: #ffb400;
+            font-size: 18px;
+            margin: 8px 0;
+        }
+
+        .book-btn {
+            margin-top: 16px;
+            padding: 12px 28px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .book-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        /* REVIEWS */
+
+        .reviews {
+            padding: 80px 60px;
+            text-align: center;
+            background: linear-gradient(180deg, var(--bg-light) 0%, var(--white) 100%);
+        }
+
+        .reviews h2 {
+            font-size: 32px;
+            margin-bottom: 48px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .reviews h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .review-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .review-card {
+            background: var(--white);
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            border: 2px solid #f3f4f6;
+            position: relative;
+        }
+
+        .review-card::before {
+            content: '"';
+            font-size: 80px;
+            color: var(--accent);
+            opacity: 0.2;
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-family: Georgia, serif;
+        }
+
+        .review-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .review-card p {
+            color: var(--text-dark);
+            font-style: italic;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .review-card strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* POPUPS */
+
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+        }
+
+        .popup-content {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 20px;
+            width: 360px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            animation: fadeInUp 0.4s ease;
+        }
+
+        .popup-content h2 {
+            margin-bottom: 24px;
+            color: var(--text-dark);
+        }
+
+        .popup-content input {
+            width: 100%;
+            padding: 14px 18px;
+            margin: 10px 0;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: var(--transition);
+            background: var(--bg-light);
+        }
+
+        .popup-content input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: var(--white);
+        }
+
+        .popup-content button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 16px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .popup-content button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        .close {
+            float: right;
+            cursor: pointer;
+            font-size: 28px;
+            color: var(--text-muted);
+            transition: var(--transition);
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: var(--accent);
+            transform: rotate(90deg);
+        }
+
+        /* FOOTER */
+
+        .footer {
+            text-align: center;
+            padding: 32px;
+            background: linear-gradient(135deg, var(--primary) 0%, #333 100%);
+            color: var(--white);
+            margin-top: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-hover), var(--accent));
+        }
+
+        .footer p {
+            font-size: 15px;
+            opacity: 0.9;
+        }
+
+        .footer p span {
+            color: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+
+        <div class="logo">
+            <i class="fa-solid fa-house"></i> GharFix
+        </div>
+
+        <div class="menu">
+            <a href="#">Home</a>
+            <a href="#">Services</a>
+            <a href="#">Workers</a>
+            <a href="#">Contact</a>
+        </div>
+
+        <div class="auth-buttons">
+            <button class="login" onclick="openLogin()">Login</button>
+            <button class="login primary-btn" onclick="openSignup()">Create Account</button>
+        </div>
+
+    </div>
+
+    <div class="hero">
+
+        <h1><span>Home</span> services, on demand</h1>
+
+        <p>Book trusted electricians, plumbers, maids and more</p>
+
+        <div class="search-box">
+            <input type="text" placeholder="Search service...">
+            <button>Search</button>
+        </div>
+
+    </div>
+
+    <div class="services">
+
+        <h2>Service Categories</h2>
+
+        <div class="service-grid">
+
+            <div class="service-card" onclick="openBooking()">
+                <i class="fa-solid fa-bolt"></i>
+                <h3>Electrician</h3>
+            </div>
+
+            <div class="service-card" onclick="openBooking()">
+                <i class="fa-solid fa-wrench"></i>
+                <h3>Plumber</h3>
+            </div>
+
+            <div class="service-card" onclick="openBooking()">
+                <i class="fa-solid fa-hammer"></i>
+                <h3>Carpenter</h3>
+            </div>
+
+            <div class="service-card" onclick="openBooking()">
+                <i class="fa-solid fa-snowflake"></i>
+                <h3>AC Service</h3>
+            </div>
+
+            <div class="service-card" onclick="openBooking()">
+                <i class="fa-solid fa-broom"></i>
+                <h3>House Maid</h3>
+            </div>
+
+            <div class="service-card" onclick="openBooking()">
+                <i class="fa-solid fa-shirt"></i>
+                <h3>Laundry</h3>
+            </div>
+
+            <div class="service-card" onclick="openBooking()">
+                <i class="fa-solid fa-person-digging"></i>
+                <h3>Labour</h3>
+            </div>
+
+            <div class="service-card" onclick="openBooking()">
+                <i class="fa-solid fa-building"></i>
+                <h3>Contractor</h3>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="workers">
+
+        <h2>Top Rated Workers</h2>
+
+        <div class="worker-grid">
+
+            <div class="worker-card">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg">
+                <h3>Ramesh Kumar</h3>
+                <p>Plumber</p>
+                <p class="star">⭐ 4.5</p>
+                <button class="book-btn" onclick="openBooking()">Book</button>
+            </div>
+
+            <div class="worker-card">
+                <img src="https://randomuser.me/api/portraits/men/45.jpg">
+                <h3>Suresh Patel</h3>
+                <p>Electrician</p>
+                <p class="star">⭐ 4.7</p>
+                <button class="book-btn" onclick="openBooking()">Book</button>
+            </div>
+
+            <div class="worker-card">
+                <img src="https://randomuser.me/api/portraits/men/60.jpg">
+                <h3>Amit Sharma</h3>
+                <p>Carpenter</p>
+                <p class="star">⭐ 4.6</p>
+                <button class="book-btn" onclick="openBooking()">Book</button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="reviews">
+
+        <h2>Customer Reviews</h2>
+
+        <div class="review-grid">
+
+            <div class="review-card">
+                <p>"Great service! Electrician arrived on time."</p>
+                <strong>⭐ 5 - Rahul</strong>
+            </div>
+
+            <div class="review-card">
+                <p>"Very professional plumber, fixed everything quickly."</p>
+                <strong>⭐ 4.5 - Priya</strong>
+            </div>
+
+            <div class="review-card">
+                <p>"Affordable and reliable service."</p>
+                <strong>⭐ 4.7 - Aman</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+        © 2026 GharFix • Find Trusted Workers Near You
+    </div>
+
+    <!-- LOGIN -->
+
+    <div class="popup" id="loginBox">
+
+        <div class="popup-content">
+
+            <span class="close" onclick="closeLogin()">×</span>
+
+            <h2>Login</h2>
+
+            <input type="email" placeholder="Email">
+            <input type="password" placeholder="Password">
+
+            <button>Login</button>
+
+        </div>
+
+    </div>
+
+    <!-- SIGNUP -->
+
+    <div class="popup" id="signupBox">
+
+        <div class="popup-content">
+
+            <span class="close" onclick="closeSignup()">×</span>
+
+            <h2>Create Account</h2>
+
+            <input type="text" placeholder="Full Name">
+            <input type="email" placeholder="Email Address">
+            <input type="tel" placeholder="Phone Number">
+            <input type="password" placeholder="Password">
+            <input type="password" placeholder="Confirm Password">
+
+            <button>Create Account</button>
+
+        </div>
+
+    </div>
+
+    <!-- BOOKING FORM -->
+
+    <div class="popup" id="bookingBox">
+
+        <div class="popup-content">
+
+            <span class="close" onclick="closeBooking()">×</span>
+
+            <h2>Book Service</h2>
+
+            <input type="text" placeholder="Your Address">
+            <input type="date">
+            <input type="time">
+            <input type="text" placeholder="City">
+
+            <button>Confirm Booking</button>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        function openLogin() {
+            document.getElementById("loginBox").style.display = "flex";
+        }
+
+        function closeLogin() {
+            document.getElementById("loginBox").style.display = "none";
+        }
+
+        function openSignup() {
+            document.getElementById("signupBox").style.display = "flex";
+        }
+
+        function closeSignup() {
+            document.getElementById("signupBox").style.display = "none";
+        }
+
+        function openBooking() {
+            document.getElementById("bookingBox").style.display = "flex";
+        }
+
+        function closeBooking() {
+            document.getElementById("bookingBox").style.display = "none";
+        }
+
+    </script>
+
+</body>
+
+</html>
