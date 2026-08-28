@@ -1171,7 +1171,11 @@
                 <button class="ph-close" onclick="closePopup('loginBox')"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="pb">
-                <form action="/login" method="POST">
+                <div style="display:flex;gap:0;margin-bottom:18px;border-radius:8px;overflow:hidden;border:1.5px solid var(--border);">
+                    <button type="button" id="loginUserToggle" onclick="setLoginType('user')" style="flex:1;padding:10px;font-size:13px;font-weight:600;font-family:inherit;border:none;cursor:pointer;background:var(--ink);color:#fff;transition:all .2s ease;">I'm a User</button>
+                    <button type="button" id="loginWorkerToggle" onclick="setLoginType('worker')" style="flex:1;padding:10px;font-size:13px;font-weight:600;font-family:inherit;border:none;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .2s ease;">I'm a Worker</button>
+                </div>
+                <form id="loginForm" action="/login" method="POST">
                     <div class="fg"><label>Email Address</label><input type="email" name="email"
                             placeholder="you@example.com" required></div>
                     <div class="fg"><label>Password</label><input type="password" name="password"
@@ -1184,6 +1188,7 @@
         </div>
     </div>
 
+
     <!-- SIGNUP POPUP -->
     <div class="popup" id="signupBox">
         <div class="popup-box">
@@ -1195,7 +1200,12 @@
                 <button class="ph-close" onclick="closePopup('signupBox')"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="pb">
-                <form action="/register" method="POST">
+                <div style="display:flex;gap:0;margin-bottom:18px;border-radius:8px;overflow:hidden;border:1.5px solid var(--border);">
+                    <button type="button" id="signupUserToggle" onclick="setSignupType('user')" style="flex:1;padding:10px;font-size:13px;font-weight:600;font-family:inherit;border:none;cursor:pointer;background:var(--ink);color:#fff;transition:all .2s ease;">I'm a User</button>
+                    <button type="button" id="signupWorkerToggle" onclick="setSignupType('worker')" style="flex:1;padding:10px;font-size:13px;font-weight:600;font-family:inherit;border:none;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .2s ease;">I'm a Worker</button>
+                </div>
+                <!-- User signup form -->
+                <form id="userSignupForm" action="/register" method="POST">
                     <div class="fg"><label>Full Name</label><input type="text" name="name" placeholder="Your full name"
                             required></div>
                     <div class="fg"><label>Email Address</label><input type="email" name="email"
@@ -1208,11 +1218,37 @@
                             placeholder="Repeat password" required></div>
                     <button type="submit" class="pop-btn">Create Account</button>
                 </form>
+                <!-- Worker signup form (hidden by default) -->
+                <form id="workerSignupForm" action="/register/worker" method="POST" style="display:none;">
+                    <div class="fg"><label>Full Name</label><input type="text" name="name" placeholder="Your full name"
+                            required></div>
+                    <div class="fg"><label>Service Category</label>
+                        <select name="service" required>
+                            <option value="" disabled selected>Select your service</option>
+                            <option value="Electrician">Electrician</option>
+                            <option value="Plumber">Plumber</option>
+                            <option value="Carpenter">Carpenter</option>
+                            <option value="AC Service">AC Service</option>
+                            <option value="House Maid">House Maid</option>
+                            <option value="Laundry">Laundry</option>
+                            <option value="Labour">Labour</option>
+                            <option value="Contractor">Contractor</option>
+                        </select>
+                    </div>
+                    <div class="fg"><label>Phone Number</label><input type="tel" name="phone"
+                            placeholder="+91 98765 43210" required></div>
+                    <div class="fg"><label>Email Address</label><input type="email" name="email"
+                            placeholder="you@example.com" required></div>
+                    <div class="fg"><label>Password</label><input type="password" name="password"
+                            placeholder="Create a password" required></div>
+                    <button type="submit" class="pop-btn">Create Worker Account</button>
+                </form>
                 <p class="pop-foot">Already have an account? <a onclick="switchPopup('signupBox','loginBox')">Sign
                         in</a></p>
             </div>
         </div>
     </div>
+
 
     <!-- BOOKING POPUP -->
     <div class="popup" id="bookingBox">
@@ -1269,6 +1305,37 @@
         function searchServices() { const q = document.getElementById('searchInput').value; if (q) document.getElementById('workers').scrollIntoView({ behavior: 'smooth' }); }
         document.querySelectorAll('.popup').forEach(p => p.addEventListener('click', e => { if (e.target === p) closePopup(p.id); }));
         setTimeout(() => { document.querySelectorAll('.flash').forEach(f => { f.style.opacity = '0'; f.style.transition = 'opacity .4s'; setTimeout(() => f.remove(), 400); }); }, 4000);
+
+        function setLoginType(type) {
+            var form = document.getElementById('loginForm');
+            var userBtn = document.getElementById('loginUserToggle');
+            var workerBtn = document.getElementById('loginWorkerToggle');
+            if (type === 'worker') {
+                form.action = '/worker/login';
+                workerBtn.style.background = 'var(--ink)'; workerBtn.style.color = '#fff';
+                userBtn.style.background = 'var(--bg)'; userBtn.style.color = 'var(--muted)';
+            } else {
+                form.action = '/login';
+                userBtn.style.background = 'var(--ink)'; userBtn.style.color = '#fff';
+                workerBtn.style.background = 'var(--bg)'; workerBtn.style.color = 'var(--muted)';
+            }
+        }
+
+        function setSignupType(type) {
+            var userForm = document.getElementById('userSignupForm');
+            var workerForm = document.getElementById('workerSignupForm');
+            var userBtn = document.getElementById('signupUserToggle');
+            var workerBtn = document.getElementById('signupWorkerToggle');
+            if (type === 'worker') {
+                userForm.style.display = 'none'; workerForm.style.display = 'block';
+                workerBtn.style.background = 'var(--ink)'; workerBtn.style.color = '#fff';
+                userBtn.style.background = 'var(--bg)'; userBtn.style.color = 'var(--muted)';
+            } else {
+                userForm.style.display = 'block'; workerForm.style.display = 'none';
+                userBtn.style.background = 'var(--ink)'; userBtn.style.color = '#fff';
+                workerBtn.style.background = 'var(--bg)'; workerBtn.style.color = 'var(--muted)';
+            }
+        }
     </script>
 
     <!-- Leaflet CSS -->

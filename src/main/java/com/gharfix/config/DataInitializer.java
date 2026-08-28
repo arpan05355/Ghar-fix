@@ -67,16 +67,34 @@ public class DataInitializer implements CommandLineRunner {
 
     private void seedWorkers() {
         if (workerRepository.count() == 0) {
-            List<Worker> workers = List.of(
-                    new Worker("Ramesh Kumar", "Plumber", "9876543210", 4.5, "https://randomuser.me/api/portraits/men/32.jpg", "5 years", "Expert in pipe fitting and leak repairs"),
-                    new Worker("Suresh Patel", "Electrician", "9876543211", 4.7, "https://randomuser.me/api/portraits/men/45.jpg", "7 years", "Specialist in wiring and electrical installations"),
-                    new Worker("Amit Sharma", "Carpenter", "9876543212", 4.6, "https://randomuser.me/api/portraits/men/60.jpg", "8 years", "Expert furniture maker and repairs"),
-                    new Worker("Raj Malhotra", "AC Service", "9876543213", 4.8, "https://randomuser.me/api/portraits/men/22.jpg", "6 years", "AC repair and maintenance expert"),
-                    new Worker("Priya Singh", "House Maid", "9876543214", 4.9, "https://randomuser.me/api/portraits/women/44.jpg", "4 years", "Professional home cleaning services"),
-                    new Worker("Vikram Joshi", "Laundry", "9876543215", 4.4, "https://randomuser.me/api/portraits/men/75.jpg", "3 years", "Quality laundry and dry cleaning")
-            );
-            workerRepository.saveAll(workers);
-            log.info("Default workers seeded successfully ({} items).", workers.size());
+            String hashedPassword = passwordEncoder.encode("worker123");
+
+            Worker w1 = new Worker("Ramesh Kumar", "Plumber", "9876543210", 4.5, "https://randomuser.me/api/portraits/men/32.jpg", "5 years", "Expert in pipe fitting and leak repairs");
+            w1.setEmail("ramesh@gharfix.com");
+            w1.setPasswordHash(hashedPassword);
+
+            Worker w2 = new Worker("Suresh Patel", "Electrician", "9876543211", 4.7, "https://randomuser.me/api/portraits/men/45.jpg", "7 years", "Specialist in wiring and electrical installations");
+            w2.setEmail("suresh@gharfix.com");
+            w2.setPasswordHash(hashedPassword);
+
+            Worker w3 = new Worker("Amit Sharma", "Carpenter", "9876543212", 4.6, "https://randomuser.me/api/portraits/men/60.jpg", "8 years", "Expert furniture maker and repairs");
+            w3.setEmail("amit@gharfix.com");
+            w3.setPasswordHash(hashedPassword);
+
+            Worker w4 = new Worker("Raj Malhotra", "AC Service", "9876543213", 4.8, "https://randomuser.me/api/portraits/men/22.jpg", "6 years", "AC repair and maintenance expert");
+            w4.setEmail("raj@gharfix.com");
+            w4.setPasswordHash(hashedPassword);
+
+            Worker w5 = new Worker("Priya Singh", "House Maid", "9876543214", 4.9, "https://randomuser.me/api/portraits/women/44.jpg", "4 years", "Professional home cleaning services");
+            w5.setEmail("priya@gharfix.com");
+            w5.setPasswordHash(hashedPassword);
+
+            Worker w6 = new Worker("Vikram Joshi", "Laundry", "9876543215", 4.4, "https://randomuser.me/api/portraits/men/75.jpg", "3 years", "Quality laundry and dry cleaning");
+            w6.setEmail("vikram@gharfix.com");
+            w6.setPasswordHash(hashedPassword);
+
+            workerRepository.saveAll(List.of(w1, w2, w3, w4, w5, w6));
+            log.info("Default workers seeded successfully (6 items, all with email/password credentials).");
         }
     }
 
@@ -134,10 +152,10 @@ public class DataInitializer implements CommandLineRunner {
                     Long workerId = rs.getLong("worker_id");
                     var userOpt = userRepository.findById(userId);
                     var workerOpt = workerRepository.findById(workerId);
-                    if (userOpt.isPresent() && workerOpt.isPresent()) {
+                    if (userOpt.isPresent()) {
                         Booking b = new Booking();
                         b.setUser(userOpt.get());
-                        b.setWorker(workerOpt.get());
+                        b.setWorker(workerOpt.orElse(null));
                         b.setServiceName(rs.getString("service_name"));
                         b.setAddress(rs.getString("address"));
                         b.setCity(rs.getString("city"));

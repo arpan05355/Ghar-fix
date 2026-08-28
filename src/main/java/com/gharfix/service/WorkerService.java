@@ -1,9 +1,11 @@
 package com.gharfix.service;
 
 import com.gharfix.dto.WorkerDto;
+import com.gharfix.dto.WorkerRegisterDto;
 import com.gharfix.dto.WorkerSearchDto;
 import com.gharfix.entity.Worker;
 import com.gharfix.repository.WorkerRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,9 +17,11 @@ import java.util.stream.Collectors;
 public class WorkerService {
 
     private final WorkerRepository workerRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public WorkerService(WorkerRepository workerRepository) {
+    public WorkerService(WorkerRepository workerRepository, PasswordEncoder passwordEncoder) {
         this.workerRepository = workerRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Worker> getAllWorkers() {
@@ -46,6 +50,14 @@ public class WorkerService {
         return workerRepository.findById(id);
     }
 
+    public Optional<Worker> findByEmail(String email) {
+        return workerRepository.findByEmail(email);
+    }
+
+    public boolean existsByEmail(String email) {
+        return workerRepository.existsByEmail(email);
+    }
+
     public List<WorkerDto> getWorkerDtos(String service) {
         List<Worker> workers = getWorkersByService(service);
         return workers.stream()
@@ -58,6 +70,23 @@ public class WorkerService {
         return workers.stream()
                 .map(w -> new WorkerSearchDto(w.getId(), w.getName(), w.getService(), w.getRating()))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Worker registerWorker(WorkerRegisterDto request) {
+        if (workerRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("Email already registered as a worker!");
+        }
+
+        Worker worker = new Worker();
+        worker.setName(request.getName());
+        worker.setService(request.getService());
+        worker.setPhone(request.getPhone());
+        worker.setEmail(request.getEmail());
+        worker.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+        worker.setRating(4.0);
+
+        return workerRepository.save(worker);
     }
 
     @Transactional

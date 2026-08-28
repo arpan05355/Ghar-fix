@@ -19,6 +19,10 @@ public interface WorkerRepository extends JpaRepository<Worker, Long> {
 
     Optional<Worker> findByName(String name);
 
+    Optional<Worker> findByEmail(String email);
+
+    boolean existsByEmail(String email);
+
     @Query("SELECT w FROM Worker w WHERE LOWER(w.name) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(w.service) LIKE LOWER(CONCAT('%', :query, '%')) ORDER BY w.rating DESC")
     List<Worker> searchByNameOrService(@Param("query") String query);
 }

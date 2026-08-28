@@ -181,7 +181,7 @@
                     <div class="bc-icon"><i class="fa-solid fa-wrench"></i></div>
                     <div>
                         <h3 th:text="${booking.serviceName}">Service</h3>
-                        <p th:text="|with ${booking.worker.name}|">with Worker</p>
+                        <p th:text="${booking.worker != null ? 'with ' + booking.worker.name : 'Awaiting professional'}">with Worker</p>
                     </div>
                 </div>
                 <span class="status-badge" th:classappend="${booking.status}">

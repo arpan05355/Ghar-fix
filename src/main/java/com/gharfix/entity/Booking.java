@@ -17,8 +17,8 @@ public class Booking {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "worker_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
+    @JoinColumn(name = "worker_id", nullable = true)
     private Worker worker;
 
     @Column(name = "service_name", nullable = false, length = 50)
@@ -37,7 +37,7 @@ public class Booking {
     private LocalTime bookingTime;
 
     @Column(length = 20)
-    private String status = "pending";
+    private String status = "requested";
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -54,7 +54,7 @@ public class Booking {
         this.city = city;
         this.bookingDate = bookingDate;
         this.bookingTime = bookingTime;
-        this.status = (status != null) ? status : "pending";
+        this.status = (status != null) ? status : "requested";
         this.createdAt = LocalDateTime.now();
     }
 
