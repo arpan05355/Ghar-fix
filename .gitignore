@@ -26,3 +26,11 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Java & Maven
+target/
+*.class
+.tools/
+c/
+
+
