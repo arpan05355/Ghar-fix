@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -80,7 +81,11 @@ public class WorkerService {
 
         Worker worker = new Worker();
         worker.setName(request.getName());
-        worker.setService(request.getService());
+        if (request.getServices() != null && !request.getServices().isEmpty()) {
+            worker.setServices(new ArrayList<>(request.getServices()));
+        } else if (request.getService() != null && !request.getService().isBlank()) {
+            worker.setService(request.getService());
+        }
         worker.setPhone(request.getPhone());
         worker.setEmail(request.getEmail());
         worker.setPasswordHash(passwordEncoder.encode(request.getPassword()));

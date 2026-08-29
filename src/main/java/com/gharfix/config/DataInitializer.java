@@ -72,29 +72,54 @@ public class DataInitializer implements CommandLineRunner {
             Worker w1 = new Worker("Ramesh Kumar", "Plumber", "9876543210", 4.5, "https://randomuser.me/api/portraits/men/32.jpg", "5 years", "Expert in pipe fitting and leak repairs");
             w1.setEmail("ramesh@gharfix.com");
             w1.setPasswordHash(hashedPassword);
+            w1.setServices(new java.util.ArrayList<>(List.of("Plumber")));
 
             Worker w2 = new Worker("Suresh Patel", "Electrician", "9876543211", 4.7, "https://randomuser.me/api/portraits/men/45.jpg", "7 years", "Specialist in wiring and electrical installations");
             w2.setEmail("suresh@gharfix.com");
             w2.setPasswordHash(hashedPassword);
+            w2.setServices(new java.util.ArrayList<>(List.of("Electrician")));
 
             Worker w3 = new Worker("Amit Sharma", "Carpenter", "9876543212", 4.6, "https://randomuser.me/api/portraits/men/60.jpg", "8 years", "Expert furniture maker and repairs");
             w3.setEmail("amit@gharfix.com");
             w3.setPasswordHash(hashedPassword);
+            w3.setServices(new java.util.ArrayList<>(List.of("Carpenter")));
 
             Worker w4 = new Worker("Raj Malhotra", "AC Service", "9876543213", 4.8, "https://randomuser.me/api/portraits/men/22.jpg", "6 years", "AC repair and maintenance expert");
             w4.setEmail("raj@gharfix.com");
             w4.setPasswordHash(hashedPassword);
+            w4.setServices(new java.util.ArrayList<>(List.of("AC Service")));
 
             Worker w5 = new Worker("Priya Singh", "House Maid", "9876543214", 4.9, "https://randomuser.me/api/portraits/women/44.jpg", "4 years", "Professional home cleaning services");
             w5.setEmail("priya@gharfix.com");
             w5.setPasswordHash(hashedPassword);
+            w5.setServices(new java.util.ArrayList<>(List.of("House Maid")));
 
             Worker w6 = new Worker("Vikram Joshi", "Laundry", "9876543215", 4.4, "https://randomuser.me/api/portraits/men/75.jpg", "3 years", "Quality laundry and dry cleaning");
             w6.setEmail("vikram@gharfix.com");
             w6.setPasswordHash(hashedPassword);
+            w6.setServices(new java.util.ArrayList<>(List.of("Laundry")));
 
             workerRepository.saveAll(List.of(w1, w2, w3, w4, w5, w6));
-            log.info("Default workers seeded successfully (6 items, all with email/password credentials).");
+            log.info("Default workers seeded successfully (6 items, all with email/password credentials and services).");
+        } else {
+            // Migrate existing workers to multi-service structure if empty
+            List<Worker> existingWorkers = workerRepository.findAll();
+            for (Worker w : existingWorkers) {
+                if (w.getServices() == null || w.getServices().isEmpty()) {
+                    if (w.getService() != null && !w.getService().isBlank()) {
+                        String[] parts = w.getService().split(",");
+                        List<String> list = new java.util.ArrayList<>();
+                        for (String p : parts) {
+                            if (!p.trim().isEmpty()) {
+                                list.add(p.trim());
+                            }
+                        }
+                        w.setServices(list);
+                        workerRepository.save(w);
+                        log.info("Migrated existing worker {} to services: {}", w.getEmail(), list);
+                    }
+                }
+            }
         }
     }
 

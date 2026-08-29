@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class WorkerUserDetails implements UserDetails {
     private final String name;
     private final String email;
     private final String service;
+    private final List<String> services;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
 
@@ -21,7 +23,8 @@ public class WorkerUserDetails implements UserDetails {
         this.id = worker.getId();
         this.name = worker.getName();
         this.email = worker.getEmail();
-        this.service = worker.getService();
+        this.services = worker.getServices() != null ? new ArrayList<>(worker.getServices()) : new ArrayList<>();
+        this.service = worker.getService() != null ? worker.getService() : "";
         this.password = worker.getPasswordHash();
         this.authorities = List.of(new SimpleGrantedAuthority("ROLE_WORKER"));
     }
@@ -40,6 +43,10 @@ public class WorkerUserDetails implements UserDetails {
 
     public String getService() {
         return service;
+    }
+
+    public List<String> getServices() {
+        return services;
     }
 
     @Override

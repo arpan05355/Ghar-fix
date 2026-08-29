@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GharFix for Professionals — Partner with Us</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #eff6ff;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-600: #475569;
+            --slate-400: #94a3b8;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --white: #ffffff;
+            --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.08);
+            --shadow-modal: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+            --radius-md: 10px;
+            --radius-lg: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--slate-50);
+            color: var(--slate-800);
+            line-height: 1.6;
+        }
+
+        /* FLASH MESSAGES */
+        .flash-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .flash-item {
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: var(--shadow-card);
+            animation: fadeIn .3s ease;
+        }
+        .flash-success {
+            background: #15803d;
+            color: #ffffff;
+        }
+        .flash-error {
+            background: #b91c1c;
+            color: #ffffff;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* HEADER */
+        .site-header {
+            background: var(--white);
+            border-bottom: 1px solid var(--slate-200);
+            padding: 0 48px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--slate-900);
+        }
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .brand-title {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .brand-badge {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .back-link {
+            color: var(--slate-600);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 8px;
+            transition: color .2s ease;
+        }
+        .back-link:hover {
+            color: var(--primary);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all .2s ease;
+            border: none;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid var(--slate-200);
+            color: var(--slate-800);
+        }
+        .btn-outline:hover {
+            border-color: var(--slate-800);
+            background: var(--slate-100);
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+        }
+
+        /* HERO */
+        .hero {
+            max-width: 900px;
+            margin: 60px auto 40px;
+            text-align: center;
+            padding: 0 20px;
+        }
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 50px;
+            margin-bottom: 20px;
+        }
+        .hero h1 {
+            font-size: 46px;
+            font-weight: 800;
+            color: var(--slate-900);
+            letter-spacing: -1px;
+            line-height: 1.15;
+            margin-bottom: 18px;
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--slate-600);
+            max-width: 650px;
+            margin: 0 auto 32px;
+            line-height: 1.6;
+        }
+        .hero-cta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+        .hero-cta .btn {
+            padding: 14px 32px;
+            font-size: 15px;
+        }
+
+        /* WHY SECTION */
+        .features-section {
+            max-width: 1100px;
+            margin: 70px auto 90px;
+            padding: 0 24px;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 44px;
+        }
+        .section-header h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--slate-900);
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+        .section-header p {
+            font-size: 15px;
+            color: var(--slate-600);
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+        .feature-card {
+            background: var(--white);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            padding: 36px 30px;
+            box-shadow: var(--shadow-card);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px -4px rgba(15, 23, 42, 0.12);
+        }
+        .feature-icon-wrap {
+            width: 52px;
+            height: 52px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 22px;
+        }
+        .feature-card h3 {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-bottom: 10px;
+        }
+        .feature-card p {
+            font-size: 14.5px;
+            color: var(--slate-600);
+            line-height: 1.6;
+        }
+
+        /* MODALS */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 520px;
+            box-shadow: var(--shadow-modal);
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalPop .25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-head {
+            padding: 24px 28px 20px;
+            border-bottom: 1px solid var(--slate-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .modal-head h3 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--slate-900);
+        }
+        .modal-head p {
+            font-size: 13px;
+            color: var(--slate-600);
+            margin-top: 2px;
+        }
+        .modal-close {
+            background: var(--slate-100);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--slate-600);
+            font-size: 14px;
+            transition: all .2s;
+        }
+        .modal-close:hover {
+            background: var(--slate-200);
+            color: var(--slate-900);
+        }
+        .modal-body {
+            padding: 28px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--slate-800);
+            margin-bottom: 6px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid var(--slate-200);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--slate-900);
+            background: var(--white);
+            outline: none;
+            transition: border-color .2s ease;
+        }
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        /* CHECKBOX GRID FOR MULTI-SERVICE */
+        .skills-picker-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--slate-800);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .skills-hint {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--slate-600);
+        }
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            max-height: 180px;
+            overflow-y: auto;
+            padding: 10px;
+            background: var(--slate-50);
+            border: 1.5px solid var(--slate-200);
+            border-radius: var(--radius-md);
+            margin-bottom: 18px;
+        }
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            background: var(--white);
+            border: 1px solid var(--slate-200);
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--slate-800);
+            cursor: pointer;
+            user-select: none;
+            transition: all .15s ease;
+        }
+        .skill-item:hover {
+            border-color: var(--primary);
+        }
+        .skill-item input[type="checkbox"] {
+            accent-color: var(--primary);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            font-size: 15px;
+            margin-top: 8px;
+        }
+        .modal-foot {
+            text-align: center;
+            font-size: 13px;
+            color: var(--slate-600);
+            margin-top: 18px;
+        }
+        .modal-foot a {
+            color: var(--primary);
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .modal-foot a:hover {
+            text-decoration: underline;
+        }
+
+        /* FOOTER */
+        .site-footer {
+            border-top: 1px solid var(--slate-200);
+            background: var(--white);
+            padding: 30px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--slate-600);
+        }
+
+        @media (max-width: 860px) {
+            .site-header { padding: 0 20px; }
+            .features-grid { grid-template-columns: 1fr; gap: 20px; }
+            .hero h1 { font-size: 34px; }
+            .hero-cta { flex-direction: column; }
+            .hero-cta .btn { width: 100%; }
+            .skills-grid { grid-template-columns: 1fr; }
+            .site-footer { flex-direction: column; gap: 12px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- FLASH NOTIFICATIONS -->
+    <div class="flash-container">
+        <div th:if="${flash_success != null}" class="flash-item flash-success" th:text="${flash_success}"></div>
+        <div th:if="${flash_error != null}" class="flash-item flash-error" th:text="${flash_error}"></div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <a href="/worker" class="brand">
+            <div class="brand-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+            <div>
+                <span class="brand-title">GharFix</span>
+                <span class="brand-badge">Pro</span>
+            </div>
+        </a>
+        <div class="header-actions">
+            <a href="/" class="back-link"><i class="fa-solid fa-arrow-left"></i> Customer Site</a>
+            <button class="btn btn-outline" onclick="openWorkerModal('loginModal')">Pro Log In</button>
+            <button class="btn btn-primary" onclick="openWorkerModal('signupModal')">Sign Up</button>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-pill">
+            <i class="fa-solid fa-handshake"></i> GharFix Partner Program
+        </div>
+        <h1>Work when you want,<br>earn what you need</h1>
+        <p>Join GharFix as a verified home service professional. Take on local jobs matching your skills, get paid weekly, and grow your independent client base.</p>
+        <div class="hero-cta">
+            <button class="btn btn-primary" onclick="openWorkerModal('signupModal')">
+                <i class="fa-solid fa-user-plus"></i> Sign Up as a Pro
+            </button>
+            <button class="btn btn-outline" onclick="openWorkerModal('loginModal')">
+                <i class="fa-solid fa-right-to-bracket"></i> Pro Log In
+            </button>
+        </div>
+    </section>
+
+    <!-- WHY WORK WITH GHARFIX SECTION -->
+    <section class="features-section">
+        <div class="section-header">
+            <h2>Why work with GharFix</h2>
+            <p>Built from the ground up to give service professionals flexibility and respect.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon-wrap">
+                    <i class="fa-regular fa-clock"></i>
+                </div>
+                <h3>Flexible Hours</h3>
+                <p>You choose when and where you want to work. Accept requests that fit your schedule and maintain full control over your time.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon-wrap">
+                    <i class="fa-solid fa-money-bill-transfer"></i>
+                </div>
+                <h3>Weekly Payments</h3>
+                <p>Receive your earnings directly deposited into your bank account on a reliable weekly cycle with completely transparent rates.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon-wrap">
+                    <i class="fa-solid fa-shield-check"></i>
+                </div>
+                <h3>Verified Customers</h3>
+                <p>Connect with pre-screened homeowners ready for service. No bidding wars, no lead fees, and direct customer communication.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div>&copy; 2026 GharFix Pro. All rights reserved.</div>
+        <div>
+            <a href="/" style="color:var(--slate-600); text-decoration:none; margin-right:16px;">Customer Home</a>
+            <a href="#" style="color:var(--slate-600); text-decoration:none; margin-right:16px;">Partner Terms</a>
+            <a href="#" style="color:var(--slate-600); text-decoration:none;">Support</a>
+        </div>
+    </footer>
+
+    <!-- PRO LOGIN MODAL -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-card">
+            <div class="modal-head">
+                <div>
+                    <h3>Pro Log In</h3>
+                    <p>Access your worker dashboard and service requests</p>
+                </div>
+                <button class="modal-close" onclick="closeWorkerModal('loginModal')">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/worker/login" method="POST">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" name="email" class="form-control" placeholder="you@domain.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" class="form-control" placeholder="Your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-submit">
+                        <i class="fa-solid fa-right-to-bracket"></i> Log In to Dashboard
+                    </button>
+                </form>
+                <div class="modal-foot">
+                    Don't have a partner account? <a onclick="switchWorkerModal('loginModal', 'signupModal')">Sign up here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRO SIGNUP MODAL -->
+    <div class="modal-overlay" id="signupModal">
+        <div class="modal-card">
+            <div class="modal-head">
+                <div>
+                    <h3>Register as a Pro</h3>
+                    <p>Select all services you are qualified to provide</p>
+                </div>
+                <button class="modal-close" onclick="closeWorkerModal('signupModal')">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/register/worker" method="POST" id="proSignupForm" onsubmit="return validateSkillsSelected()">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="name" class="form-control" placeholder="e.g. Ramesh Sharma" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" name="phone" class="form-control" placeholder="+91 98765 43210" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" name="email" class="form-control" placeholder="you@domain.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Create Password</label>
+                        <input type="password" name="password" class="form-control" placeholder="Minimum 6 characters" required>
+                    </div>
+
+                    <!-- MULTI-SERVICE CHECKBOX PICKER -->
+                    <div class="skills-picker-label">
+                        <span>Select Your Services</span>
+                        <span class="skills-hint">Pick 1 or more skills</span>
+                    </div>
+                    <div class="skills-grid">
+                        <th:block th:if="${services != null && !services.isEmpty()}">
+                            <label th:each="s : ${services}" class="skill-item">
+                                <input type="checkbox" name="services" th:value="${s.name}">
+                                <span th:text="${s.name}">Service</span>
+                            </label>
+                        </th:block>
+                        <th:block th:if="${services == null || services.isEmpty()}">
+                            <label class="skill-item"><input type="checkbox" name="services" value="Electrician"> Electrician</label>
+                            <label class="skill-item"><input type="checkbox" name="services" value="Plumber"> Plumber</label>
+                            <label class="skill-item"><input type="checkbox" name="services" value="Carpenter"> Carpenter</label>
+                            <label class="skill-item"><input type="checkbox" name="services" value="AC Service"> AC Service</label>
+                            <label class="skill-item"><input type="checkbox" name="services" value="House Maid"> House Maid</label>
+                            <label class="skill-item"><input type="checkbox" name="services" value="Laundry"> Laundry</label>
+                            <label class="skill-item"><input type="checkbox" name="services" value="Labour"> Labour</label>
+                            <label class="skill-item"><input type="checkbox" name="services" value="Contractor"> Contractor</label>
+                        </th:block>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-submit">
+                        <i class="fa-solid fa-check"></i> Complete Registration
+                    </button>
+                </form>
+                <div class="modal-foot">
+                    Already registered? <a onclick="switchWorkerModal('signupModal', 'loginModal')">Log in here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openWorkerModal(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeWorkerModal(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        function switchWorkerModal(from, to) {
+            closeWorkerModal(from);
+            setTimeout(() => openWorkerModal(to), 150);
+        }
+
+        // Close on backdrop click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeWorkerModal(this.id);
+                }
+            });
+        });
+
+        // Validate at least one service checkbox selected
+        function validateSkillsSelected() {
+            const checked = document.querySelectorAll('#proSignupForm input[name="services"]:checked');
+            if (checked.length === 0) {
+                alert('Please select at least one service category.');
+                return false;
+            }
+            return true;
+        }
+
+        // Auto-hide flash messages
+        setTimeout(function() {
+            document.querySelectorAll('.flash-item').forEach(f => {
+                f.style.opacity = '0';
+                f.style.transition = 'opacity 0.4s ease';
+                setTimeout(() => f.remove(), 400);
+            });
+        }, 4000);
+    </script>
+</body>
+</html>

@@ -146,10 +146,96 @@
         .footer-logo { font-size:16px; font-weight:800; color:var(--ink); }
         .footer-logo em { font-style:normal; color:var(--gold); }
 
+        /* MY SERVICES SECTION */
+        .services-card {
+            background: var(--surface);
+            border-radius: 16px;
+            border: 1.5px solid var(--border);
+            box-shadow: var(--shadow-xs);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .services-picker-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        .service-pill-label {
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+        }
+        .service-pill-label input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .service-pill-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 12px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border);
+            background: var(--bg);
+            transition: var(--t);
+            text-align: center;
+        }
+        .service-pill-content i {
+            font-size: 20px;
+            color: var(--muted);
+            transition: var(--t);
+        }
+        .service-pill-content strong {
+            font-size: 13px;
+            color: var(--ink-soft);
+            font-weight: 600;
+        }
+        .service-pill-label:hover .service-pill-content {
+            border-color: var(--gold-mid);
+            transform: translateY(-2px);
+        }
+        .service-pill-label input[type="checkbox"]:checked + .service-pill-content {
+            background: var(--gold-lt);
+            border-color: var(--gold-mid);
+            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.12);
+        }
+        .service-pill-label input[type="checkbox"]:checked + .service-pill-content i {
+            color: var(--gold);
+        }
+        .service-pill-label input[type="checkbox"]:checked + .service-pill-content strong {
+            color: var(--ink);
+        }
+        .btn-save-services {
+            background: var(--ink);
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            transition: var(--t);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-save-services:hover {
+            background: #222;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+        }
+
+        @media (max-width:768px) {
+            .services-picker-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
         @media (max-width:640px) {
             .navbar { padding:0 20px; }
             .page-header { padding:32px 20px; }
             .rc-details, .jc-details { grid-template-columns:1fr; }
+            .services-picker-grid { grid-template-columns: 1fr; }
             .footer { padding:18px 20px; }
         }
     </style>
@@ -170,7 +256,7 @@
             <div th:if="${workerDetails != null}" class="user-chip">
                 <div class="u-avatar" th:text="${workerDetails.name != null && !workerDetails.name.isEmpty() ? workerDetails.name.substring(0,1).toUpperCase() : 'W'}">W</div>
                 <span class="u-name" th:text="${workerDetails.name != null ? workerDetails.name.split(' ')[0] : 'Worker'}">Worker</span>
-                <span class="u-badge" th:text="${workerDetails.service}">Service</span>
+                <span class="u-badge" th:text="${workerServices != null && !workerServices.isEmpty() ? #strings.listJoin(workerServices, ', ') : (workerDetails.service != null ? workerDetails.service : 'Pro')}">Service</span>
                 <a href="/logout" class="btn btn-ghost">Logout</a>
             </div>
         </div>
@@ -187,6 +273,10 @@
             <div class="header-stat">
                 <div class="stat-num" th:text="${acceptedJobs != null ? acceptedJobs.size() : 0}">0</div>
                 <div class="stat-label">Accepted Jobs</div>
+            </div>
+            <div class="header-stat">
+                <div class="stat-num" th:text="${workerServices != null ? workerServices.size() : 0}">0</div>
+                <div class="stat-label">Active Skills</div>
             </div>
         </div>
     </div>
@@ -286,6 +376,35 @@
             <h3>No Accepted Jobs Yet</h3>
             <p>Accept requests from the list above to start working on service appointments.</p>
         </div>
+
+        <hr class="section-divider">
+
+        <!-- MY SERVICES SECTION -->
+        <div class="section-title"><i class="fa-solid fa-layer-group"></i> My Services</div>
+
+        <div class="services-card">
+            <p style="color: var(--muted); font-size: 13px; margin-bottom: 18px;">
+                Manage the service categories you offer. You will receive booking requests matching any of your active skills.
+            </p>
+            <form action="/worker/dashboard/services/update" method="POST" id="servicesForm" onsubmit="return validateDashboardServices()">
+                <div class="services-picker-grid">
+                    <label th:each="s : ${allServices}" class="service-pill-label">
+                        <input type="checkbox" name="services" th:value="${s.name}"
+                               th:checked="${workerServices != null && workerServices.contains(s.name)}">
+                        <div class="service-pill-content">
+                            <i class="fa-solid" th:classappend="${s.icon != null ? s.icon : 'fa-wrench'}"></i>
+                            <strong th:text="${s.name}">Service</strong>
+                        </div>
+                    </label>
+                </div>
+                <div style="margin-top: 22px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                    <span style="font-size: 12px; color: var(--muted);"><i class="fa-solid fa-circle-info"></i> You must select at least one skill.</span>
+                    <button type="submit" class="btn-save-services">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Services
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <footer class="footer">
@@ -301,6 +420,16 @@
                 setTimeout(function(){f.remove();},400);
             });
         },4000);
+
+        // Validate at least one service is selected
+        function validateDashboardServices() {
+            var checked = document.querySelectorAll('#servicesForm input[name="services"]:checked');
+            if (checked.length === 0) {
+                alert('Please select at least one service category.');
+                return false;
+            }
+            return true;
+        }
 
         // Client-side decline: hide the card and remember in sessionStorage
         function declineRequest(btn) {

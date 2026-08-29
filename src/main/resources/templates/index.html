@@ -1070,13 +1070,13 @@
             </div>
             <div class="step">
                 <div class="step-num">2</div>
-                <h3>Select a Pro</h3>
-                <p>Browse verified, rated professionals</p>
+                <h3>Pick a Slot</h3>
+                <p>Choose a date & time that works for you</p>
             </div>
             <div class="step">
                 <div class="step-num">3</div>
-                <h3>Pick a Slot</h3>
-                <p>Choose a date & time that suits you</p>
+                <h3>Pro Accepts Your Request</h3>
+                <p>Nearby verified professionals are notified and the first one available accepts your request</p>
             </div>
             <div class="step">
                 <div class="step-num">4</div>
@@ -1086,40 +1086,113 @@
         </div>
     </section>
 
-    <!-- WORKERS -->
+    <!-- PLATFORM FEATURES & BENEFITS -->
     <section class="section section-alt" id="workers">
+        <style>
+            .benefit-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 22px;
+                max-width: 1100px;
+                margin: 0 auto;
+            }
+            .benefit-card {
+                background: var(--surface);
+                border: 1.5px solid var(--border);
+                border-radius: var(--radius);
+                padding: 32px 28px;
+                transition: var(--t);
+                box-shadow: var(--shadow-xs);
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .benefit-card:hover {
+                border-color: var(--gold-mid);
+                box-shadow: 0 10px 32px rgba(0, 0, 0, 0.08);
+                transform: translateY(-4px);
+            }
+            .benefit-icon {
+                width: 52px;
+                height: 52px;
+                border-radius: 13px;
+                background: var(--gold-lt);
+                color: var(--gold);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 22px;
+                margin-bottom: 20px;
+                border: 1px solid #f3dca0;
+                transition: var(--t);
+            }
+            .benefit-card:hover .benefit-icon {
+                background: var(--gold);
+                color: #fff;
+                border-color: var(--gold);
+            }
+            .benefit-card h3 {
+                font-size: 17px;
+                font-weight: 700;
+                color: var(--ink);
+                margin-bottom: 8px;
+                letter-spacing: -0.2px;
+            }
+            .benefit-card p {
+                font-size: 13.5px;
+                color: var(--muted);
+                line-height: 1.6;
+                margin: 0;
+            }
+            @media (max-width: 900px) {
+                .benefit-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 18px;
+                }
+            }
+            @media (max-width: 640px) {
+                .benefit-grid {
+                    grid-template-columns: 1fr;
+                    gap: 16px;
+                }
+            }
+        </style>
         <div class="sec-head">
-            <div class="sec-label">Professionals</div>
-            <h2>Top Rated Near You</h2>
-            <p>Handpicked experts, trusted by thousands of homeowners</p>
+            <div class="sec-label">Why GharFix</div>
+            <h2>Everything You Need for Effortless Home Care</h2>
+            <p>Quality service, verified experts, and peace of mind at every step</p>
         </div>
-        <div class="worker-grid">
-            <div th:each="worker : ${workers}" class="worker-card">
-                <div class="wc-top">
-                    <img class="wc-img" th:src="${worker.imageUrl}" th:alt="${worker.name}">
-                    <div class="wc-meta">
-                        <h3 th:text="${worker.name}">Worker Name</h3>
-                        <div class="wc-tag"><i class="fa-solid fa-circle-check"></i> <span th:text="${worker.service}">Service</span></div>
-                        <div class="wc-stars">
-                            <i class="fa-solid fa-star"></i>
-                            <strong th:text="${worker.rating}">4.8</strong>&nbsp;&middot;&nbsp;<span style="color:var(--muted)"><span th:text="${worker.experience}">5 years</span></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="wc-body">
-                    <div class="wc-details">
-                        <div class="wc-detail"><i class="fa-solid fa-briefcase"></i> <span th:text="${worker.experience}">5 years</span></div>
-                        <div class="wc-detail"><i class="fa-solid fa-circle-check"></i> ID Verified</div>
-                    </div>
-                    <button class="book-btn"
-                        th:data-id="${worker.id}" th:data-name="${worker.name}" th:data-service="${worker.service}" th:data-img="${worker.imageUrl}"
-                        onclick="openBooking(this.getAttribute('data-id'), this.getAttribute('data-name'), this.getAttribute('data-service'), this.getAttribute('data-img'))"
-                        th:text="|Book ${worker.service}|">
-                        Book Service
-                    </button>
-                </div>
+        <div class="benefit-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                <h3>Find Nearby Pros</h3>
+                <p>Instantly discover verified electricians, plumbers, cleaners, and more near your location.</p>
             </div>
-        </div>
+            <div class="benefit-card">
+                <div class="benefit-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h3>Book in Seconds</h3>
+                <p>Choose a service, pick a time, and confirm your booking in just a few taps.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3>Verified &amp; Trusted</h3>
+                <p>Every professional is background-checked and ID-verified before they join GharFix.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon"><i class="fa-solid fa-bell"></i></div>
+                <h3>Real-Time Updates</h3>
+                <p>Get notified the moment a professional accepts your request.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon"><i class="fa-solid fa-tag"></i></div>
+                <h3>Transparent Pricing</h3>
+                <p>See upfront rates before you book, no hidden charges.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon"><i class="fa-solid fa-star"></i></div>
+                <h3>Rated by Homeowners</h3>
+                <p>Read genuine reviews from real customers before you decide.</p>
+            </div>
         </div>
     </section>
 
@@ -1172,8 +1245,8 @@
             </div>
             <div class="pb">
                 <div style="display:flex;gap:0;margin-bottom:18px;border-radius:8px;overflow:hidden;border:1.5px solid var(--border);">
-                    <button type="button" id="loginUserToggle" onclick="setLoginType('user')" style="flex:1;padding:10px;font-size:13px;font-weight:600;font-family:inherit;border:none;cursor:pointer;background:var(--ink);color:#fff;transition:all .2s ease;">I'm a User</button>
-                    <button type="button" id="loginWorkerToggle" onclick="setLoginType('worker')" style="flex:1;padding:10px;font-size:13px;font-weight:600;font-family:inherit;border:none;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .2s ease;">I'm a Worker</button>
+                    <button type="button" style="flex:1;padding:10px;font-size:13px;font-weight:600;font-family:inherit;border:none;cursor:default;background:var(--ink);color:#fff;">I'm a User</button>
+                    <button type="button" onclick="window.location.href='/worker'" style="flex:1;padding:10px;font-size:13px;font-weight:600;font-family:inherit;border:none;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .2s ease;">I'm a Worker <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;margin-left:4px;"></i></button>
                 </div>
                 <form id="loginForm" action="/login" method="POST">
                     <div class="fg"><label>Email Address</label><input type="email" name="email"
@@ -1201,8 +1274,8 @@
             </div>
             <div class="pb">
                 <div style="display:flex;gap:0;margin-bottom:18px;border-radius:8px;overflow:hidden;border:1.5px solid var(--border);">
-                    <button type="button" id="signupUserToggle" onclick="setSignupType('user')" style="flex:1;padding:10px;font-size:13px;font-weight:600;font-family:inherit;border:none;cursor:pointer;background:var(--ink);color:#fff;transition:all .2s ease;">I'm a User</button>
-                    <button type="button" id="signupWorkerToggle" onclick="setSignupType('worker')" style="flex:1;padding:10px;font-size:13px;font-weight:600;font-family:inherit;border:none;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .2s ease;">I'm a Worker</button>
+                    <button type="button" style="flex:1;padding:10px;font-size:13px;font-weight:600;font-family:inherit;border:none;cursor:default;background:var(--ink);color:#fff;">I'm a User</button>
+                    <button type="button" onclick="window.location.href='/worker'" style="flex:1;padding:10px;font-size:13px;font-weight:600;font-family:inherit;border:none;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .2s ease;">I'm a Worker <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;margin-left:4px;"></i></button>
                 </div>
                 <!-- User signup form -->
                 <form id="userSignupForm" action="/register" method="POST">
@@ -1217,31 +1290,6 @@
                     <div class="fg"><label>Confirm Password</label><input type="password" name="confirm_password"
                             placeholder="Repeat password" required></div>
                     <button type="submit" class="pop-btn">Create Account</button>
-                </form>
-                <!-- Worker signup form (hidden by default) -->
-                <form id="workerSignupForm" action="/register/worker" method="POST" style="display:none;">
-                    <div class="fg"><label>Full Name</label><input type="text" name="name" placeholder="Your full name"
-                            required></div>
-                    <div class="fg"><label>Service Category</label>
-                        <select name="service" required>
-                            <option value="" disabled selected>Select your service</option>
-                            <option value="Electrician">Electrician</option>
-                            <option value="Plumber">Plumber</option>
-                            <option value="Carpenter">Carpenter</option>
-                            <option value="AC Service">AC Service</option>
-                            <option value="House Maid">House Maid</option>
-                            <option value="Laundry">Laundry</option>
-                            <option value="Labour">Labour</option>
-                            <option value="Contractor">Contractor</option>
-                        </select>
-                    </div>
-                    <div class="fg"><label>Phone Number</label><input type="tel" name="phone"
-                            placeholder="+91 98765 43210" required></div>
-                    <div class="fg"><label>Email Address</label><input type="email" name="email"
-                            placeholder="you@example.com" required></div>
-                    <div class="fg"><label>Password</label><input type="password" name="password"
-                            placeholder="Create a password" required></div>
-                    <button type="submit" class="pop-btn">Create Worker Account</button>
                 </form>
                 <p class="pop-foot">Already have an account? <a onclick="switchPopup('signupBox','loginBox')">Sign
                         in</a></p>
@@ -1305,37 +1353,6 @@
         function searchServices() { const q = document.getElementById('searchInput').value; if (q) document.getElementById('workers').scrollIntoView({ behavior: 'smooth' }); }
         document.querySelectorAll('.popup').forEach(p => p.addEventListener('click', e => { if (e.target === p) closePopup(p.id); }));
         setTimeout(() => { document.querySelectorAll('.flash').forEach(f => { f.style.opacity = '0'; f.style.transition = 'opacity .4s'; setTimeout(() => f.remove(), 400); }); }, 4000);
-
-        function setLoginType(type) {
-            var form = document.getElementById('loginForm');
-            var userBtn = document.getElementById('loginUserToggle');
-            var workerBtn = document.getElementById('loginWorkerToggle');
-            if (type === 'worker') {
-                form.action = '/worker/login';
-                workerBtn.style.background = 'var(--ink)'; workerBtn.style.color = '#fff';
-                userBtn.style.background = 'var(--bg)'; userBtn.style.color = 'var(--muted)';
-            } else {
-                form.action = '/login';
-                userBtn.style.background = 'var(--ink)'; userBtn.style.color = '#fff';
-                workerBtn.style.background = 'var(--bg)'; workerBtn.style.color = 'var(--muted)';
-            }
-        }
-
-        function setSignupType(type) {
-            var userForm = document.getElementById('userSignupForm');
-            var workerForm = document.getElementById('workerSignupForm');
-            var userBtn = document.getElementById('signupUserToggle');
-            var workerBtn = document.getElementById('signupWorkerToggle');
-            if (type === 'worker') {
-                userForm.style.display = 'none'; workerForm.style.display = 'block';
-                workerBtn.style.background = 'var(--ink)'; workerBtn.style.color = '#fff';
-                userBtn.style.background = 'var(--bg)'; userBtn.style.color = 'var(--muted)';
-            } else {
-                userForm.style.display = 'block'; workerForm.style.display = 'none';
-                userBtn.style.background = 'var(--ink)'; userBtn.style.color = '#fff';
-                workerBtn.style.background = 'var(--bg)'; workerBtn.style.color = 'var(--muted)';
-            }
-        }
     </script>
 
     <!-- Leaflet CSS -->

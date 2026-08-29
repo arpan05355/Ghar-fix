@@ -30,7 +30,24 @@ public class BookingService {
     }
 
     public List<Booking> getRequestedBookingsForService(String serviceName) {
-        return bookingRepository.findByStatusAndServiceNameIgnoreCase("requested", serviceName);
+        if (serviceName == null || serviceName.isBlank()) {
+            return java.util.Collections.emptyList();
+        }
+        return bookingRepository.findByStatusAndServiceNameIgnoreCase("requested", serviceName.trim());
+    }
+
+    public List<Booking> getRequestedBookingsForServices(List<String> services) {
+        if (services == null || services.isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
+        List<String> lowerServices = services.stream()
+                .filter(s -> s != null && !s.isBlank())
+                .map(s -> s.trim().toLowerCase())
+                .toList();
+        if (lowerServices.isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
+        return bookingRepository.findByStatusAndServiceNameInIgnoreCase("requested", lowerServices);
     }
 
     public List<Booking> getAcceptedBookingsForWorker(Long workerId) {

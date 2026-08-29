@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import com.gharfix.entity.ServiceEntity;
+import com.gharfix.service.ServiceCategoryService;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -22,30 +25,71 @@ public class WorkerDashboardController {
 
     private final BookingService bookingService;
     private final WorkerService workerService;
+    private final ServiceCategoryService serviceCategoryService;
 
-    public WorkerDashboardController(BookingService bookingService, WorkerService workerService) {
+    public WorkerDashboardController(BookingService bookingService,
+                                     WorkerService workerService,
+                                     ServiceCategoryService serviceCategoryService) {
         this.bookingService = bookingService;
         this.workerService = workerService;
+        this.serviceCategoryService = serviceCategoryService;
     }
 
     @GetMapping("/dashboard")
     public String dashboard(Model model,
                             @AuthenticationPrincipal WorkerUserDetails workerDetails) {
         if (workerDetails == null) {
-            return "redirect:/";
+            return "redirect:/worker";
         }
 
-        // Available requests matching this worker's service type
-        List<Booking> availableRequests = bookingService.getRequestedBookingsForService(workerDetails.getService());
+        Worker worker = workerService.findById(workerDetails.getId()).orElse(null);
+        List<String> workerServices = (worker != null && worker.getServices() != null)
+                ? worker.getServices()
+                : (workerDetails.getServices() != null ? workerDetails.getServices() : List.of());
+
+        // Available requests matching ANY of this worker's services
+        List<Booking> availableRequests = bookingService.getRequestedBookingsForServices(workerServices);
 
         // This worker's accepted jobs
         List<Booking> acceptedJobs = bookingService.getAcceptedBookingsForWorker(workerDetails.getId());
 
+        // All available platform services for the "My Services" selector
+        List<ServiceEntity> allServices = serviceCategoryService.getAllServices();
+
+        model.addAttribute("worker", worker);
         model.addAttribute("workerDetails", workerDetails);
+        model.addAttribute("workerServices", workerServices);
+        model.addAttribute("allServices", allServices);
         model.addAttribute("availableRequests", availableRequests);
         model.addAttribute("acceptedJobs", acceptedJobs);
 
         return "worker_dashboard";
+    }
+
+    @PostMapping("/dashboard/services/update")
+    public String updateServices(@RequestParam(value = "services", required = false) List<String> services,
+                                 @AuthenticationPrincipal WorkerUserDetails workerDetails,
+                                 RedirectAttributes redirectAttributes) {
+        if (workerDetails == null) {
+            return "redirect:/worker";
+        }
+
+        if (services == null || services.isEmpty()) {
+            redirectAttributes.addFlashAttribute("flash_error", "Please select at least one service category.");
+            return "redirect:/worker/dashboard";
+        }
+
+        try {
+            Worker worker = workerService.findById(workerDetails.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Worker not found"));
+            worker.setServices(services);
+            workerService.save(worker);
+            redirectAttributes.addFlashAttribute("flash_success", "Your services have been updated successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("flash_error", "Failed to update services: " + e.getMessage());
+        }
+
+        return "redirect:/worker/dashboard";
     }
 
     @PostMapping("/dashboard/requests/{bookingId}/accept")

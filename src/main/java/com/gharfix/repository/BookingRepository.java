@@ -16,5 +16,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findByStatusAndServiceNameIgnoreCase(String status, String serviceName);
 
+    @Query("SELECT b FROM Booking b WHERE LOWER(b.status) = LOWER(:status) AND LOWER(b.serviceName) IN :services ORDER BY b.bookingDate DESC, b.bookingTime DESC")
+    List<Booking> findByStatusAndServiceNameInIgnoreCase(@Param("status") String status, @Param("services") List<String> services);
+
     List<Booking> findByWorkerIdOrderByBookingDateDesc(Long workerId);
 }

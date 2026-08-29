@@ -1,8 +1,12 @@
 package com.gharfix.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class WorkerRegisterDto {
     private String name;
     private String service;
+    private List<String> services = new ArrayList<>();
     private String phone;
     private String email;
     private String password;
@@ -24,6 +28,19 @@ public class WorkerRegisterDto {
 
     public void setService(String service) {
         this.service = service;
+    }
+
+    public List<String> getServices() {
+        if ((services == null || services.isEmpty()) && service != null && !service.isBlank()) {
+            List<String> list = new ArrayList<>();
+            list.add(service);
+            return list;
+        }
+        return services != null ? services : new ArrayList<>();
+    }
+
+    public void setServices(List<String> services) {
+        this.services = services != null ? services : new ArrayList<>();
     }
 
     public String getPhone() {

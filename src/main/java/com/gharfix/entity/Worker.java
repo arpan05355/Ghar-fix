@@ -16,8 +16,13 @@ public class Worker {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(nullable = false, length = 50)
+    @Column(length = 150)
     private String service;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "worker_services", joinColumns = @JoinColumn(name = "worker_id"))
+    @Column(name = "service_name", nullable = false, length = 50)
+    private List<String> services = new ArrayList<>();
 
     @Column(nullable = false, length = 20)
     private String phone;
@@ -55,6 +60,9 @@ public class Worker {
     public Worker(String name, String service, String phone, Double rating, String imageUrl, String experience, String description) {
         this.name = name;
         this.service = service;
+        if (service != null && !service.isBlank()) {
+            this.services = new ArrayList<>(List.of(service));
+        }
         this.phone = phone;
         this.rating = rating;
         this.imageUrl = imageUrl;
@@ -80,11 +88,28 @@ public class Worker {
     }
 
     public String getService() {
-        return service;
+        if (services != null && !services.isEmpty()) {
+            return String.join(", ", services);
+        }
+        return service != null ? service : "";
     }
 
     public void setService(String service) {
         this.service = service;
+        if (service != null && !service.isBlank() && (this.services == null || this.services.isEmpty())) {
+            this.services = new ArrayList<>(List.of(service));
+        }
+    }
+
+    public List<String> getServices() {
+        return services;
+    }
+
+    public void setServices(List<String> services) {
+        this.services = services != null ? new ArrayList<>(services) : new ArrayList<>();
+        if (!this.services.isEmpty()) {
+            this.service = String.join(", ", this.services);
+        }
     }
 
     public String getPhone() {

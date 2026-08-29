@@ -13,7 +13,8 @@ import java.util.Optional;
 public interface WorkerRepository extends JpaRepository<Worker, Long> {
     List<Worker> findAllByOrderByRatingDesc();
 
-    List<Worker> findByServiceOrderByRatingDesc(String service);
+    @Query("SELECT DISTINCT w FROM Worker w LEFT JOIN w.services s WHERE LOWER(s) = LOWER(:service) OR LOWER(w.service) LIKE LOWER(CONCAT('%', :service, '%')) ORDER BY w.rating DESC")
+    List<Worker> findByServiceOrderByRatingDesc(@Param("service") String service);
 
     List<Worker> findTop6ByOrderByRatingDesc();
 
@@ -23,6 +24,6 @@ public interface WorkerRepository extends JpaRepository<Worker, Long> {
 
     boolean existsByEmail(String email);
 
-    @Query("SELECT w FROM Worker w WHERE LOWER(w.name) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(w.service) LIKE LOWER(CONCAT('%', :query, '%')) ORDER BY w.rating DESC")
+    @Query("SELECT DISTINCT w FROM Worker w LEFT JOIN w.services s WHERE LOWER(w.name) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(s) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(w.service) LIKE LOWER(CONCAT('%', :query, '%')) ORDER BY w.rating DESC")
     List<Worker> searchByNameOrService(@Param("query") String query);
 }

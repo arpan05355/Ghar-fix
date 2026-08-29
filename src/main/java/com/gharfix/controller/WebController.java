@@ -9,6 +9,7 @@ import com.gharfix.entity.User;
 import com.gharfix.entity.Worker;
 import com.gharfix.entity.Review;
 import com.gharfix.security.CustomUserDetails;
+import com.gharfix.security.WorkerUserDetails;
 import com.gharfix.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -91,6 +92,31 @@ public class WebController {
         return "index";
     }
 
+    @GetMapping("/worker")
+    public String workerLanding(Model model,
+                                @AuthenticationPrincipal Object principal,
+                                HttpSession session) {
+        if (principal instanceof WorkerUserDetails) {
+            return "redirect:/worker/dashboard";
+        }
+        List<ServiceEntity> services = serviceCategoryService.getAllServices();
+        model.addAttribute("services", services);
+
+        Object sessionFlashError = session.getAttribute("flash_error");
+        if (sessionFlashError != null) {
+            model.addAttribute("flash_error", sessionFlashError);
+            session.removeAttribute("flash_error");
+        }
+
+        Object sessionFlashSuccess = session.getAttribute("flash_success");
+        if (sessionFlashSuccess != null) {
+            model.addAttribute("flash_success", sessionFlashSuccess);
+            session.removeAttribute("flash_success");
+        }
+
+        return "worker_landing";
+    }
+
     @PostMapping("/register")
     public String register(@ModelAttribute RegisterRequestDto form,
                            RedirectAttributes redirectAttributes) {
@@ -113,14 +139,14 @@ public class WebController {
         try {
             if (workerService.existsByEmail(form.getEmail())) {
                 redirectAttributes.addFlashAttribute("flash_error", "Email already registered as a worker!");
-                return "redirect:/";
+                return "redirect:/worker";
             }
             workerService.registerWorker(form);
             redirectAttributes.addFlashAttribute("flash_success", "Worker account created! Please login.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("flash_error", "Registration failed: " + e.getMessage());
         }
-        return "redirect:/";
+        return "redirect:/worker";
     }
 
     @PostMapping("/login")
@@ -167,10 +193,10 @@ public class WebController {
             redirectAttributes.addFlashAttribute("flash_success", "Logged in as worker!");
         } catch (BadCredentialsException e) {
             redirectAttributes.addFlashAttribute("flash_error", "Invalid email or password!");
-            return "redirect:/";
+            return "redirect:/worker";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("flash_error", "Login failed: " + e.getMessage());
-            return "redirect:/";
+            return "redirect:/worker";
         }
         return "redirect:/worker/dashboard";
     }
