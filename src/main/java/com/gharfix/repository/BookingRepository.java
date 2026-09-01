@@ -20,4 +20,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findByStatusAndServiceNameInIgnoreCase(@Param("status") String status, @Param("services") List<String> services);
 
     List<Booking> findByWorkerIdOrderByBookingDateDesc(Long workerId);
+
+    @Query("SELECT b FROM Booking b LEFT JOIN FETCH b.worker WHERE b.user.id = :userId AND b.negotiationStatus = 'PENDING_USER' AND b.status = 'requested' ORDER BY b.createdAt DESC")
+    List<Booking> findPendingNegotiationsForUser(@Param("userId") Long userId);
+
+    @Query("SELECT b FROM Booking b LEFT JOIN FETCH b.user WHERE b.worker.id = :workerId AND b.negotiationStatus = 'PENDING_WORKER' AND b.status = 'requested' ORDER BY b.createdAt DESC")
+    List<Booking> findPendingNegotiationsForWorker(@Param("workerId") Long workerId);
 }

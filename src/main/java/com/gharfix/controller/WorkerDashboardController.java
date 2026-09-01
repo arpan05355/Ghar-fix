@@ -1,10 +1,13 @@
 package com.gharfix.controller;
 
+import com.gharfix.dto.NegotiationDto;
 import com.gharfix.entity.Booking;
 import com.gharfix.entity.Worker;
 import com.gharfix.security.WorkerUserDetails;
 import com.gharfix.service.BookingService;
 import com.gharfix.service.WorkerService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,9 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.gharfix.entity.ServiceEntity;
 import com.gharfix.service.ServiceCategoryService;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/worker")
@@ -121,6 +127,100 @@ public class WorkerDashboardController {
         // Client-side decline via sessionStorage — no backend state change needed.
         // This endpoint exists for graceful handling if JS is disabled.
         redirectAttributes.addFlashAttribute("flash_success", "Request declined.");
+        return "redirect:/worker/dashboard";
+    }
+
+    @GetMapping("/dashboard/pending-negotiations")
+    @ResponseBody
+    public ResponseEntity<?> getPendingNegotiations(@AuthenticationPrincipal WorkerUserDetails workerDetails) {
+        if (workerDetails == null) {
+            return ResponseEntity.ok(List.of());
+        }
+        List<Booking> list = bookingService.getPendingNegotiationsForWorker(workerDetails.getId());
+        List<NegotiationDto> dtos = list.stream().map(NegotiationDto::fromEntity).toList();
+        return ResponseEntity.ok(dtos);
+    }
+
+    @PostMapping("/dashboard/requests/{bookingId}/propose-price")
+    public Object proposePrice(@PathVariable Long bookingId,
+                               @RequestParam("price") BigDecimal price,
+                               @AuthenticationPrincipal WorkerUserDetails workerDetails,
+                               HttpServletRequest request,
+                               RedirectAttributes redirectAttributes) {
+        if (workerDetails == null) {
+            return "redirect:/worker";
+        }
+        boolean isAjax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"))
+                || (request.getHeader("Accept") != null && request.getHeader("Accept").contains("application/json"));
+        try {
+            Worker worker = workerService.findById(workerDetails.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Worker not found"));
+            Booking booking = bookingService.proposePriceByWorker(bookingId, worker, price);
+            if (isAjax) {
+               return ResponseEntity.ok(Map.of("success", true, "message", "Price proposed successfully!", "booking", NegotiationDto.fromEntity(booking)));
+            }
+            redirectAttributes.addFlashAttribute("flash_success", "Price proposed successfully!");
+        } catch (Exception e) {
+            if (isAjax) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
+            }
+            redirectAttributes.addFlashAttribute("flash_error", e.getMessage());
+        }
+        return "redirect:/worker/dashboard";
+    }
+
+    @PostMapping("/dashboard/requests/{id}/accept-price")
+    public Object acceptPrice(@PathVariable Long id,
+                              @AuthenticationPrincipal WorkerUserDetails workerDetails,
+                              HttpServletRequest request,
+                              RedirectAttributes redirectAttributes) {
+        if (workerDetails == null) {
+            return "redirect:/worker";
+        }
+        boolean isAjax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"))
+                || (request.getHeader("Accept") != null && request.getHeader("Accept").contains("application/json"));
+        try {
+            Worker worker = workerService.findById(workerDetails.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Worker not found"));
+            Booking booking = bookingService.acceptBookingPriceByWorker(id, worker);
+            if (isAjax) {
+                return ResponseEntity.ok(Map.of("success", true, "message", "Counter offer accepted!", "booking", NegotiationDto.fromEntity(booking)));
+            }
+            redirectAttributes.addFlashAttribute("flash_success", "Counter offer accepted!");
+        } catch (Exception e) {
+            if (isAjax) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
+            }
+            redirectAttributes.addFlashAttribute("flash_error", e.getMessage());
+        }
+        return "redirect:/worker/dashboard";
+    }
+
+    @PostMapping("/dashboard/requests/{id}/counter-price")
+    public Object counterPrice(@PathVariable Long id,
+                               @RequestParam("price") BigDecimal price,
+                               @AuthenticationPrincipal WorkerUserDetails workerDetails,
+                               HttpServletRequest request,
+                               RedirectAttributes redirectAttributes) {
+        if (workerDetails == null) {
+            return "redirect:/worker";
+        }
+        boolean isAjax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"))
+                || (request.getHeader("Accept") != null && request.getHeader("Accept").contains("application/json"));
+        try {
+            Worker worker = workerService.findById(workerDetails.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Worker not found"));
+            Booking booking = bookingService.counterPriceByWorker(id, worker, price);
+            if (isAjax) {
+                return ResponseEntity.ok(Map.of("success", true, "message", "Counter offer sent to customer!", "booking", NegotiationDto.fromEntity(booking)));
+            }
+            redirectAttributes.addFlashAttribute("flash_success", "Counter offer sent to customer!");
+        } catch (Exception e) {
+            if (isAjax) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
+            }
+            redirectAttributes.addFlashAttribute("flash_error", e.getMessage());
+        }
         return "redirect:/worker/dashboard";
     }
 }

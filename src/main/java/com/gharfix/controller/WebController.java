@@ -1,6 +1,7 @@
 package com.gharfix.controller;
 
 import com.gharfix.dto.BookingRequestDto;
+import com.gharfix.dto.NegotiationDto;
 import com.gharfix.dto.RegisterRequestDto;
 import com.gharfix.dto.WorkerRegisterDto;
 import com.gharfix.entity.Booking;
@@ -14,6 +15,7 @@ import com.gharfix.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,9 +31,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class WebController {
@@ -290,5 +295,49 @@ public class WebController {
         }
 
         return "service-booking";
+    }
+
+    @GetMapping("/bookings/pending-negotiations")
+    @ResponseBody
+    public ResponseEntity<?> getPendingNegotiations(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.ok(List.of());
+        }
+        List<Booking> list = bookingService.getPendingNegotiationsForUser(userDetails.getId());
+        List<NegotiationDto> dtos = list.stream().map(NegotiationDto::fromEntity).toList();
+        return ResponseEntity.ok(dtos);
+    }
+
+    @PostMapping("/bookings/{id}/accept-price")
+    @ResponseBody
+    public ResponseEntity<?> acceptPrice(@PathVariable Long id,
+                                         @AuthenticationPrincipal CustomUserDetails userDetails,
+                                         HttpServletRequest request) {
+        if (userDetails == null) {
+            return ResponseEntity.status(401).body(Map.of("success", false, "message", "Please login."));
+        }
+        try {
+            Booking booking = bookingService.acceptBookingPriceByUser(id, userDetails.getId());
+            return ResponseEntity.ok(Map.of("success", true, "message", "Price accepted successfully! Booking confirmed.", "booking", NegotiationDto.fromEntity(booking)));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/bookings/{id}/counter-price")
+    @ResponseBody
+    public ResponseEntity<?> counterPrice(@PathVariable Long id,
+                                          @RequestParam("price") BigDecimal price,
+                                          @AuthenticationPrincipal CustomUserDetails userDetails,
+                                          HttpServletRequest request) {
+        if (userDetails == null) {
+            return ResponseEntity.status(401).body(Map.of("success", false, "message", "Please login."));
+        }
+        try {
+            Booking booking = bookingService.counterPriceByUser(id, userDetails.getId(), price);
+            return ResponseEntity.ok(Map.of("success", true, "message", "Counter offer sent to professional!", "booking", NegotiationDto.fromEntity(booking)));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
+        }
     }
 }

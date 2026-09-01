@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- USER NEGOTIATION FLOATING BOTTOM BAR -->
+<div th:fragment="userNegotiationBar" id="userNegBarWrapper" style="display: none;">
+    <style>
+        .user-neg-bar {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(920px, calc(100vw - 32px));
+            background: #111111;
+            color: #ffffff;
+            border: 1.5px solid rgba(245, 158, 11, 0.4);
+            border-radius: 16px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 0 20px rgba(245, 158, 11, 0.15);
+            padding: 14px 20px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            backdrop-filter: blur(10px);
+            animation: unbSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: inherit;
+        }
+
+        @keyframes unbSlideUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .unb-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        .unb-icon-badge {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: var(--gold-mid, #f59e0b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .unb-text {
+            min-width: 0;
+        }
+
+        .unb-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .unb-subtitle {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 2px;
+        }
+
+        .unb-price-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+        }
+
+        .unb-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .unb-btn-accept {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #111111;
+            border: none;
+            border-radius: 9px;
+            padding: 8px 18px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+            font-family: inherit;
+        }
+
+        .unb-btn-accept:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
+        }
+
+        .unb-counter-form {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .unb-input-price {
+            width: 84px;
+            background: #1f2937;
+            border: 1px solid #374151;
+            color: #ffffff;
+            border-radius: 8px;
+            padding: 7px 10px;
+            font-size: 13px;
+            font-weight: 600;
+            outline: none;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .unb-input-price:focus {
+            border-color: #f59e0b;
+        }
+
+        .unb-btn-counter {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 8px;
+            padding: 7px 14px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .unb-btn-counter:hover {
+            background: rgba(255, 255, 255, 0.16);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .user-neg-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 14px 16px;
+                bottom: 14px;
+            }
+            .unb-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .unb-counter-form {
+                flex: 1;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+
+    <div class="user-neg-bar" id="userNegBar">
+        <div class="unb-info">
+            <div class="unb-icon-badge">
+                <i class="fa-solid fa-comments-dollar"></i>
+            </div>
+            <div class="unb-text">
+                <div class="unb-title">
+                    <span id="unbServiceName">Service</span>
+                    <span class="unb-price-badge" id="unbProposedPrice">₹0</span>
+                </div>
+                <div class="unb-subtitle" id="unbWorkerInfo">
+                    Professional proposed a price for your request
+                </div>
+            </div>
+        </div>
+        <div class="unb-actions">
+            <button type="button" class="unb-btn-accept" id="unbAcceptBtn" onclick="handleUserAcceptPrice()">
+                <i class="fa-solid fa-check"></i> <span id="unbAcceptBtnText">Accept</span>
+            </button>
+            <form class="unb-counter-form" id="unbCounterForm" onsubmit="handleUserCounterPrice(event)">
+                <input type="number" class="unb-input-price" id="unbCounterInput" placeholder="₹ offer" min="1" step="1" required />
+                <button type="submit" class="unb-btn-counter">
+                    <i class="fa-solid fa-arrow-turn-down-left"></i> Counter Offer
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            let activeNegotiation = null;
+
+            async function pollUserNegotiations() {
+                try {
+                    const res = await fetch('/bookings/pending-negotiations', {
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    if (res.ok) {
+                        const list = await res.json();
+                        if (Array.isArray(list) && list.length > 0) {
+                            activeNegotiation = list[0];
+                            showUserNegBar(activeNegotiation);
+                        } else {
+                            activeNegotiation = null;
+                            hideUserNegBar();
+                        }
+                    }
+                } catch (err) {
+                    console.error('Error polling user negotiations:', err);
+                }
+            }
+
+            function showUserNegBar(neg) {
+                const wrapper = document.getElementById('userNegBarWrapper');
+                if (!wrapper) return;
+
+                document.getElementById('unbServiceName').textContent = neg.serviceName || 'Service Request';
+                document.getElementById('unbProposedPrice').textContent = '₹' + neg.proposedPrice;
+                document.getElementById('unbWorkerInfo').textContent =
+                    (neg.workerName ? neg.workerName : 'Professional') + ' proposed a new price for your request';
+                document.getElementById('unbAcceptBtnText').textContent = 'Accept ₹' + neg.proposedPrice;
+
+                wrapper.style.display = 'block';
+            }
+
+            function hideUserNegBar() {
+                const wrapper = document.getElementById('userNegBarWrapper');
+                if (wrapper) wrapper.style.display = 'none';
+            }
+
+            window.handleUserAcceptPrice = async function() {
+                if (!activeNegotiation) return;
+                const btn = document.getElementById('unbAcceptBtn');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Accepting...';
+
+                try {
+                    const res = await fetch('/bookings/' + activeNegotiation.id + '/accept-price', {
+                        method: 'POST',
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        hideUserNegBar();
+                        alert('Price accepted successfully! Your booking is confirmed with ' + (activeNegotiation.workerName || 'the professional') + '.');
+                        window.location.href = '/my-bookings';
+                    } else {
+                        alert('Could not accept price: ' + (data.message || 'Please try again.'));
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fa-solid fa-check"></i> ' + (document.getElementById('unbAcceptBtnText') ? document.getElementById('unbAcceptBtnText').textContent : 'Accept');
+                    }
+                } catch (e) {
+                    alert('Error accepting price. Please try again.');
+                    btn.disabled = false;
+                }
+            };
+
+            window.handleUserCounterPrice = async function(e) {
+                if (e) e.preventDefault();
+                if (!activeNegotiation) return;
+                const input = document.getElementById('unbCounterInput');
+                const price = input.value;
+                if (!price || parseFloat(price) <= 0) return;
+
+                const form = document.getElementById('unbCounterForm');
+                const submitBtn = form.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Sending...';
+
+                try {
+                    const res = await fetch('/bookings/' + activeNegotiation.id + '/counter-price?price=' + encodeURIComponent(price), {
+                        method: 'POST',
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        hideUserNegBar();
+                        input.value = '';
+                        alert('Counter offer of ₹' + price + ' sent to professional! Waiting for response.');
+                        pollUserNegotiations();
+                    } else {
+                        alert('Could not send counter offer: ' + (data.message || 'Please try again.'));
+                    }
+                } catch (err) {
+                    alert('Error sending counter offer. Please try again.');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-solid fa-arrow-turn-down-left"></i> Counter Offer';
+                }
+            };
+
+            // Initial poll and recurring every 10 seconds
+            pollUserNegotiations();
+            setInterval(pollUserNegotiations, 10000);
+        })();
+    </script>
+</div>
+
+</body>
+</html>

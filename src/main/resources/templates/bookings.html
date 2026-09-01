@@ -230,5 +230,7 @@
             });
         },4000);
     </script>
+    <!-- User Negotiation Notification Bar -->
+    <div th:if="${currentUser != null}" th:replace="~{fragments/negotiation-bar :: userNegotiationBar}"></div>
 </body>
 </html>

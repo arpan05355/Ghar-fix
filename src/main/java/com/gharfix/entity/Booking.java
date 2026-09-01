@@ -1,6 +1,7 @@
 package com.gharfix.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -38,6 +39,15 @@ public class Booking {
 
     @Column(length = 20)
     private String status = "requested";
+
+    @Column(name = "proposed_price", precision = 10, scale = 2)
+    private BigDecimal proposedPrice;
+
+    @Column(name = "proposed_by", length = 20)
+    private String proposedBy;
+
+    @Column(name = "negotiation_status", length = 30)
+    private String negotiationStatus = "NONE";
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -128,6 +138,30 @@ public class Booking {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public BigDecimal getProposedPrice() {
+        return proposedPrice;
+    }
+
+    public void setProposedPrice(BigDecimal proposedPrice) {
+        this.proposedPrice = proposedPrice;
+    }
+
+    public String getProposedBy() {
+        return proposedBy;
+    }
+
+    public void setProposedBy(String proposedBy) {
+        this.proposedBy = proposedBy;
+    }
+
+    public String getNegotiationStatus() {
+        return negotiationStatus;
+    }
+
+    public void setNegotiationStatus(String negotiationStatus) {
+        this.negotiationStatus = negotiationStatus;
     }
 
     public LocalDateTime getCreatedAt() {

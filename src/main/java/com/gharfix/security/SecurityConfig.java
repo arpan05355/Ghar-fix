@@ -113,7 +113,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/worker", "/worker/", "/worker/login", "/register/worker").permitAll()
                 .requestMatchers("/worker/dashboard/**").hasRole("WORKER")
-                .requestMatchers("/my-bookings", "/book").hasRole("USER")
+                .requestMatchers("/bookings/**", "/my-bookings", "/book").hasRole("USER")
                 .anyRequest().permitAll()
             )
             .logout(logout -> logout

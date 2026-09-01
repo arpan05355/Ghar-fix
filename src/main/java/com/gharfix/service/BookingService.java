@@ -9,6 +9,7 @@ import com.gharfix.repository.WorkerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -100,6 +101,114 @@ public class BookingService {
 
     @Transactional
     public Booking save(Booking booking) {
+        return bookingRepository.save(booking);
+    }
+
+    public List<Booking> getPendingNegotiationsForUser(Long userId) {
+        return bookingRepository.findPendingNegotiationsForUser(userId);
+    }
+
+    public List<Booking> getPendingNegotiationsForWorker(Long workerId) {
+        return bookingRepository.findPendingNegotiationsForWorker(workerId);
+    }
+
+    @Transactional
+    public Booking proposePriceByWorker(Long bookingId, Worker worker, BigDecimal price) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found."));
+
+        if (!"requested".equals(booking.getStatus())) {
+            throw new IllegalStateException("This request is no longer open.");
+        }
+
+        if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Proposed price must be greater than zero.");
+        }
+
+        booking.setWorker(worker);
+        booking.setProposedPrice(price);
+        booking.setProposedBy("WORKER");
+        booking.setNegotiationStatus("PENDING_USER");
+        return bookingRepository.save(booking);
+    }
+
+    @Transactional
+    public Booking acceptBookingPriceByUser(Long bookingId, Long userId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found."));
+
+        if (booking.getUser() == null || !booking.getUser().getId().equals(userId)) {
+            throw new IllegalStateException("You are not authorized to accept this booking.");
+        }
+
+        if (!"requested".equals(booking.getStatus())) {
+            throw new IllegalStateException("This request was already accepted or completed.");
+        }
+
+        if (booking.getWorker() == null) {
+            throw new IllegalStateException("No worker is assigned to this proposal.");
+        }
+
+        booking.setStatus("accepted");
+        booking.setNegotiationStatus("AGREED");
+        return bookingRepository.save(booking);
+    }
+
+    @Transactional
+    public Booking counterPriceByUser(Long bookingId, Long userId, BigDecimal price) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found."));
+
+        if (booking.getUser() == null || !booking.getUser().getId().equals(userId)) {
+            throw new IllegalStateException("You are not authorized to counter this booking.");
+        }
+
+        if (!"requested".equals(booking.getStatus())) {
+            throw new IllegalStateException("This request is no longer open for negotiation.");
+        }
+
+        if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Counter price must be greater than zero.");
+        }
+
+        booking.setProposedPrice(price);
+        booking.setProposedBy("USER");
+        booking.setNegotiationStatus("PENDING_WORKER");
+        return bookingRepository.save(booking);
+    }
+
+    @Transactional
+    public Booking acceptBookingPriceByWorker(Long bookingId, Worker worker) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found."));
+
+        if (!"requested".equals(booking.getStatus())) {
+            throw new IllegalStateException("This request was already accepted by another professional.");
+        }
+
+        booking.setWorker(worker);
+        booking.setStatus("accepted");
+        booking.setNegotiationStatus("AGREED");
+        return bookingRepository.save(booking);
+    }
+
+    @Transactional
+    public Booking counterPriceByWorker(Long bookingId, Worker worker, BigDecimal price) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found."));
+
+        if (!"requested".equals(booking.getStatus())) {
+            throw new IllegalStateException("This request is no longer open for negotiation.");
+        }
+
+        if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Counter price must be greater than zero.");
+        }
+
+        booking.setWorker(worker);
+        booking.setProposedPrice(price);
+        booking.setProposedBy("WORKER");
+        booking.setNegotiationStatus("PENDING_USER");
         return bookingRepository.save(booking);
     }
 }
