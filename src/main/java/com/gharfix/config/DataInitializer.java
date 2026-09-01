@@ -51,17 +51,42 @@ public class DataInitializer implements CommandLineRunner {
     private void seedServices() {
         if (serviceRepository.count() == 0) {
             List<ServiceEntity> services = List.of(
-                    new ServiceEntity("Electrician", "fa-bolt", "Electrical repairs and installations"),
-                    new ServiceEntity("Plumber", "fa-wrench", "Pipe fitting and water repairs"),
-                    new ServiceEntity("Carpenter", "fa-hammer", "Furniture and woodwork"),
-                    new ServiceEntity("AC Service", "fa-snowflake", "Air conditioner repair and service"),
-                    new ServiceEntity("House Maid", "fa-broom", "Home cleaning services"),
-                    new ServiceEntity("Laundry", "fa-shirt", "Cloth washing and ironing"),
-                    new ServiceEntity("Labour", "fa-person-digging", "General labor work"),
-                    new ServiceEntity("Contractor", "fa-building", "Construction and renovation")
+                    new ServiceEntity("Electrician", "fa-bolt", "Electrical repairs and installations", 90, 150),
+                    new ServiceEntity("Plumber", "fa-wrench", "Pipe fitting and water repairs", 60, 180),
+                    new ServiceEntity("Carpenter", "fa-hammer", "Furniture and woodwork", 120, 160),
+                    new ServiceEntity("AC Service", "fa-snowflake", "Air conditioner repair and service", 90, 200),
+                    new ServiceEntity("House Maid", "fa-broom", "Home cleaning services", 120, 100),
+                    new ServiceEntity("Laundry", "fa-shirt", "Cloth washing and ironing", 45, 80),
+                    new ServiceEntity("Labour", "fa-person-digging", "General labor work", 180, 120),
+                    new ServiceEntity("Contractor", "fa-building", "Construction and renovation", 240, 250)
             );
             serviceRepository.saveAll(services);
             log.info("Default services seeded successfully ({} items).", services.size());
+        } else {
+            // Update existing services if price or duration is missing/zero
+            List<ServiceEntity> existing = serviceRepository.findAll();
+            for (ServiceEntity s : existing) {
+                boolean updated = false;
+                if (s.getBasePricePerHour() == null || s.getBasePricePerHour() == 0 ||
+                    s.getEstimatedDurationMinutes() == null || s.getEstimatedDurationMinutes() == 0) {
+                    switch (s.getName()) {
+                        case "Electrician" -> { s.setEstimatedDurationMinutes(90); s.setBasePricePerHour(150); }
+                        case "Plumber" -> { s.setEstimatedDurationMinutes(60); s.setBasePricePerHour(180); }
+                        case "Carpenter" -> { s.setEstimatedDurationMinutes(120); s.setBasePricePerHour(160); }
+                        case "AC Service" -> { s.setEstimatedDurationMinutes(90); s.setBasePricePerHour(200); }
+                        case "House Maid" -> { s.setEstimatedDurationMinutes(120); s.setBasePricePerHour(100); }
+                        case "Laundry" -> { s.setEstimatedDurationMinutes(45); s.setBasePricePerHour(80); }
+                        case "Labour" -> { s.setEstimatedDurationMinutes(180); s.setBasePricePerHour(120); }
+                        case "Contractor" -> { s.setEstimatedDurationMinutes(240); s.setBasePricePerHour(250); }
+                        default -> { s.setEstimatedDurationMinutes(60); s.setBasePricePerHour(150); }
+                    }
+                    updated = true;
+                }
+                if (updated) {
+                    serviceRepository.save(s);
+                    log.info("Updated service {} with duration {} min, rate ₹{}/hr", s.getName(), s.getEstimatedDurationMinutes(), s.getBasePricePerHour());
+                }
+            }
         }
     }
 

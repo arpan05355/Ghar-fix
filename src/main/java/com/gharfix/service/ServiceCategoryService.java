@@ -27,9 +27,13 @@ public class ServiceCategoryService {
         return serviceRepository.findByName(name);
     }
 
+    public Optional<ServiceEntity> findByNameIgnoreCase(String name) {
+        return serviceRepository.findByNameIgnoreCase(name);
+    }
+
     public List<ServiceDto> getAllServiceDtos() {
         return serviceRepository.findAll().stream()
-                .map(s -> new ServiceDto(s.getId(), s.getName(), s.getIcon(), s.getDescription()))
+                .map(s -> new ServiceDto(s.getId(), s.getName(), s.getIcon(), s.getDescription(), s.getBasePricePerHour(), s.getEstimatedDurationMinutes()))
                 .collect(Collectors.toList());
     }
 

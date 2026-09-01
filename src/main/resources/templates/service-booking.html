@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Book ' + ${serviceName} + ' - GharFix'">Book Service - GharFix</title>
+    <meta name="description" content="Book verified home service professionals on GharFix.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        :root {
+            --ink: #0f0f0f;
+            --ink-soft: #374151;
+            --muted: #6b7280;
+            --gold: #b8860b;
+            --gold-lt: #fef9ee;
+            --gold-mid: #f59e0b;
+            --border: #e5e7eb;
+            --surface: #ffffff;
+            --bg: #f7f7f5;
+            --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.06);
+            --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.07);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.10);
+            --radius: 14px;
+            --t: all 0.22s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── NAVBAR ── */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 48px;
+            height: 64px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--ink);
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            text-decoration: none;
+            letter-spacing: -0.4px;
+        }
+
+        .logo-mark {
+            width: 34px;
+            height: 34px;
+            background: var(--ink);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-mark i {
+            color: var(--gold-mid);
+            font-size: 15px;
+        }
+
+        .logo em {
+            font-style: normal;
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--muted);
+            font-size: 13.5px;
+            font-weight: 500;
+            transition: var(--t);
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--ink);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 20px;
+            border-radius: 9px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            font-family: inherit;
+            transition: var(--t);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--ink-soft);
+            border: 1.5px solid var(--border);
+        }
+
+        .btn-ghost:hover {
+            background: var(--bg);
+            border-color: #ccc;
+        }
+
+        .btn-gold {
+            background: var(--gold-mid);
+            color: #fff;
+        }
+
+        .btn-gold:hover {
+            background: #e08e0b;
+            transform: translateY(-1px);
+        }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .u-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--ink);
+            color: var(--gold-mid);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .u-name {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--ink-soft);
+        }
+
+        /* ── FLASH ── */
+        .flash-messages {
+            position: fixed;
+            top: 76px;
+            right: 20px;
+            z-index: 2000;
+        }
+
+        .flash {
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: var(--shadow-sm);
+            animation: slideIn .3s ease;
+        }
+
+        .flash.success {
+            background: #14532d;
+            color: #fff;
+        }
+
+        .flash.error {
+            background: #7f1d1d;
+            color: #fff;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* ── LAYOUT ── */
+        .booking-page-container {
+            max-width: 1280px;
+            width: 100%;
+            margin: 24px auto 40px;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 310px 1fr;
+            gap: 28px;
+            align-items: start;
+            flex: 1;
+        }
+
+        @media (max-width: 960px) {
+            .booking-page-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar-card {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow-xs);
+            position: sticky;
+            top: 84px;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sidebar-badge {
+            background: var(--gold-lt);
+            color: var(--gold);
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            border: 1px solid #e9c97a;
+        }
+
+        .service-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .service-nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1.5px solid transparent;
+            cursor: pointer;
+            transition: var(--t);
+            background: var(--bg);
+            color: var(--ink-soft);
+            text-decoration: none;
+        }
+
+        .service-nav-item:hover {
+            border-color: var(--gold-mid);
+            background: var(--gold-lt);
+            transform: translateX(3px);
+        }
+
+        .service-nav-item.active {
+            border-color: var(--gold-mid);
+            background: var(--gold-lt);
+            color: var(--ink);
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+        }
+
+        .sni-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sni-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            color: var(--ink-soft);
+            transition: var(--t);
+            border: 1px solid var(--border);
+        }
+
+        .service-nav-item.active .sni-icon,
+        .service-nav-item:hover .sni-icon {
+            background: var(--gold-mid);
+            color: #fff;
+            border-color: var(--gold-mid);
+        }
+
+        .sni-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .sni-arrow {
+            font-size: 12px;
+            color: var(--muted);
+            transition: var(--t);
+        }
+
+        .service-nav-item.active .sni-arrow {
+            color: var(--gold);
+            transform: translateX(2px);
+        }
+
+        /* ── MAIN BOOKING AREA ── */
+        .booking-main-card {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .bm-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 18px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 28px;
+        }
+
+        .bm-service-info {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .bm-service-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: var(--ink);
+            color: var(--gold-mid);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .bm-service-text h1 {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--ink);
+            line-height: 1.2;
+        }
+
+        .bm-service-text p {
+            font-size: 13.5px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        /* Price Estimate Pill */
+        .price-badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #fef9ee 0%, #fff7ed 100%);
+            border: 1.5px solid #e9c97a;
+            color: #92400e;
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 0 2px 10px rgba(245, 158, 11, 0.12);
+        }
+
+        .price-badge-pill i {
+            color: var(--gold-mid);
+            font-size: 15px;
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 640px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--ink-soft);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .form-group label i {
+            color: var(--gold-mid);
+            font-size: 13px;
+        }
+
+        .input-with-action {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 9px;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--ink);
+            background: #fff;
+            outline: none;
+            transition: var(--t);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--gold-mid);
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.12);
+        }
+
+        .btn-loc-detect {
+            position: absolute;
+            right: 8px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--ink-soft);
+            cursor: pointer;
+            transition: var(--t);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-loc-detect:hover {
+            background: var(--gold-lt);
+            border-color: #e9c97a;
+            color: var(--gold);
+        }
+
+        /* Map Section */
+        .map-section {
+            margin: 24px 0 28px;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .map-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #fafafa;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .map-status-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--muted);
+        }
+
+        .map-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #f59e0b;
+            box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+            animation: dotPulse 1.2s infinite;
+        }
+
+        .map-status-dot.found {
+            background: #10b981;
+            animation: none;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        @keyframes dotPulse {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5); }
+            70% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+
+        #bookingMap {
+            width: 100%;
+            height: 300px;
+            background: #e5e3df;
+        }
+
+        /* Leaflet elements */
+        .user-pulse {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #3b82f6;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
+            animation: userPulse 2s infinite;
+        }
+
+        @keyframes userPulse {
+            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5); }
+            70% { box-shadow: 0 0 0 12px rgba(59, 130, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+
+        .worker-pin {
+            width: 32px;
+            height: 32px;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border: 2.5px solid #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: markerDrop .4s cubic-bezier(.34, 1.56, .64, 1);
+        }
+
+        .worker-pin i {
+            transform: rotate(45deg);
+            color: #fff;
+            font-size: 13px;
+        }
+
+        @keyframes markerDrop {
+            from { opacity: 0; transform: rotate(-45deg) scale(0) translateY(-20px); }
+            to { opacity: 1; transform: rotate(-45deg) scale(1) translateY(0); }
+        }
+
+        .popup-worker-name {
+            font-weight: 700;
+            color: #0f0f0f;
+        }
+
+        .popup-worker-info {
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .popup-worker-badge {
+            display: inline-block;
+            margin-top: 6px;
+            background: #fef9ee;
+            color: #b8860b;
+            border: 1px solid #e9c97a;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* Price Breakdown Callout */
+        .pricing-callout {
+            background: #fafafa;
+            border: 1.5px dashed var(--border);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .pricing-callout-items {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .pci-item span {
+            display: block;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .pci-item strong {
+            font-size: 17px;
+            color: var(--ink);
+            font-weight: 700;
+        }
+
+        .pricing-total {
+            text-align: right;
+        }
+
+        .pricing-total span {
+            display: block;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .pricing-total strong {
+            font-size: 22px;
+            color: var(--gold);
+            font-weight: 800;
+        }
+
+        .pricing-note {
+            width: 100%;
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 10px;
+            justify-content: center;
+            box-shadow: 0 4px 18px rgba(245, 158, 11, 0.28);
+        }
+
+        /* ── MODALS (Sign in / Sign up) ── */
+        .popup {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 15, 15, 0.7);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .popup.active {
+            display: flex;
+        }
+
+        .popup-box {
+            background: var(--surface);
+            width: 100%;
+            max-width: 440px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            animation: slideIn .2s ease;
+        }
+
+        .ph {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 22px 24px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .ph-title h2 {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .ph-title p {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .ph-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            transition: var(--t);
+        }
+
+        .ph-close:hover {
+            background: var(--border);
+            color: var(--ink);
+        }
+
+        .pb {
+            padding: 24px;
+        }
+
+        .fg {
+            margin-bottom: 16px;
+        }
+
+        .fg label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--ink-soft);
+        }
+
+        .fg input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--ink);
+            outline: none;
+            transition: var(--t);
+        }
+
+        .fg input:focus {
+            border-color: var(--gold-mid);
+        }
+
+        .pop-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--ink);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: var(--t);
+            margin-top: 8px;
+        }
+
+        .pop-btn:hover {
+            background: #222;
+        }
+
+        .pop-foot {
+            text-align: center;
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 16px;
+        }
+
+        .pop-foot a {
+            color: var(--gold);
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--ink);
+            color: #fff;
+            padding: 30px 48px;
+            text-align: center;
+            margin-top: auto;
+            border-top: 1px solid #222;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: var(--t);
+        }
+
+        .footer-links a:hover {
+            color: var(--gold-mid);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- FLASH MESSAGES -->
+    <div class="flash-messages">
+        <div th:if="${flash_success}" class="flash success" th:text="${flash_success}"></div>
+        <div th:if="${flash_error}" class="flash error" th:text="${flash_error}"></div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="/" class="logo">
+            <div class="logo-mark"><i class="fa-solid fa-wrench"></i></div>
+            Ghar<em>Fix</em>
+        </a>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/#services" class="active">Services</a></li>
+            <li><a href="/#workers">Professionals</a></li>
+            <li><a href="/#reviews">Reviews</a></li>
+            <li th:if="${currentUser != null}">
+                <a href="/my-bookings">My Bookings</a>
+            </li>
+        </ul>
+        <div class="nav-right">
+            <div th:if="${currentUser != null}" class="user-chip">
+                <div class="u-avatar" th:text="${currentUser.name != null && !currentUser.name.isEmpty() ? currentUser.name.substring(0,1).toUpperCase() : 'U'}">U</div>
+                <span class="u-name" th:text="${currentUser.name != null ? currentUser.name.split(' ')[0] : 'User'}">User</span>
+                <a href="/logout" class="btn btn-ghost">Logout</a>
+            </div>
+            <div th:if="${currentUser == null}" style="display:contents;">
+                <button class="btn btn-ghost" onclick="openPopup('loginBox')">Sign In</button>
+                <button class="btn btn-gold" onclick="openPopup('signupBox')">Get Started</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- BOOKING PAGE WRAPPER -->
+    <div class="booking-page-container">
+        <!-- LEFT SIDEBAR -->
+        <aside class="sidebar-card">
+            <div class="sidebar-header">
+                <div class="sidebar-title">
+                    <i class="fa-solid fa-sliders"></i> All Services
+                </div>
+                <span class="sidebar-badge" th:text="${#lists.size(services)} + ' available'">8 available</span>
+            </div>
+            <ul class="service-list" id="serviceList">
+                <li th:each="svc : ${services}">
+                    <div class="service-nav-item"
+                         th:classappend="${svc.name.equalsIgnoreCase(serviceName)} ? 'active' : ''"
+                         th:data-name="${svc.name}"
+                         th:data-icon="${svc.icon}"
+                         th:data-duration="${svc.estimatedDurationMinutes != null ? svc.estimatedDurationMinutes : 60}"
+                         th:data-price="${svc.basePricePerHour != null ? svc.basePricePerHour : 150}"
+                         onclick="switchService(this.getAttribute('data-name'))">
+                        <div class="sni-left">
+                            <div class="sni-icon">
+                                <i class="fa-solid" th:classappend="${svc.icon != null ? svc.icon : 'fa-star'}"></i>
+                            </div>
+                            <span class="sni-name" th:text="${svc.name}">Service Name</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right sni-arrow"></i>
+                    </div>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- MAIN AREA -->
+        <main class="booking-main-card">
+            <div class="bm-top">
+                <div class="bm-service-info">
+                    <div class="bm-service-icon" id="headerServiceIcon">
+                        <i class="fa-solid" th:classappend="${serviceIcon != null ? serviceIcon : 'fa-bolt'}"></i>
+                    </div>
+                    <div class="bm-service-text">
+                        <h1 id="headerServiceName" th:text="'Book ' + ${serviceName}">Book Electrician</h1>
+                        <p id="headerServiceDesc" th:text="${selectedService != null && selectedService.description != null ? selectedService.description : 'Verified professionals with upfront transparent pricing.'}">Professional home service verified by GharFix</p>
+                    </div>
+                </div>
+
+                <!-- Price pill -->
+                <div class="price-badge-pill" id="headerPricePill">
+                    <i class="fa-solid fa-tag"></i>
+                    <span id="headerPriceEstimateText" th:text="'Estimated: ₹' + ${estimatedPrice} + ' for ~' + ${estimatedDurationMinutes} + ' mins'">Estimated: ₹225 for ~90 mins</span>
+                </div>
+            </div>
+
+            <!-- Booking Form -->
+            <form action="/book" method="POST" id="bookingForm" onsubmit="return handleFormSubmit(event)">
+                <!-- Hidden inputs -->
+                <input type="hidden" name="service" id="bookingServiceInput" th:value="${serviceName}">
+                <input type="hidden" name="worker_id" id="bookingWorkerId" value="">
+
+                <div class="form-grid">
+                    <!-- Date Picker -->
+                    <div class="form-group">
+                        <label for="bookingDate"><i class="fa-solid fa-calendar-days"></i> Preferred Date</label>
+                        <input type="date" name="date" id="bookingDate" required>
+                    </div>
+
+                    <!-- Time Picker -->
+                    <div class="form-group">
+                        <label for="bookingTime"><i class="fa-solid fa-clock"></i> Preferred Time Slot</label>
+                        <input type="time" name="time" id="bookingTime" value="10:00" required>
+                    </div>
+
+                    <!-- City -->
+                    <div class="form-group">
+                        <label for="bookingCity"><i class="fa-solid fa-city"></i> City</label>
+                        <input type="text" name="city" id="bookingCity" placeholder="e.g. New Delhi" value="New Delhi" required>
+                    </div>
+
+                    <!-- Address with detect location button -->
+                    <div class="form-group">
+                        <label for="bookingAddress"><i class="fa-solid fa-location-dot"></i> Street Address</label>
+                        <div class="input-with-action">
+                            <input type="text" name="address" id="bookingAddress" placeholder="House no., street, area" required>
+                            <button type="button" class="btn-loc-detect" onclick="requestCurrentLocation()">
+                                <i class="fa-solid fa-crosshairs"></i> Detect
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leaflet Map Section -->
+                <div class="map-section">
+                    <div class="map-header">
+                        <div class="map-status-row">
+                            <span class="map-status-dot" id="bookingMapStatusDot"></span>
+                            <span id="bookingMapStatusText">Searching nearby professionals...</span>
+                        </div>
+                        <div style="font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px;">
+                            <i class="fa-solid fa-shield-halved" style="color: var(--gold-mid);"></i> ID Verified
+                        </div>
+                    </div>
+                    <div id="bookingMap"></div>
+                </div>
+
+                <!-- Pricing Summary Breakdown -->
+                <div class="pricing-callout">
+                    <div class="pricing-callout-items">
+                        <div class="pci-item">
+                            <span>Base Rate</span>
+                            <strong id="summaryBaseRate" th:text="'₹' + ${basePricePerHour} + '/hr'">₹150/hr</strong>
+                        </div>
+                        <div class="pci-item">
+                            <span>Est. Duration</span>
+                            <strong id="summaryDuration" th:text="'~' + ${estimatedDurationMinutes} + ' mins'">~90 mins</strong>
+                        </div>
+                    </div>
+                    <div class="pricing-total">
+                        <span>Total Estimated</span>
+                        <strong id="summaryTotalPrice" th:text="'₹' + ${estimatedPrice}">₹225</strong>
+                    </div>
+                    <div class="pricing-note">
+                        <i class="fa-solid fa-circle-info" style="color: var(--gold);"></i>
+                        Final amount is calculated at actual completion time. No hidden convenience fees.
+                    </div>
+                </div>
+
+                <!-- Confirm Booking Button -->
+                <button type="submit" class="btn btn-gold submit-btn" id="confirmBookingBtn">
+                    <i class="fa-solid fa-circle-check"></i> Confirm Booking
+                </button>
+            </form>
+        </main>
+    </div>
+
+    <!-- LOGIN POPUP -->
+    <div class="popup" id="loginBox">
+        <div class="popup-box">
+            <div class="ph">
+                <div class="ph-title">
+                    <h2>Welcome back</h2>
+                    <p>Sign in to your GharFix account to book</p>
+                </div>
+                <button class="ph-close" onclick="closePopup('loginBox')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="pb">
+                <form id="loginForm" action="/login" method="POST">
+                    <div class="fg"><label>Email Address</label><input type="email" name="email" placeholder="you@example.com" required></div>
+                    <div class="fg"><label>Password</label><input type="password" name="password" placeholder="Your password" required></div>
+                    <button type="submit" class="pop-btn">Sign In & Continue</button>
+                </form>
+                <p class="pop-foot">Don't have an account? <a onclick="switchPopup('loginBox','signupBox')">Create one free</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIGNUP POPUP -->
+    <div class="popup" id="signupBox">
+        <div class="popup-box">
+            <div class="ph">
+                <div class="ph-title">
+                    <h2>Create Account</h2>
+                    <p>Join thousands of happy homeowners</p>
+                </div>
+                <button class="ph-close" onclick="closePopup('signupBox')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="pb">
+                <form id="userSignupForm" action="/register" method="POST">
+                    <div class="fg"><label>Full Name</label><input type="text" name="name" placeholder="Your full name" required></div>
+                    <div class="fg"><label>Email Address</label><input type="email" name="email" placeholder="you@example.com" required></div>
+                    <div class="fg"><label>Phone Number</label><input type="tel" name="phone" placeholder="+91 98765 43210" required></div>
+                    <div class="fg"><label>Password</label><input type="password" name="password" placeholder="Create a password" required></div>
+                    <div class="fg"><label>Confirm Password</label><input type="password" name="confirm_password" placeholder="Repeat password" required></div>
+                    <button type="submit" class="pop-btn">Create Account</button>
+                </form>
+                <p class="pop-foot">Already have an account? <a onclick="switchPopup('signupBox','loginBox')">Sign in</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div>&copy; 2026 GharFix Technologies Inc. All rights reserved.</div>
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/#services">Services</a>
+                <a href="/#workers">Professionals</a>
+                <a href="/#reviews">Reviews</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script th:inline="javascript">
+        /* Global State & Service Registry */
+        let currentServiceName = /*[[${serviceName}]]*/ 'Electrician';
+        let currentServiceIcon = /*[[${serviceIcon}]]*/ 'fa-bolt';
+        let currentDuration = /*[[${estimatedDurationMinutes}]]*/ 90;
+        let currentPricePerHour = /*[[${basePricePerHour}]]*/ 150;
+        const isAuthenticated = /*[[${currentUser != null}]]*/ false;
+
+        let _bMap = null;
+        let _bMapTimers = [];
+        let _currentLat = 28.6139;
+        let _currentLng = 77.2090;
+
+        const WORKER_DATA = [
+            { name: 'Ramesh Kumar', dist: '0.4 km', rating: '4.5★' },
+            { name: 'Suresh Patel', dist: '0.7 km', rating: '4.7★' },
+            { name: 'Amit Sharma', dist: '1.1 km', rating: '4.6★' },
+            { name: 'Raj Malhotra', dist: '1.4 km', rating: '4.8★' },
+            { name: 'Priya Singh', dist: '0.9 km', rating: '4.9★' },
+            { name: 'Vikram Joshi', dist: '1.8 km', rating: '4.4★' },
+        ];
+
+        /* Init Date picker min date to today */
+        document.addEventListener('DOMContentLoaded', () => {
+            const todayStr = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('bookingDate');
+            if (dateInput) {
+                dateInput.min = todayStr;
+                dateInput.value = todayStr;
+            }
+
+            // Initialize map with geolocation or fallback
+            requestCurrentLocation();
+
+            // Set up popstate listener for back/forward navigation
+            window.addEventListener('popstate', (e) => {
+                const pathParts = window.location.pathname.split('/');
+                if (pathParts.length >= 3 && pathParts[1] === 'book') {
+                    const svcName = decodeURIComponent(pathParts[2]);
+                    switchService(svcName, false);
+                }
+            });
+        });
+
+        /* Switch active service category */
+        async function switchService(targetServiceName, pushState = true) {
+            if (!targetServiceName) return;
+
+            // Highlight sidebar item immediately
+            const items = document.querySelectorAll('.service-nav-item');
+            let foundItem = null;
+            items.forEach(el => {
+                const itemService = el.getAttribute('data-name');
+                if (itemService.toLowerCase() === targetServiceName.toLowerCase()) {
+                    el.classList.add('active');
+                    foundItem = el;
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+
+            // Fetch service details from /api/services to ensure fresh state
+            let sData = null;
+            try {
+                const res = await fetch('/api/services');
+                if (res.ok) {
+                    const list = await res.json();
+                    sData = list.find(s => s.name.toLowerCase() === targetServiceName.toLowerCase());
+                }
+            } catch (err) {
+                console.warn('Could not fetch /api/services, falling back to DOM metadata', err);
+            }
+
+            if (!sData && foundItem) {
+                sData = {
+                    name: foundItem.getAttribute('data-name'),
+                    icon: foundItem.getAttribute('data-icon'),
+                    estimatedDurationMinutes: parseInt(foundItem.getAttribute('data-duration') || '60', 10),
+                    basePricePerHour: parseInt(foundItem.getAttribute('data-price') || '150', 10),
+                    description: 'Professional ' + foundItem.getAttribute('data-name') + ' services by verified experts.'
+                };
+            }
+
+            if (sData) {
+                currentServiceName = sData.name;
+                currentServiceIcon = sData.icon || 'fa-bolt';
+                currentDuration = sData.estimatedDurationMinutes || 60;
+                currentPricePerHour = sData.basePricePerHour || 150;
+
+                // Price formula: (basePricePerHour / 60) * estimatedDurationMinutes
+                const estimatedTotal = Math.round((currentPricePerHour / 60.0) * currentDuration);
+
+                // Update DOM elements
+                document.getElementById('bookingServiceInput').value = currentServiceName;
+                document.getElementById('headerServiceName').textContent = 'Book ' + currentServiceName;
+                if (sData.description) {
+                    document.getElementById('headerServiceDesc').textContent = sData.description;
+                }
+                document.title = 'Book ' + currentServiceName + ' - GharFix';
+
+                // Update service icon
+                const iconContainer = document.getElementById('headerServiceIcon');
+                iconContainer.innerHTML = '<i class="fa-solid ' + (currentServiceIcon.startsWith('fa-') ? currentServiceIcon : ('fa-' + currentServiceIcon)) + '"></i>';
+
+                // Update price estimate text
+                const pillText = `Estimated: ₹${estimatedTotal} for ~${currentDuration} mins`;
+                document.getElementById('headerPriceEstimateText').textContent = pillText;
+
+                // Update pricing summary breakdown
+                document.getElementById('summaryBaseRate').textContent = `₹${currentPricePerHour}/hr`;
+                document.getElementById('summaryDuration').textContent = `~${currentDuration} mins`;
+                document.getElementById('summaryTotalPrice').textContent = `₹${estimatedTotal}`;
+
+                // Update browser URL via history.pushState
+                if (pushState) {
+                    const newUrl = '/book/' + encodeURIComponent(currentServiceName);
+                    history.pushState({ service: currentServiceName }, '', newUrl);
+                }
+
+                // Refresh map markers with new service label
+                renderMapMarkers(_currentLat, _currentLng, currentServiceName);
+            }
+        }
+
+        /* Map & Geolocation Handling */
+        function requestCurrentLocation() {
+            const statusText = document.getElementById('bookingMapStatusText');
+            if (statusText) statusText.textContent = 'Detecting your location...';
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    pos => {
+                        _currentLat = pos.coords.latitude;
+                        _currentLng = pos.coords.longitude;
+                        initBookingMap(_currentLat, _currentLng, currentServiceName);
+                    },
+                    () => {
+                        // Fallback to New Delhi default
+                        initBookingMap(_currentLat, _currentLng, currentServiceName);
+                    },
+                    { timeout: 6000 }
+                );
+            } else {
+                initBookingMap(_currentLat, _currentLng, currentServiceName);
+            }
+        }
+
+        function initBookingMap(lat, lng, serviceName) {
+            if (_bMap) {
+                _bMap.remove();
+                _bMap = null;
+            }
+
+            const mapEl = document.getElementById('bookingMap');
+            if (!mapEl) return;
+
+            _bMap = L.map('bookingMap', {
+                zoomControl: true,
+                attributionControl: true
+            }).setView([lat, lng], 14);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                maxZoom: 19
+            }).addTo(_bMap);
+
+            renderMapMarkers(lat, lng, serviceName);
+        }
+
+        function renderMapMarkers(lat, lng, serviceName) {
+            if (!_bMap) return;
+
+            // Clear previous timers
+            _bMapTimers.forEach(clearTimeout);
+            _bMapTimers = [];
+
+            // Clear markers except tiles
+            _bMap.eachLayer(layer => {
+                if (layer instanceof L.Marker) {
+                    _bMap.removeLayer(layer);
+                }
+            });
+
+            // User "You are here" marker
+            const userIcon = L.divIcon({
+                html: '<div class="user-pulse"></div>',
+                className: '',
+                iconSize: [18, 18],
+                iconAnchor: [9, 9]
+            });
+
+            L.marker([lat, lng], { icon: userIcon })
+                .addTo(_bMap)
+                .bindPopup('<span style="font-weight:700;font-size:13px">📍 Your Location</span>')
+                .openPopup();
+
+            // Scatter worker markers around user
+            const offsets = [
+                [-0.003, 0.005], [0.004, -0.003], [-0.005, -0.006],
+                [0.006, 0.004], [-0.002, 0.008], [0.007, -0.005]
+            ];
+            const count = 4 + Math.floor(Math.random() * 3);
+            const workerIcon = L.divIcon({
+                html: '<div class="worker-pin"><i class="fa-solid fa-person"></i></div>',
+                className: '',
+                iconSize: [32, 32],
+                iconAnchor: [16, 32]
+            });
+
+            const statusDot = document.getElementById('bookingMapStatusDot');
+            const statusText = document.getElementById('bookingMapStatusText');
+            if (statusDot) statusDot.className = 'map-status-dot';
+            if (statusText) statusText.textContent = `Finding nearby ${serviceName} pros...`;
+
+            offsets.slice(0, count).forEach((off, i) => {
+                const t = setTimeout(() => {
+                    if (!_bMap) return;
+                    const wLat = lat + off[0] + (Math.random() - 0.5) * 0.002;
+                    const wLng = lng + off[1] + (Math.random() - 0.5) * 0.002;
+                    const w = WORKER_DATA[i % WORKER_DATA.length];
+
+                    L.marker([wLat, wLng], { icon: workerIcon })
+                        .addTo(_bMap)
+                        .bindPopup(`
+                            <div class="popup-worker-name">${w.name}</div>
+                            <div class="popup-worker-info">${w.dist} away · ${w.rating}</div>
+                            <div class="popup-worker-badge">${serviceName}</div>
+                        `);
+
+                    if (i === count - 1) {
+                        const t2 = setTimeout(() => {
+                            if (statusDot) statusDot.className = 'map-status-dot found';
+                            if (statusText) statusText.textContent = `${count} verified ${serviceName} pros nearby`;
+                        }, 500);
+                        _bMapTimers.push(t2);
+                    }
+                }, 400 + i * 350);
+                _bMapTimers.push(t);
+            });
+        }
+
+        /* Form submission handler */
+        function handleFormSubmit(e) {
+            if (!isAuthenticated) {
+                // If not logged in, prompt user to log in
+                openPopup('loginBox');
+                return false;
+            }
+            return true;
+        }
+
+        /* Modal Helpers */
+        function openPopup(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closePopup(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        function switchPopup(a, b) {
+            closePopup(a);
+            setTimeout(() => openPopup(b), 180);
+        }
+
+        // Close modal on outside click
+        document.querySelectorAll('.popup').forEach(p => {
+            p.addEventListener('click', e => {
+                if (e.target === p) closePopup(p.id);
+            });
+        });
+
+        // Auto-dismiss flash messages
+        setTimeout(() => {
+            document.querySelectorAll('.flash').forEach(f => {
+                f.style.opacity = '0';
+                f.style.transition = 'opacity .4s';
+                setTimeout(() => f.remove(), 400);
+            });
+        }, 4000);
+    </script>
+</body>
+</html>

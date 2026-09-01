@@ -26,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -240,5 +241,54 @@ public class WebController {
         model.addAttribute("currentUser", userDetails);
 
         return "bookings";
+    }
+
+    @GetMapping({"/book", "/book/{serviceName}"})
+    public String bookService(@PathVariable(value = "serviceName", required = false) String serviceName,
+                              Model model,
+                              @AuthenticationPrincipal Object principal,
+                              HttpSession session) {
+        List<ServiceEntity> services = serviceCategoryService.getAllServices();
+        model.addAttribute("services", services);
+
+        ServiceEntity selectedService = null;
+        if (serviceName != null && !serviceName.isBlank()) {
+            selectedService = serviceCategoryService.findByNameIgnoreCase(serviceName.trim())
+                    .orElse(null);
+        }
+        if (selectedService == null && !services.isEmpty()) {
+            selectedService = services.get(0);
+        }
+
+        model.addAttribute("selectedService", selectedService);
+        if (selectedService != null) {
+            model.addAttribute("serviceName", selectedService.getName());
+            model.addAttribute("serviceIcon", selectedService.getIcon());
+            model.addAttribute("basePricePerHour", selectedService.getBasePricePerHour());
+            model.addAttribute("estimatedDurationMinutes", selectedService.getEstimatedDurationMinutes());
+
+            int duration = selectedService.getEstimatedDurationMinutes() != null ? selectedService.getEstimatedDurationMinutes() : 60;
+            int pricePerHour = selectedService.getBasePricePerHour() != null ? selectedService.getBasePricePerHour() : 150;
+            int estimatedPrice = Math.round(((float) pricePerHour / 60.0f) * duration);
+            model.addAttribute("estimatedPrice", estimatedPrice);
+        }
+
+        if (principal instanceof CustomUserDetails) {
+            model.addAttribute("currentUser", principal);
+        }
+
+        Object sessionFlashError = session.getAttribute("flash_error");
+        if (sessionFlashError != null) {
+            model.addAttribute("flash_error", sessionFlashError);
+            session.removeAttribute("flash_error");
+        }
+
+        Object sessionFlashSuccess = session.getAttribute("flash_success");
+        if (sessionFlashSuccess != null) {
+            model.addAttribute("flash_success", sessionFlashSuccess);
+            session.removeAttribute("flash_success");
+        }
+
+        return "service-booking";
     }
 }

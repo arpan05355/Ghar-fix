@@ -207,12 +207,15 @@
         .user-chip {
             display: flex;
             align-items: center;
-            gap: 10px;
+        }
+
+        .user-menu-wrap {
+            position: relative;
         }
 
         .u-avatar {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: var(--ink);
             color: var(--gold-mid);
@@ -220,13 +223,110 @@
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 12px;
+            font-size: 13px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--t);
+            font-family: inherit;
+            padding: 0;
+            user-select: none;
         }
 
-        .u-name {
-            font-weight: 600;
-            font-size: 13px;
+        .u-avatar:hover {
+            border-color: var(--gold-mid);
+            transform: scale(1.05);
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 220px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+            padding: 6px 0;
+            display: none;
+            flex-direction: column;
+            z-index: 200;
+            animation: slideIn .2s ease;
+        }
+
+        .user-dropdown.active {
+            display: flex;
+        }
+
+        .ud-header {
+            padding: 10px 16px 8px;
+        }
+
+        .ud-name {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--ink);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ud-email {
+            font-size: 11.5px;
+            color: var(--muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 2px;
+        }
+
+        .ud-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+
+        .ud-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .ud-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 16px;
             color: var(--ink-soft);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: var(--t);
+        }
+
+        .ud-item i {
+            font-size: 13px;
+            width: 16px;
+            color: var(--muted);
+            transition: var(--t);
+        }
+
+        .ud-item:hover {
+            background: var(--gold-lt);
+            color: var(--gold);
+        }
+
+        .ud-item:hover i {
+            color: var(--gold);
+        }
+
+        .ud-item.ud-logout:hover {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .ud-item.ud-logout:hover i {
+            color: #dc2626;
         }
 
         /* â”€â”€ HERO â”€â”€ */
@@ -988,10 +1088,31 @@
             </li>
         </ul>
         <div class="nav-right">
-            <div th:if="${currentUser != null}" class="user-chip">
-                <div class="u-avatar" th:text="${currentUser.name != null && !currentUser.name.isEmpty() ? currentUser.name.substring(0,1).toUpperCase() : 'U'}">U</div>
-                <span class="u-name" th:text="${currentUser.name != null ? currentUser.name.split(' ')[0] : 'User'}">User</span>
-                <a href="/logout" class="btn btn-ghost">Logout</a>
+            <div th:if="${currentUser != null}" class="user-chip user-menu-wrap">
+                <button type="button" class="u-avatar" id="userAvatarBtn" onclick="toggleUserDropdown(event)" aria-label="User profile menu">
+                    <span th:text="${currentUser.name != null && !currentUser.name.isEmpty() ? currentUser.name.substring(0,1).toUpperCase() : 'U'}">U</span>
+                </button>
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="ud-header">
+                        <div class="ud-name" th:text="${currentUser.name}">User Name</div>
+                        <div class="ud-email" th:text="${currentUser.email}">user@example.com</div>
+                    </div>
+                    <div class="ud-divider"></div>
+                    <ul class="ud-list">
+                        <li>
+                            <a href="/my-bookings" class="ud-item">
+                                <i class="fa-solid fa-calendar-check"></i>
+                                <span>My Bookings</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/logout" class="ud-item ud-logout">
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div th:if="${currentUser == null}" style="display:contents;">
                 <button class="btn btn-ghost" onclick="openPopup('loginBox')">Sign In</button>
@@ -1048,7 +1169,7 @@
             <p>Choose from our most-booked home service categories</p>
         </div>
         <div class="service-grid">
-            <div th:each="service : ${services}" class="svc-card" th:data-service="${service.name}" onclick="selectService(this.getAttribute('data-service'))">
+            <div th:each="service : ${services}" class="svc-card" th:data-service="${service.name}" onclick="window.open('/book/' + encodeURIComponent(this.getAttribute('data-service')), '_blank')">
                 <div class="svc-icon"><i class="fa-solid" th:classappend="${service.icon != null ? service.icon : 'fa-star'}"></i></div>
                 <h3 th:text="${service.name}">Service Name</h3>
             </div>
@@ -1352,6 +1473,20 @@
         function selectService(n) { showRadar(n); }
         function searchServices() { const q = document.getElementById('searchInput').value; if (q) document.getElementById('workers').scrollIntoView({ behavior: 'smooth' }); }
         document.querySelectorAll('.popup').forEach(p => p.addEventListener('click', e => { if (e.target === p) closePopup(p.id); }));
+        function toggleUserDropdown(e) {
+            if (e) e.stopPropagation();
+            const ud = document.getElementById('userDropdown');
+            if (ud) ud.classList.toggle('active');
+        }
+        document.addEventListener('click', function(e) {
+            const ud = document.getElementById('userDropdown');
+            if (ud && ud.classList.contains('active')) {
+                const wrap = document.querySelector('.user-menu-wrap');
+                if (wrap && !wrap.contains(e.target)) {
+                    ud.classList.remove('active');
+                }
+            }
+        });
         setTimeout(() => { document.querySelectorAll('.flash').forEach(f => { f.style.opacity = '0'; f.style.transition = 'opacity .4s'; setTimeout(() => f.remove(), 400); }); }, 4000);
     </script>
 

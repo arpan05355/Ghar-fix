@@ -19,6 +19,12 @@ public class ServiceEntity {
     @Column(length = 200)
     private String description;
 
+    @Column(name = "estimated_duration_minutes")
+    private Integer estimatedDurationMinutes = 60;
+
+    @Column(name = "base_price_per_hour")
+    private Integer basePricePerHour = 150;
+
     public ServiceEntity() {
     }
 
@@ -26,6 +32,14 @@ public class ServiceEntity {
         this.name = name;
         this.icon = icon;
         this.description = description;
+    }
+
+    public ServiceEntity(String name, String icon, String description, Integer estimatedDurationMinutes, Integer basePricePerHour) {
+        this.name = name;
+        this.icon = icon;
+        this.description = description;
+        this.estimatedDurationMinutes = estimatedDurationMinutes;
+        this.basePricePerHour = basePricePerHour;
     }
 
     public Long getId() {
@@ -58,5 +72,21 @@ public class ServiceEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getEstimatedDurationMinutes() {
+        return estimatedDurationMinutes;
+    }
+
+    public void setEstimatedDurationMinutes(Integer estimatedDurationMinutes) {
+        this.estimatedDurationMinutes = estimatedDurationMinutes;
+    }
+
+    public Integer getBasePricePerHour() {
+        return basePricePerHour;
+    }
+
+    public void setBasePricePerHour(Integer basePricePerHour) {
+        this.basePricePerHour = basePricePerHour;
     }
 }
