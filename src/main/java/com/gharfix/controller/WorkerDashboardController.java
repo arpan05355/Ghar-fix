@@ -54,7 +54,7 @@ public class WorkerDashboardController {
                 : (workerDetails.getServices() != null ? workerDetails.getServices() : List.of());
 
         // Available requests matching ANY of this worker's services
-        List<Booking> availableRequests = bookingService.getRequestedBookingsForServices(workerServices);
+        List<Booking> availableRequests = bookingService.getRequestedBookingsForServices(workerServices, workerDetails.getId());
 
         // This worker's accepted jobs
         List<Booking> acceptedJobs = bookingService.getAcceptedBookingsForWorker(workerDetails.getId());
@@ -160,6 +160,11 @@ public class WorkerDashboardController {
                return ResponseEntity.ok(Map.of("success", true, "message", "Price proposed successfully!", "booking", NegotiationDto.fromEntity(booking)));
             }
             redirectAttributes.addFlashAttribute("flash_success", "Price proposed successfully!");
+        } catch (IllegalStateException e) {
+            if (isAjax) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
+            }
+            redirectAttributes.addFlashAttribute("flash_error", e.getMessage());
         } catch (Exception e) {
             if (isAjax) {
                 return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
@@ -187,6 +192,11 @@ public class WorkerDashboardController {
                 return ResponseEntity.ok(Map.of("success", true, "message", "Counter offer accepted!", "booking", NegotiationDto.fromEntity(booking)));
             }
             redirectAttributes.addFlashAttribute("flash_success", "Counter offer accepted!");
+        } catch (IllegalStateException e) {
+            if (isAjax) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
+            }
+            redirectAttributes.addFlashAttribute("flash_error", e.getMessage());
         } catch (Exception e) {
             if (isAjax) {
                 return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
@@ -215,6 +225,11 @@ public class WorkerDashboardController {
                 return ResponseEntity.ok(Map.of("success", true, "message", "Counter offer sent to customer!", "booking", NegotiationDto.fromEntity(booking)));
             }
             redirectAttributes.addFlashAttribute("flash_success", "Counter offer sent to customer!");
+        } catch (IllegalStateException e) {
+            if (isAjax) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
+            }
+            redirectAttributes.addFlashAttribute("flash_error", e.getMessage());
         } catch (Exception e) {
             if (isAjax) {
                 return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));

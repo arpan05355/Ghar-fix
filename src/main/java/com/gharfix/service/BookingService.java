@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
+@SuppressWarnings("null")
 public class BookingService {
 
     private final BookingRepository bookingRepository;
@@ -31,13 +32,26 @@ public class BookingService {
     }
 
     public List<Booking> getRequestedBookingsForService(String serviceName) {
+        return getRequestedBookingsForService(serviceName, null);
+    }
+
+    public List<Booking> getRequestedBookingsForService(String serviceName, Long workerId) {
         if (serviceName == null || serviceName.isBlank()) {
             return java.util.Collections.emptyList();
         }
-        return bookingRepository.findByStatusAndServiceNameIgnoreCase("requested", serviceName.trim());
+        List<Booking> bookings = bookingRepository.findByStatusAndServiceNameIgnoreCase("requested", serviceName.trim());
+        return bookings.stream()
+                .filter(b -> b.getWorker() == null
+                        || (workerId != null && b.getWorker().getId().equals(workerId))
+                        || (b.getNegotiationStatus() != null && "NONE".equalsIgnoreCase(b.getNegotiationStatus())))
+                .toList();
     }
 
     public List<Booking> getRequestedBookingsForServices(List<String> services) {
+        return getRequestedBookingsForServices(services, null);
+    }
+
+    public List<Booking> getRequestedBookingsForServices(List<String> services, Long workerId) {
         if (services == null || services.isEmpty()) {
             return java.util.Collections.emptyList();
         }
@@ -48,7 +62,12 @@ public class BookingService {
         if (lowerServices.isEmpty()) {
             return java.util.Collections.emptyList();
         }
-        return bookingRepository.findByStatusAndServiceNameInIgnoreCase("requested", lowerServices);
+        List<Booking> bookings = bookingRepository.findByStatusAndServiceNameInIgnoreCase("requested", lowerServices);
+        return bookings.stream()
+                .filter(b -> b.getWorker() == null
+                        || (workerId != null && b.getWorker().getId().equals(workerId))
+                        || (b.getNegotiationStatus() != null && "NONE".equalsIgnoreCase(b.getNegotiationStatus())))
+                .toList();
     }
 
     public List<Booking> getAcceptedBookingsForWorker(Long workerId) {
@@ -94,6 +113,13 @@ public class BookingService {
             throw new IllegalStateException("This request was already accepted by another professional.");
         }
 
+        if (booking.getWorker() != null
+                && !booking.getWorker().getId().equals(worker.getId())
+                && booking.getNegotiationStatus() != null
+                && !"NONE".equalsIgnoreCase(booking.getNegotiationStatus())) {
+            throw new IllegalStateException("This request is already being negotiated by another professional.");
+        }
+
         booking.setWorker(worker);
         booking.setStatus("accepted");
         return bookingRepository.save(booking);
@@ -123,6 +149,19 @@ public class BookingService {
 
         if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Proposed price must be greater than zero.");
+        }
+
+        if (booking.getWorker() != null
+                && !booking.getWorker().getId().equals(worker.getId())
+                && booking.getNegotiationStatus() != null
+                && !"NONE".equalsIgnoreCase(booking.getNegotiationStatus())) {
+            throw new IllegalStateException("This request is already being negotiated by another professional.");
+        }
+
+        if (booking.getNegotiationStatus() != null
+                && !"NONE".equalsIgnoreCase(booking.getNegotiationStatus())
+                && booking.getWorker() != null) {
+            throw new IllegalStateException("A negotiation is already active on this request.");
         }
 
         booking.setWorker(worker);
@@ -186,6 +225,10 @@ public class BookingService {
             throw new IllegalStateException("This request was already accepted by another professional.");
         }
 
+        if (booking.getWorker() == null || !booking.getWorker().getId().equals(worker.getId())) {
+            throw new IllegalStateException("You are not part of the negotiation on this request.");
+        }
+
         booking.setWorker(worker);
         booking.setStatus("accepted");
         booking.setNegotiationStatus("AGREED");
@@ -203,6 +246,10 @@ public class BookingService {
 
         if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Counter price must be greater than zero.");
+        }
+
+        if (booking.getWorker() == null || !booking.getWorker().getId().equals(worker.getId())) {
+            throw new IllegalStateException("You are not part of the negotiation on this request.");
         }
 
         booking.setWorker(worker);

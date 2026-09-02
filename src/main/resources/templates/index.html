@@ -6,30 +6,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GharFix - Home Services at Your Doorstep</title>
     <meta name="description"
-        content="Book trusted home service professionals â€” electricians, plumbers, maids and more.">
+        content="Book trusted home service professionals — electricians, plumbers, maids and more in Vadodara.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Leaflet CSS for Map Search -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <style>
         :root {
-            --ink: #0f0f0f;
-            --ink-soft: #374151;
-            --muted: #6b7280;
-            --gold: #b8860b;
-            --gold-lt: #fef9ee;
-            --gold-mid: #f59e0b;
-            --border: #e5e7eb;
-            --surface: #ffffff;
-            --bg: #f7f7f5;
-            --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.06);
-            --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.07);
-            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.10);
-            --radius: 14px;
-            --t: all 0.22s ease;
+            --bg-page: #FFFFFF;
+            --bg-subtle: #F8F9FA;
+            --bg-card: #FFFFFF;
+            --border-light: #E5E7EB;
+            --border-subtle: #F0F2F5;
+            --text-primary: #1A1A1A;
+            --text-secondary: #4B5563;
+            --text-muted: #6B7280;
+            --text-light: #9CA3AF;
+            
+            --btn-primary: #1A1A1A;
+            --btn-primary-hover: #2E2E2E;
+            --btn-secondary-bg: #F3F4F6;
+            --btn-secondary-hover: #E5E7EB;
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+            
+            --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.04);
+            --shadow-hover: 0 10px 24px rgba(0, 0, 0, 0.08);
+            
+            --transition: all 0.2s ease-in-out;
         }
 
         * {
@@ -39,850 +51,865 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--ink);
-            line-height: 1.6;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* â”€â”€ FLASH â”€â”€ */
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ── FLASH MESSAGES ── */
         .flash-messages {
             position: fixed;
             top: 76px;
             right: 20px;
-            z-index: 2000;
+            z-index: 2100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .flash {
             padding: 12px 18px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            font-size: 13px;
+            border-radius: var(--radius-sm);
+            font-size: 13.5px;
             font-weight: 500;
-            box-shadow: var(--shadow-sm);
-            animation: slideIn .3s ease;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            animation: flashSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .flash.success {
-            background: #14532d;
-            color: #fff;
+            background: #14532D;
+            color: #FFFFFF;
         }
 
         .flash.error {
-            background: #7f1d1d;
-            color: #fff;
+            background: #991B1B;
+            color: #FFFFFF;
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(50px)
-            }
-
-            to {
-                opacity: 1;
-                transform: translateX(0)
-            }
+        @keyframes flashSlideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
-        /* â”€â”€ NAVBAR â”€â”€ */
-        .navbar {
+        /* ── 1. TOP BAR / NAVBAR ── */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--border-subtle);
+            height: 72px;
+        }
+
+        .header-inner {
+            max-width: 1240px;
+            margin: 0 auto;
+            height: 100%;
+            padding: 0 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 64px;
-            height: 64px;
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            gap: 20px;
         }
 
-        .logo {
-            font-size: 20px;
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 22px;
             font-weight: 800;
-            color: var(--ink);
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            text-decoration: none;
-            letter-spacing: -0.4px;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
         }
 
-        .logo-mark {
-            width: 34px;
-            height: 34px;
-            background: var(--ink);
-            border-radius: 9px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .brand-logo i {
+            color: var(--text-primary);
+            font-size: 20px;
         }
 
-        .logo-mark i {
-            color: var(--gold-mid);
-            font-size: 15px;
-        }
-
-        .logo em {
+        .brand-logo em {
             font-style: normal;
-            color: var(--gold);
+            color: #4B5563;
+            font-weight: 600;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 26px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--muted);
-            font-weight: 500;
-            font-size: 14px;
-            transition: var(--t);
-        }
-
-        .nav-links a:hover {
-            color: var(--ink);
-        }
-
-        .nav-right {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .btn {
+        /* Location selector (Static visual Urban Company style) */
+        .location-picker {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 8px 18px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 13px;
+            gap: 8px;
+            padding: 7px 12px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-full);
+            background: #FFFFFF;
             cursor: pointer;
-            border: none;
-            transition: var(--t);
-            text-decoration: none;
-            font-family: inherit;
+            transition: var(--transition);
+            -webkit-user-select: none;
+            user-select: none;
         }
 
-        .btn-ghost {
-            background: transparent;
-            color: var(--ink-soft);
-            border: 1.5px solid var(--border);
+        .location-picker:hover {
+            border-color: var(--text-primary);
+            background: var(--bg-subtle);
         }
 
-        .btn-ghost:hover {
-            border-color: var(--ink);
-            color: var(--ink);
-            background: var(--bg);
+        .location-picker .loc-pin {
+            color: var(--text-primary);
+            font-size: 14px;
         }
 
-        .btn-dark {
-            background: var(--ink);
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+        .location-picker .loc-city {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
-        .btn-dark:hover {
-            background: #222;
-            transform: translateY(-1px);
+        .location-picker .loc-chevron {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-left: 2px;
         }
 
-        .btn-gold {
-            background: var(--gold-mid);
-            color: var(--ink);
-            font-weight: 700;
-            box-shadow: 0 2px 10px rgba(245, 158, 11, 0.3);
-        }
-
-        .btn-gold:hover {
-            background: #e08e0b;
-            transform: translateY(-1px);
-        }
-
-        .user-chip {
+        .header-right {
             display: flex;
             align-items: center;
+            gap: 14px;
         }
 
+        .nav-link-partner {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+
+        .nav-link-partner:hover {
+            color: var(--text-primary);
+            background: var(--bg-subtle);
+        }
+
+        .btn-header-signin {
+            padding: 8px 16px;
+            font-size: 13.5px;
+            font-weight: 600;
+            font-family: inherit;
+            color: var(--text-primary);
+            background: transparent;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-header-signin:hover {
+            border-color: var(--text-primary);
+            background: var(--bg-subtle);
+        }
+
+        .btn-header-primary {
+            padding: 8px 18px;
+            font-size: 13.5px;
+            font-weight: 600;
+            font-family: inherit;
+            color: #FFFFFF;
+            background: var(--btn-primary);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-header-primary:hover {
+            background: var(--btn-primary-hover);
+        }
+
+        /* User Menu */
         .user-menu-wrap {
             position: relative;
         }
 
         .u-avatar {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: var(--ink);
-            color: var(--gold-mid);
+            background: #1A1A1A;
+            color: #FFFFFF;
+            border: none;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 15px;
             font-weight: 700;
-            font-size: 13px;
             cursor: pointer;
-            border: 2px solid transparent;
-            transition: var(--t);
-            font-family: inherit;
-            padding: 0;
+            transition: var(--transition);
             -webkit-user-select: none;
             user-select: none;
         }
 
         .u-avatar:hover {
-            border-color: var(--gold-mid);
-            transform: scale(1.05);
-            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+            transform: scale(1.04);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
         .user-dropdown {
             position: absolute;
-            top: calc(100% + 10px);
             right: 0;
+            top: calc(100% + 10px);
             width: 220px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-            padding: 6px 0;
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
             display: none;
             flex-direction: column;
-            z-index: 200;
-            animation: slideIn .2s ease;
+            padding: 8px 0;
+            z-index: 1010;
         }
 
         .user-dropdown.active {
             display: flex;
+            animation: dropFade 0.2s ease;
+        }
+
+        @keyframes dropFade {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .ud-header {
-            padding: 10px 16px 8px;
+            padding: 10px 16px 12px;
+            border-bottom: 1px solid var(--border-subtle);
         }
 
         .ud-name {
-            font-size: 13.5px;
+            font-size: 14px;
             font-weight: 700;
-            color: var(--ink);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            color: var(--text-primary);
         }
 
         .ud-email {
-            font-size: 11.5px;
-            color: var(--muted);
+            font-size: 12px;
+            color: var(--text-muted);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             margin-top: 2px;
         }
 
-        .ud-divider {
-            height: 1px;
-            background: var(--border);
-            margin: 4px 0;
-        }
-
         .ud-list {
             list-style: none;
-            padding: 0;
-            margin: 0;
+            padding: 6px 0 0;
         }
 
         .ud-item {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 9px 16px;
-            color: var(--ink-soft);
-            text-decoration: none;
-            font-size: 13px;
+            padding: 10px 16px;
+            font-size: 13.5px;
             font-weight: 500;
-            transition: var(--t);
-        }
-
-        .ud-item i {
-            font-size: 13px;
-            width: 16px;
-            color: var(--muted);
-            transition: var(--t);
+            color: var(--text-secondary);
+            transition: var(--transition);
         }
 
         .ud-item:hover {
-            background: var(--gold-lt);
-            color: var(--gold);
+            background: var(--bg-subtle);
+            color: var(--text-primary);
         }
 
-        .ud-item:hover i {
-            color: var(--gold);
-        }
-
-        .ud-item.ud-logout:hover {
-            background: #fef2f2;
-            color: #dc2626;
-        }
-
-        .ud-item.ud-logout:hover i {
-            color: #dc2626;
-        }
-
-        /* â”€â”€ HERO â”€â”€ */
-        .hero {
-            background: #111;
-            padding: 80px 64px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse 70% 80% at 80% 50%, rgba(245, 158, 11, 0.12) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 600px;
-        }
-
-        .hero-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.7);
-            padding: 5px 14px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: 500;
-            letter-spacing: 0.4px;
-            margin-bottom: 22px;
-        }
-
-        .hero-tag i {
-            color: var(--gold-mid);
-        }
-
-        .hero h1 {
-            font-size: 50px;
-            font-weight: 900;
-            color: #fff;
-            line-height: 1.08;
-            letter-spacing: -1.5px;
-            margin-bottom: 18px;
-        }
-
-        .hero h1 em {
-            font-style: normal;
-            color: var(--gold-mid);
-        }
-
-        .hero p {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.55);
-            margin-bottom: 36px;
-            max-width: 440px;
-            line-height: 1.7;
-        }
-
-        .search-wrap {
-            display: flex;
-            align-items: center;
-            background: #fff;
-            border-radius: 12px;
-            padding: 5px 5px 5px 18px;
-            max-width: 520px;
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
-        }
-
-        .search-wrap i {
-            color: var(--muted);
-            font-size: 15px;
-            margin-right: 10px;
-            flex-shrink: 0;
-        }
-
-        .search-wrap input {
-            flex: 1;
-            border: none;
-            outline: none;
+        .ud-item i {
             font-size: 14px;
-            font-family: inherit;
-            color: var(--ink);
-            background: transparent;
+            color: var(--text-muted);
+            width: 16px;
         }
 
-        .search-wrap input::placeholder {
-            color: #9ca3af;
+        .ud-logout {
+            color: #DC2626;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 6px;
+            padding-top: 10px;
         }
 
-        .search-wrap button {
-            padding: 10px 22px;
-            border-radius: 8px;
-            background: var(--ink);
-            color: #fff;
-            border: none;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            font-family: inherit;
-            transition: var(--t);
-            white-space: nowrap;
+        .ud-logout:hover {
+            background: #FEF2F2;
+            color: #B91C1C;
         }
 
-        .search-wrap button:hover {
-            background: #222;
+        .ud-logout i {
+            color: #DC2626;
         }
 
-        .hero-stats {
-            display: flex;
-            gap: 40px;
-            margin-top: 48px;
+        /* ── 2. HERO AREA & CIRCULAR CATEGORY ROW ── */
+        .hero-section {
+            background: #FFFFFF;
+            padding: 48px 24px 36px;
+            border-bottom: 1px solid var(--border-subtle);
         }
 
-        .stat strong {
-            display: block;
-            font-size: 26px;
-            font-weight: 800;
-            color: #fff;
-            letter-spacing: -0.5px;
-        }
-
-        .stat span {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.4);
-            font-weight: 500;
-        }
-
-        .stat-div {
-            width: 1px;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        /* â”€â”€ TRUST BAR â”€â”€ */
-        .trust-bar {
-            display: flex;
-            justify-content: center;
-            gap: 48px;
-            padding: 30px 64px;
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .trust-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .trust-item i {
-            font-size: 16px;
-            color: var(--gold);
-        }
-
-        .trust-item strong {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--ink);
-        }
-
-        .trust-item span {
-            font-size: 12px;
-            color: var(--muted);
-        }
-
-        /* â”€â”€ SECTION SHARED â”€â”€ */
-        .section {
-            padding: 72px 64px;
-        }
-
-        .section-alt {
-            background: var(--surface);
-        }
-
-        .sec-head {
+        .hero-container {
+            max-width: 1240px;
+            margin: 0 auto;
             text-align: center;
-            margin-bottom: 48px;
         }
 
-        .sec-label {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: var(--gold);
+        .hero-title {
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            color: var(--text-primary);
+            line-height: 1.25;
             margin-bottom: 10px;
         }
 
-        .sec-head h2 {
-            font-size: 30px;
-            font-weight: 800;
-            color: var(--ink);
-            letter-spacing: -0.5px;
+        .hero-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 620px;
+            margin: 0 auto 36px;
         }
 
-        .sec-head p {
-            color: var(--muted);
-            font-size: 14px;
-            margin-top: 8px;
+        /* Circular Category Row */
+        .category-row-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            padding: 6px 4px 14px;
+            scrollbar-width: thin;
         }
 
-        /* â”€â”€ SERVICES â”€â”€ */
-        .service-grid {
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 14px;
-            max-width: 1160px;
+        .category-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 26px;
+            min-width: max-content;
             margin: 0 auto;
         }
 
-        .svc-card {
+        .cat-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
-            padding: 24px 10px;
-            border-radius: var(--radius);
+            gap: 10px;
+            width: 82px;
             cursor: pointer;
-            background: var(--surface);
-            border: 1.5px solid var(--border);
-            transition: var(--t);
+            transition: var(--transition);
+            text-align: center;
         }
 
-        .svc-card:hover {
-            border-color: var(--gold-mid);
-            box-shadow: 0 6px 24px rgba(245, 158, 11, 0.12);
-            transform: translateY(-4px);
+        .cat-circle {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+            box-shadow: var(--shadow-subtle);
         }
 
-        .svc-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 13px;
-            background: var(--bg);
-            color: var(--ink-soft);
+        .cat-item:hover .cat-circle {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .cat-label {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.25;
+            max-width: 82px;
+            word-wrap: break-word;
+        }
+
+        /* Distinct Pastel Palettes for Categories */
+        .cat-electrician {
+            background-color: #FFF7ED;
+            color: #EA580C;
+            border: 1px solid #FFEDD5;
+        }
+
+        .cat-plumber {
+            background-color: #EFF6FF;
+            color: #2563EB;
+            border: 1px solid #DBEAFE;
+        }
+
+        .cat-carpenter {
+            background-color: #FAF5FF;
+            color: #9333EA;
+            border: 1px solid #F3E8FF;
+        }
+
+        .cat-ac-service {
+            background-color: #F0F9FF;
+            color: #0284C7;
+            border: 1px solid #E0F2FE;
+        }
+
+        .cat-house-maid {
+            background-color: #ECFDF5;
+            color: #059669;
+            border: 1px solid #D1FAE5;
+        }
+
+        .cat-laundry {
+            background-color: #FDF2F8;
+            color: #DB2777;
+            border: 1px solid #FCE7F3;
+        }
+
+        .cat-labour {
+            background-color: #FFFBEB;
+            color: #D97706;
+            border: 1px solid #FEF3C7;
+        }
+
+        .cat-contractor {
+            background-color: #EEF2FF;
+            color: #4F46E5;
+            border: 1px solid #E0E7FF;
+        }
+
+        .cat-all {
+            background-color: #F3F4F6;
+            color: #374151;
+            border: 1px solid #E5E7EB;
+        }
+
+        /* ── SECTION COMMON STYLES ── */
+        .section {
+            padding: 56px 24px;
+        }
+
+        .section-alt {
+            background-color: var(--bg-subtle);
+        }
+
+        .sec-container {
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+
+        .sec-head {
+            margin-bottom: 28px;
+        }
+
+        .sec-head.center {
+            text-align: center;
+        }
+
+        .sec-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.4px;
+            margin-bottom: 6px;
+        }
+
+        .sec-sub {
+            font-size: 14.5px;
+            color: var(--text-secondary);
+        }
+
+        /* ── 3. "SEE HOW IT WORKS" HORIZONTAL SCROLL PREVIEW CARDS ── */
+        .preview-scroll-wrapper {
+            overflow-x: auto;
+            padding-bottom: 16px;
+            margin: 0 -24px;
+            padding-left: 24px;
+            padding-right: 24px;
+            scrollbar-width: thin;
+        }
+
+        .preview-cards-row {
+            display: flex;
+            gap: 18px;
+            min-width: max-content;
+        }
+
+        .preview-card {
+            width: 250px;
+            height: 165px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            border: 1px solid var(--border-light);
+            background: #FFFFFF;
+            transition: var(--transition);
+            box-shadow: var(--shadow-subtle);
+            flex-shrink: 0;
+        }
+
+        .preview-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--text-primary);
+        }
+
+        .preview-placeholder {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Soft background tints for preview cards */
+        .prev-electrician { background: linear-gradient(135deg, #FFF7ED, #FFEDD5); }
+        .prev-plumber { background: linear-gradient(135deg, #EFF6FF, #DBEAFE); }
+        .prev-carpenter { background: linear-gradient(135deg, #FAF5FF, #F3E8FF); }
+        .prev-ac-service { background: linear-gradient(135deg, #F0F9FF, #E0F2FE); }
+        .prev-house-maid { background: linear-gradient(135deg, #ECFDF5, #D1FAE5); }
+        .prev-laundry { background: linear-gradient(135deg, #FDF2F8, #FCE7F3); }
+        .prev-labour { background: linear-gradient(135deg, #FFFBEB, #FEF3C7); }
+        .prev-contractor { background: linear-gradient(135deg, #EEF2FF, #E0E7FF); }
+
+        .preview-bg-icon {
+            font-size: 56px;
+            opacity: 0.18;
+            color: #1A1A1A;
+            transition: transform 0.3s ease;
+        }
+
+        .preview-card:hover .preview-bg-icon {
+            transform: scale(1.1);
+        }
+
+        .play-button-overlay {
+            position: absolute;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(26, 26, 26, 0.85);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            padding-left: 3px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+            transition: var(--transition);
+        }
+
+        .preview-card:hover .play-button-overlay {
+            background: #1A1A1A;
+            transform: scale(1.1);
+        }
+
+        .preview-caption-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 24px 14px 12px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.25) 60%, transparent 100%);
+            color: #FFFFFF;
+        }
+
+        .preview-caption-tag {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .preview-caption-text {
+            font-size: 13.5px;
+            font-weight: 700;
+            line-height: 1.25;
+            color: #FFFFFF;
+        }
+
+        /* ── 4. "MOST BOOKED SERVICES" RESPONSIVE GRID ── */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .service-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .service-card:hover {
+            border-color: var(--text-primary);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-3px);
+        }
+
+        .service-card-media {
+            height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: #F9FAFB;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .service-card-media i {
+            font-size: 38px;
+            transition: transform 0.2s ease;
+        }
+
+        .service-card:hover .service-card-media i {
+            transform: scale(1.1);
+        }
+
+        .card-electrician i { color: #EA580C; }
+        .card-plumber i { color: #2563EB; }
+        .card-carpenter i { color: #9333EA; }
+        .card-ac-service i { color: #0284C7; }
+        .card-house-maid i { color: #059669; }
+        .card-laundry i { color: #DB2777; }
+        .card-labour i { color: #D97706; }
+        .card-contractor i { color: #4F46E5; }
+
+        .service-card-body {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .service-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .service-price-wrap {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            margin-top: auto;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-subtle);
+        }
+
+        .price-prefix {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .service-price {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .service-price-rate {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .service-book-action {
+            margin-top: 12px;
+            width: 100%;
+            padding: 9px;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .service-card:hover .service-book-action {
+            background: var(--btn-primary);
+            color: #FFFFFF;
+            border-color: var(--btn-primary);
+        }
+
+        /* ── 5. "HOW IT WORKS" (4-STEP) SECTION ── */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .step-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 24px 20px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .step-card:hover {
+            border-color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        .step-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--text-primary);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 18px;
+        }
+
+        .step-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .step-desc {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ── 6. "WHY GHARFIX" SECTION ── */
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .why-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 28px 24px;
+            transition: var(--transition);
+        }
+
+        .why-card:hover {
+            border-color: var(--text-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-card);
+        }
+
+        .why-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            transition: var(--t);
+            margin-bottom: 18px;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
         }
 
-        .svc-card:hover .svc-icon {
-            background: var(--gold-lt);
-            color: var(--gold);
-        }
-
-        .svc-card h3 {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--ink-soft);
-            text-align: center;
-        }
-
-        /* â”€â”€ HOW IT WORKS â”€â”€ */
-        .steps-row {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1px;
-            background: var(--border);
-            max-width: 1000px;
-            margin: 0 auto;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
-
-        .step {
-            background: var(--surface);
-            text-align: center;
-            padding: 36px 20px;
-            position: relative;
-        }
-
-        .step-num {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--ink);
-            color: var(--gold-mid);
-            font-size: 16px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
-        }
-
-        .step h3 {
-            font-size: 14px;
+        .why-title {
+            font-size: 16.5px;
             font-weight: 700;
-            margin-bottom: 6px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
         }
 
-        .step p {
-            font-size: 12px;
-            color: var(--muted);
-            line-height: 1.6;
+        .why-desc {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.55;
         }
 
-        /* â”€â”€ WORKERS â”€â”€ */
-        .worker-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 22px;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .worker-card {
-            background: var(--surface);
-            border: 1.5px solid var(--border);
-            border-radius: 18px;
-            overflow: hidden;
-            transition: var(--t);
-            box-shadow: var(--shadow-xs);
-        }
-
-        .worker-card:hover {
-            border-color: #d1b85c;
-            box-shadow: 0 10px 36px rgba(0, 0, 0, 0.10);
-            transform: translateY(-5px);
-        }
-
-        .wc-top {
-            padding: 24px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            border-bottom: 1px solid var(--border);
-            background: linear-gradient(135deg, #fafafa 0%, #fff 100%);
-        }
-
-        .wc-img {
-            width: 68px;
-            height: 68px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2.5px solid var(--border);
-            flex-shrink: 0;
-        }
-
-        .wc-meta h3 {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--ink);
-        }
-
-        .wc-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            background: var(--gold-lt);
-            color: var(--gold);
-            padding: 3px 10px;
-            border-radius: 50px;
-            font-size: 11px;
-            font-weight: 700;
-            margin-top: 4px;
-            border: 1px solid #e9c97a;
-        }
-
-        .wc-stars {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-top: 6px;
-            font-size: 12px;
-            color: var(--ink-soft);
-        }
-
-        .wc-stars i {
-            color: var(--gold-mid);
-            font-size: 11px;
-        }
-
-        .wc-body {
-            padding: 16px 24px 20px;
-        }
-
-        .wc-details {
-            display: flex;
-            gap: 18px;
-            margin-bottom: 14px;
-        }
-
-        .wc-detail {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 12px;
-            color: var(--muted);
-        }
-
-        .wc-detail i {
-            color: var(--gold);
-            font-size: 11px;
-        }
-
-        .book-btn {
-            width: 100%;
-            padding: 11px;
-            border-radius: 9px;
-            background: var(--ink);
-            color: #fff;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            border: none;
-            font-family: inherit;
-            transition: var(--t);
-            letter-spacing: 0.2px;
-        }
-
-        .book-btn:hover {
-            background: #222;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-            transform: translateY(-1px);
-        }
-
-        /* â”€â”€ REVIEWS (dark panel) â”€â”€ */
-        .reviews-section {
-            padding: 72px 64px;
-            background: #111;
-        }
-
-        .reviews-section .sec-label {
-            color: var(--gold-mid);
-        }
-
-        .reviews-section .sec-head h2 {
-            color: #fff;
-        }
-
-        .reviews-section .sec-head p {
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .review-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .review-card {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 28px;
-            transition: var(--t);
-        }
-
-        .review-card:hover {
-            background: rgba(255, 255, 255, 0.07);
-            transform: translateY(-3px);
-        }
-
-        .review-stars {
-            color: var(--gold-mid);
-            font-size: 13px;
-            margin-bottom: 14px;
-        }
-
-        .review-card p {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.75;
-            margin-bottom: 20px;
-        }
-
-        .reviewer {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .rev-av {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            background: rgba(245, 158, 11, 0.15);
-            border: 1px solid rgba(245, 158, 11, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--gold-mid);
-            font-weight: 700;
-            font-size: 13px;
-        }
-
-        .rev-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        .rev-label {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.35);
-        }
-
-        /* â”€â”€ FOOTER â”€â”€ */
+        /* ── FOOTER ── */
         .footer {
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            padding: 24px 64px;
+            background: #FFFFFF;
+            border-top: 1px solid var(--border-subtle);
+            padding: 40px 24px;
+            margin-top: 40px;
+        }
+
+        .footer-inner {
+            max-width: 1240px;
+            margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 13px;
-            color: var(--muted);
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-left {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
         .footer-logo {
-            font-size: 17px;
+            font-size: 20px;
             font-weight: 800;
-            color: var(--ink);
+            color: var(--text-primary);
         }
 
-        .footer-logo em {
-            font-style: normal;
-            color: var(--gold);
+        .footer-copy {
+            font-size: 13px;
+            color: var(--text-muted);
         }
 
-        .footer a {
-            color: var(--muted);
-            text-decoration: none;
-            margin-left: 18px;
-            transition: var(--t);
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            font-weight: 500;
         }
 
-        .footer a:hover {
-            color: var(--ink);
+        .footer-links a:hover {
+            color: var(--text-primary);
         }
 
-        /* â”€â”€ POPUPS â”€â”€ */
+        /* ── POPUPS / MODALS ── */
         .popup {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.45);
             display: none;
             justify-content: center;
             align-items: center;
-            -webkit-backdrop-filter: blur(5px);
-            backdrop-filter: blur(5px);
-            z-index: 1000;
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
             padding: 20px;
         }
 
@@ -891,30 +918,24 @@
         }
 
         .popup-box {
-            background: var(--surface);
-            border-radius: 20px;
+            background: #FFFFFF;
+            border-radius: var(--radius-lg);
             width: 100%;
             max-width: 400px;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
-            animation: popIn .28s cubic-bezier(.34, 1.56, .64, 1);
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.16);
+            border: 1px solid var(--border-light);
+            animation: popupScale 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             max-height: 90vh;
             overflow-y: auto;
         }
 
-        @keyframes popIn {
-            from {
-                opacity: 0;
-                transform: scale(.92) translateY(16px)
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0)
-            }
+        @keyframes popupScale {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         .ph {
-            padding: 28px 28px 0;
+            padding: 24px 24px 0;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
@@ -923,117 +944,139 @@
         .ph-title h2 {
             font-size: 20px;
             font-weight: 800;
-            color: var(--ink);
-            letter-spacing: -0.4px;
+            color: var(--text-primary);
         }
 
         .ph-title p {
             font-size: 13px;
-            color: var(--muted);
+            color: var(--text-muted);
             margin-top: 3px;
         }
 
         .ph-close {
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            background: var(--bg);
-            border: none;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--ink-soft);
-            font-size: 14px;
-            transition: var(--t);
-            flex-shrink: 0;
+            color: var(--text-secondary);
+            font-size: 13px;
+            transition: var(--transition);
         }
 
         .ph-close:hover {
-            background: var(--border);
+            background: var(--border-light);
+            color: var(--text-primary);
         }
 
         .pb {
-            padding: 20px 28px 28px;
+            padding: 20px 24px 24px;
+        }
+
+        .modal-toggle-wrap {
+            display: flex;
+            gap: 0;
+            margin-bottom: 18px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+        }
+
+        .toggle-btn-active {
+            flex: 1;
+            padding: 9px;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: inherit;
+            border: none;
+            background: var(--text-primary);
+            color: #FFFFFF;
+            cursor: default;
+        }
+
+        .toggle-btn-inactive {
+            flex: 1;
+            padding: 9px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+            border: none;
+            background: var(--bg-subtle);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-btn-inactive:hover {
+            color: var(--text-primary);
         }
 
         .fg {
-            margin-bottom: 13px;
+            margin-bottom: 14px;
         }
 
         .fg label {
             display: block;
             font-size: 12px;
             font-weight: 600;
-            color: var(--ink-soft);
+            color: var(--text-secondary);
             margin-bottom: 5px;
-            letter-spacing: 0.2px;
         }
 
         .fg input,
         .fg select {
             width: 100%;
-            padding: 11px 13px;
-            border: 1.5px solid var(--border);
-            border-radius: 8px;
-            font-size: 13px;
+            padding: 10px 12px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 13.5px;
             font-family: inherit;
-            color: var(--ink);
-            background: var(--bg);
-            transition: var(--t);
+            color: var(--text-primary);
+            background: #FFFFFF;
             outline: none;
+            transition: var(--transition);
         }
 
         .fg input:focus,
         .fg select:focus {
-            border-color: var(--gold-mid);
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
-        }
-
-        .fg input[readonly] {
-            background: var(--gold-lt);
-            color: var(--gold);
-            font-weight: 700;
-            border-color: #e9c97a;
+            border-color: var(--text-primary);
+            box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
         }
 
         .pop-btn {
             width: 100%;
-            padding: 13px;
-            border-radius: 9px;
-            background: var(--ink);
-            color: #fff;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            background: var(--text-primary);
+            color: #FFFFFF;
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
             border: none;
             font-family: inherit;
-            transition: var(--t);
+            transition: var(--transition);
             margin-top: 6px;
-            letter-spacing: 0.2px;
         }
 
         .pop-btn:hover {
-            background: #222;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            background: var(--btn-primary-hover);
         }
 
         .pop-foot {
             text-align: center;
             font-size: 13px;
-            color: var(--muted);
+            color: var(--text-muted);
             margin-top: 14px;
         }
 
         .pop-foot a {
-            color: var(--gold);
-            font-weight: 600;
+            color: var(--text-primary);
+            font-weight: 700;
             cursor: pointer;
-            text-decoration: none;
-        }
-
-        .pop-foot a:hover {
             text-decoration: underline;
         }
 
@@ -1041,16 +1084,16 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            background: var(--bg);
-            border-radius: 9px;
-            padding: 11px 13px;
+            background: var(--bg-subtle);
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
             margin-bottom: 14px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--border-light);
         }
 
         .worker-preview img {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             object-fit: cover;
         }
@@ -1058,492 +1101,26 @@
         .wp-name {
             font-weight: 700;
             font-size: 13px;
+            color: var(--text-primary);
         }
 
         .wp-service {
             font-size: 11px;
-            color: var(--gold);
+            color: var(--text-muted);
             font-weight: 600;
         }
-    </style>
-</head>
 
-<body>
-
-    <div class="flash-messages">
-        <div th:if="${flash_success != null}" class="flash success" th:text="${flash_success}"></div>
-        <div th:if="${flash_error != null}" class="flash error" th:text="${flash_error}"></div>
-    </div>
-
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <a href="/" class="logo">
-            <div class="logo-mark"><i class="fa-solid fa-house-chimney"></i></div>
-            Ghar<em>Fix</em>
-        </a>
-        <ul class="nav-links">
-            <li><a href="#services">Services</a></li>
-            <li><a href="#workers">Professionals</a></li>
-            <li><a href="#reviews">Reviews</a></li>
-            <li th:if="${currentUser != null}">
-                <a href="/my-bookings">My Bookings</a>
-            </li>
-        </ul>
-        <div class="nav-right">
-            <div th:if="${currentUser != null}" class="user-chip user-menu-wrap">
-                <button type="button" class="u-avatar" id="userAvatarBtn" onclick="toggleUserDropdown(event)" aria-label="User profile menu">
-                    <span th:text="${currentUser.name != null && !currentUser.name.isEmpty() ? currentUser.name.substring(0,1).toUpperCase() : 'U'}">U</span>
-                </button>
-                <div class="user-dropdown" id="userDropdown">
-                    <div class="ud-header">
-                        <div class="ud-name" th:text="${currentUser.name}">User Name</div>
-                        <div class="ud-email" th:text="${currentUser.email}">user@example.com</div>
-                    </div>
-                    <div class="ud-divider"></div>
-                    <ul class="ud-list">
-                        <li>
-                            <a href="/my-bookings" class="ud-item">
-                                <i class="fa-solid fa-calendar-check"></i>
-                                <span>My Bookings</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/logout" class="ud-item ud-logout">
-                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                                <span>Logout</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div th:if="${currentUser == null}" style="display:contents;">
-                <button class="btn btn-ghost" onclick="openPopup('loginBox')">Sign In</button>
-                <button class="btn btn-gold" onclick="openPopup('signupBox')">Get Started</button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- HERO -->
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-tag"><i class="fa-solid fa-circle-check"></i> Trusted by 10,000+ households</div>
-            <h1>Home Services,<br><em>Done Right.</em></h1>
-            <p>Book verified, background-checked professionals for every home need &mdash; fast, reliable, and at fair
-                prices.</p>
-
-            <div class="search-wrap">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input id="searchInput" type="text" placeholder="Search for electrician, plumber, AC repairâ€¦">
-                <button onclick="searchServices()">Search</button>
-            </div>
-
-            <div class="hero-stats">
-                <div class="stat"><strong>10K+</strong><span>Happy Customers</span></div>
-                <div class="stat-div"></div>
-                <div class="stat"><strong>500+</strong><span>Verified Professionals</span></div>
-                <div class="stat-div"></div>
-                <div class="stat"><strong>4.8 â˜…</strong><span>Avg. Rating</span></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- TRUST BAR -->
-    <div class="trust-bar">
-        <div class="trust-item"><i class="fa-solid fa-shield-halved"></i>
-            <div><strong>Background Verified</strong><br><span>All professionals are ID checked</span></div>
-        </div>
-        <div class="trust-item"><i class="fa-solid fa-rotate-left"></i>
-            <div><strong>Re-service Guarantee</strong><br><span>Not satisfied? We'll fix it</span></div>
-        </div>
-        <div class="trust-item"><i class="fa-solid fa-tag"></i>
-            <div><strong>Transparent Pricing</strong><br><span>No hidden charges, ever</span></div>
-        </div>
-        <div class="trust-item"><i class="fa-solid fa-headset"></i>
-            <div><strong>24 / 7 Support</strong><br><span>We're always here to help</span></div>
-        </div>
-    </div>
-
-    <!-- SERVICES -->
-    <section class="section section-alt" id="services">
-        <div class="sec-head">
-            <div class="sec-label">Services</div>
-            <h2>What can we help you with?</h2>
-            <p>Choose from our most-booked home service categories</p>
-        </div>
-        <div class="service-grid">
-            <div th:each="service : ${services}" class="svc-card" th:data-service="${service.name}" onclick="window.open('/book/' + encodeURIComponent(this.getAttribute('data-service')), '_blank')">
-                <div class="svc-icon"><i class="fa-solid" th:classappend="${service.icon != null ? service.icon : 'fa-star'}"></i></div>
-                <h3 th:text="${service.name}">Service Name</h3>
-            </div>
-        </div>
-        </div>
-    </section>
-
-    <!-- HOW IT WORKS -->
-    <section class="section">
-        <div class="sec-head">
-            <div class="sec-label">How It Works</div>
-            <h2>Booking in 4 simple steps</h2>
-        </div>
-        <div class="steps-row">
-            <div class="step">
-                <div class="step-num">1</div>
-                <h3>Choose a Service</h3>
-                <p>Pick from 8+ home service categories</p>
-            </div>
-            <div class="step">
-                <div class="step-num">2</div>
-                <h3>Pick a Slot</h3>
-                <p>Choose a date & time that works for you</p>
-            </div>
-            <div class="step">
-                <div class="step-num">3</div>
-                <h3>Pro Accepts Your Request</h3>
-                <p>Nearby verified professionals are notified and the first one available accepts your request</p>
-            </div>
-            <div class="step">
-                <div class="step-num">4</div>
-                <h3>Relax</h3>
-                <p>Your expert arrives right on time</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- PLATFORM FEATURES & BENEFITS -->
-    <section class="section section-alt" id="workers">
-        <style>
-            .benefit-grid {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 22px;
-                max-width: 1100px;
-                margin: 0 auto;
-            }
-            .benefit-card {
-                background: var(--surface);
-                border: 1.5px solid var(--border);
-                border-radius: var(--radius);
-                padding: 32px 28px;
-                transition: var(--t);
-                box-shadow: var(--shadow-xs);
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .benefit-card:hover {
-                border-color: var(--gold-mid);
-                box-shadow: 0 10px 32px rgba(0, 0, 0, 0.08);
-                transform: translateY(-4px);
-            }
-            .benefit-icon {
-                width: 52px;
-                height: 52px;
-                border-radius: 13px;
-                background: var(--gold-lt);
-                color: var(--gold);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 22px;
-                margin-bottom: 20px;
-                border: 1px solid #f3dca0;
-                transition: var(--t);
-            }
-            .benefit-card:hover .benefit-icon {
-                background: var(--gold);
-                color: #fff;
-                border-color: var(--gold);
-            }
-            .benefit-card h3 {
-                font-size: 17px;
-                font-weight: 700;
-                color: var(--ink);
-                margin-bottom: 8px;
-                letter-spacing: -0.2px;
-            }
-            .benefit-card p {
-                font-size: 13.5px;
-                color: var(--muted);
-                line-height: 1.6;
-                margin: 0;
-            }
-            @media (max-width: 900px) {
-                .benefit-grid {
-                    grid-template-columns: repeat(2, 1fr);
-                    gap: 18px;
-                }
-            }
-            @media (max-width: 640px) {
-                .benefit-grid {
-                    grid-template-columns: 1fr;
-                    gap: 16px;
-                }
-            }
-        </style>
-        <div class="sec-head">
-            <div class="sec-label">Why GharFix</div>
-            <h2>Everything You Need for Effortless Home Care</h2>
-            <p>Quality service, verified experts, and peace of mind at every step</p>
-        </div>
-        <div class="benefit-grid">
-            <div class="benefit-card">
-                <div class="benefit-icon"><i class="fa-solid fa-map-location-dot"></i></div>
-                <h3>Find Nearby Pros</h3>
-                <p>Instantly discover verified electricians, plumbers, cleaners, and more near your location.</p>
-            </div>
-            <div class="benefit-card">
-                <div class="benefit-icon"><i class="fa-solid fa-bolt"></i></div>
-                <h3>Book in Seconds</h3>
-                <p>Choose a service, pick a time, and confirm your booking in just a few taps.</p>
-            </div>
-            <div class="benefit-card">
-                <div class="benefit-icon"><i class="fa-solid fa-shield-halved"></i></div>
-                <h3>Verified &amp; Trusted</h3>
-                <p>Every professional is background-checked and ID-verified before they join GharFix.</p>
-            </div>
-            <div class="benefit-card">
-                <div class="benefit-icon"><i class="fa-solid fa-bell"></i></div>
-                <h3>Real-Time Updates</h3>
-                <p>Get notified the moment a professional accepts your request.</p>
-            </div>
-            <div class="benefit-card">
-                <div class="benefit-icon"><i class="fa-solid fa-tag"></i></div>
-                <h3>Transparent Pricing</h3>
-                <p>See upfront rates before you book, no hidden charges.</p>
-            </div>
-            <div class="benefit-card">
-                <div class="benefit-icon"><i class="fa-solid fa-star"></i></div>
-                <h3>Rated by Homeowners</h3>
-                <p>Read genuine reviews from real customers before you decide.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- REVIEWS -->
-    <section class="reviews-section" id="reviews">
-        <div class="sec-head">
-            <div class="sec-label">Testimonials</div>
-            <h2>What customers say</h2>
-            <p>Real reviews from real homeowners</p>
-        </div>
-        <div class="review-grid">
-            <div th:each="review : ${reviews}" class="review-card">
-                <div class="review-stars">
-                    <i th:each="i : ${#numbers.sequence(1, review.rating.intValue())}" class="fa-solid fa-star"></i>
-                    <i th:if="${review.rating % 1 != 0}" class="fa-solid fa-star-half-stroke"></i>
-                </div>
-                <p th:text="|&quot;${review.comment}&quot;|">"Great service!"</p>
-                <div class="reviewer">
-                    <div class="rev-av" th:text="${review.user != null && review.user.name != null && !review.user.name.isEmpty() ? review.user.name.substring(0,1).toUpperCase() : 'V'}">V</div>
-                    <div>
-                        <div class="rev-name" th:text="${review.user != null ? review.user.name : 'Verified Customer'}">Verified Customer</div>
-                        <div class="rev-label" th:text="|${review.worker != null ? review.worker.service : 'Home Service'} Customer|">GharFix User</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="footer">
-        <div class="footer-logo">Ghar<em>Fix</em></div>
-        <span>Â© 2026 GharFix. All rights reserved.</span>
-        <div>
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
-            <a href="#">Contact</a>
-        </div>
-    </footer>
-
-    <!-- LOGIN POPUP -->
-    <div class="popup" id="loginBox">
-        <div class="popup-box">
-            <div class="ph">
-                <div class="ph-title">
-                    <h2>Welcome back</h2>
-                    <p>Sign in to your GharFix account</p>
-                </div>
-                <button class="ph-close" onclick="closePopup('loginBox')"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="pb">
-                <div style="display:flex;gap:0;margin-bottom:18px;border-radius:8px;overflow:hidden;border:1.5px solid var(--border);">
-                    <button type="button" style="flex:1;padding:10px;font-size:13px;font-weight:600;font-family:inherit;border:none;cursor:default;background:var(--ink);color:#fff;">I'm a User</button>
-                    <button type="button" onclick="window.location.href='/worker'" style="flex:1;padding:10px;font-size:13px;font-weight:600;font-family:inherit;border:none;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .2s ease;">I'm a Worker <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;margin-left:4px;"></i></button>
-                </div>
-                <form id="loginForm" action="/login" method="POST">
-                    <div class="fg"><label>Email Address</label><input type="email" name="email"
-                            placeholder="you@example.com" required></div>
-                    <div class="fg"><label>Password</label><input type="password" name="password"
-                            placeholder="Your password" required></div>
-                    <button type="submit" class="pop-btn">Sign In</button>
-                </form>
-                <p class="pop-foot">Don't have an account? <a onclick="switchPopup('loginBox','signupBox')">Create one
-                        free</a></p>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- SIGNUP POPUP -->
-    <div class="popup" id="signupBox">
-        <div class="popup-box">
-            <div class="ph">
-                <div class="ph-title">
-                    <h2>Create Account</h2>
-                    <p>Join thousands of happy homeowners</p>
-                </div>
-                <button class="ph-close" onclick="closePopup('signupBox')"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="pb">
-                <div style="display:flex;gap:0;margin-bottom:18px;border-radius:8px;overflow:hidden;border:1.5px solid var(--border);">
-                    <button type="button" style="flex:1;padding:10px;font-size:13px;font-weight:600;font-family:inherit;border:none;cursor:default;background:var(--ink);color:#fff;">I'm a User</button>
-                    <button type="button" onclick="window.location.href='/worker'" style="flex:1;padding:10px;font-size:13px;font-weight:600;font-family:inherit;border:none;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .2s ease;">I'm a Worker <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;margin-left:4px;"></i></button>
-                </div>
-                <!-- User signup form -->
-                <form id="userSignupForm" action="/register" method="POST">
-                    <div class="fg"><label>Full Name</label><input type="text" name="name" placeholder="Your full name"
-                            required></div>
-                    <div class="fg"><label>Email Address</label><input type="email" name="email"
-                            placeholder="you@example.com" required></div>
-                    <div class="fg"><label>Phone Number</label><input type="tel" name="phone"
-                            placeholder="+91 98765 43210" required></div>
-                    <div class="fg"><label>Password</label><input type="password" name="password"
-                            placeholder="Create a password" required></div>
-                    <div class="fg"><label>Confirm Password</label><input type="password" name="confirm_password"
-                            placeholder="Repeat password" required></div>
-                    <button type="submit" class="pop-btn">Create Account</button>
-                </form>
-                <p class="pop-foot">Already have an account? <a onclick="switchPopup('signupBox','loginBox')">Sign
-                        in</a></p>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- BOOKING POPUP -->
-    <div class="popup" id="bookingBox">
-        <div class="popup-box">
-            <div class="ph">
-                <div class="ph-title">
-                    <h2>Book Service</h2>
-                    <p>Fill in your details below</p>
-                </div>
-                <button class="ph-close" onclick="closePopup('bookingBox')"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="pb">
-                <div class="worker-preview" id="workerPreview">
-                    <img id="previewImg" src="" alt="">
-                    <div>
-                        <div class="wp-name" id="previewName"></div>
-                        <div class="wp-service" id="previewService"></div>
-                    </div>
-                </div>
-                <form action="/book" method="POST">
-                    <input type="hidden" name="worker_id" id="bookingWorkerId">
-                    <div class="fg"><label>Service</label><input type="text" name="service" id="bookingService"
-                            readonly></div>
-                    <div class="fg"><label>Your Address</label><input type="text" name="address"
-                            placeholder="House no., street, area" required></div>
-                    <div class="fg"><label>City</label><input type="text" name="city" placeholder="Enter your city"
-                            required></div>
-                    <div class="fg"><label>Preferred Date</label><input type="date" name="date" required></div>
-                    <div class="fg"><label>Preferred Time</label><input type="time" name="time" required></div>
-                    <button type="submit" class="pop-btn">Confirm Booking</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function openPopup(id) { document.getElementById(id).classList.add('active'); document.body.style.overflow = 'hidden'; }
-        function closePopup(id) { document.getElementById(id).classList.remove('active'); document.body.style.overflow = ''; }
-        function switchPopup(a, b) { closePopup(a); setTimeout(() => openPopup(b), 180); }
-        function openBooking(id, name, service, img) {
-            const isAuth = document.querySelector('.user-chip') !== null;
-            if (isAuth) {
-                document.getElementById('bookingWorkerId').value = id;
-                document.getElementById('bookingService').value = service;
-                document.getElementById('previewName').textContent = name;
-                document.getElementById('previewService').textContent = service;
-                document.getElementById('previewImg').src = img;
-                openPopup('bookingBox');
-            } else {
-                openPopup('loginBox');
-            }
-        }
-        function selectService(n) { showRadar(n); }
-        function searchServices() { const q = document.getElementById('searchInput').value; if (q) document.getElementById('workers').scrollIntoView({ behavior: 'smooth' }); }
-        document.querySelectorAll('.popup').forEach(p => p.addEventListener('click', e => { if (e.target === p) closePopup(p.id); }));
-        function toggleUserDropdown(e) {
-            if (e) e.stopPropagation();
-            const ud = document.getElementById('userDropdown');
-            if (ud) ud.classList.toggle('active');
-        }
-        document.addEventListener('click', function(e) {
-            const ud = document.getElementById('userDropdown');
-            if (ud && ud.classList.contains('active')) {
-                const wrap = document.querySelector('.user-menu-wrap');
-                if (wrap && !wrap.contains(e.target)) {
-                    ud.classList.remove('active');
-                }
-            }
-        });
-        setTimeout(() => { document.querySelectorAll('.flash').forEach(f => { f.style.opacity = '0'; f.style.transition = 'opacity .4s'; setTimeout(() => f.remove(), 400); }); }, 4000);
-    </script>
-
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
-    <!-- â”€â”€â”€ MAP SEARCH MODAL â”€â”€â”€ -->
-    <div id="mapModal">
-        <div id="mapCard">
-            <!-- Header -->
-            <div id="mapHeader">
-                <div id="mapHeaderLeft">
-                    <div id="mapServiceChip">
-                        <i class="fa-solid fa-location-crosshairs"></i>
-                        <span id="mapServiceName"></span>
-                    </div>
-                    <div id="mapStatusRow">
-                        <span id="mapStatusDot"></span>
-                        <span id="mapStatusText">Getting your locationâ€¦</span>
-                    </div>
-                </div>
-                <button id="mapCloseBtn" onclick="closeMapModal()">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <!-- Map -->
-            <div id="mapContainer"></div>
-
-            <!-- Footer -->
-            <div id="mapFooter">
-                <div id="mapFooterInfo">
-                    <i class="fa-solid fa-circle-info"></i>
-                    Showing verified professionals near you
-                </div>
-                <button id="mapViewBtn" class="hidden" onclick="closeMapModal(true)">
-                    <i class="fa-solid fa-users"></i>
-                    <span id="mapViewBtnText">View Professionals</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <style>
-        /* â”€â”€ MAP MODAL â”€â”€ */
+        /* ── MAP SEARCH MODAL ── */
         #mapModal {
             position: fixed;
             inset: 0;
             z-index: 2000;
-            background: rgba(5, 5, 10, 0.75);
+            background: rgba(0, 0, 0, 0.5);
             display: none;
             justify-content: center;
             align-items: center;
-            -webkit-backdrop-filter: blur(6px);
-            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
             padding: 20px;
         }
 
@@ -1552,390 +1129,582 @@
         }
 
         #mapCard {
-            background: #fff;
-            border-radius: 20px;
+            background: #FFFFFF;
+            border-radius: var(--radius-lg);
             width: 100%;
-            max-width: 700px;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+            max-width: 680px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
             overflow: hidden;
-            animation: popIn .3s cubic-bezier(.34, 1.56, .64, 1);
             display: flex;
             flex-direction: column;
+            border: 1px solid var(--border-light);
         }
 
-        /* Header */
         #mapHeader {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 16px 20px;
-            border-bottom: 1px solid var(--border);
-            background: #fff;
-        }
-
-        #mapHeaderLeft {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
+            border-bottom: 1px solid var(--border-light);
         }
 
         #mapServiceChip {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            background: var(--gold-lt);
-            color: var(--gold);
-            border: 1px solid #e9c97a;
-            padding: 4px 14px;
-            border-radius: 50px;
-            font-size: 13px;
+            gap: 6px;
+            background: var(--bg-subtle);
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-size: 12.5px;
             font-weight: 700;
         }
 
-        #mapStatusRow {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 12px;
-            color: var(--muted);
-            padding-left: 2px;
-        }
-
-        #mapStatusDot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #f59e0b;
-            box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
-            animation: dotPulse 1.2s infinite;
-        }
-
-        #mapStatusDot.found {
-            background: #10b981;
-            animation: none;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-        }
-
-        @keyframes dotPulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5);
-            }
-
-            70% {
-                box-shadow: 0 0 0 8px rgba(245, 158, 11, 0);
-            }
-
-            100% {
-                box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
-            }
-        }
-
         #mapCloseBtn {
-            width: 34px;
-            height: 34px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            background: var(--bg);
-            border: 1.5px solid var(--border);
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--ink-soft);
-            font-size: 15px;
-            transition: var(--t);
-            flex-shrink: 0;
+            color: var(--text-secondary);
         }
 
-        #mapCloseBtn:hover {
-            background: var(--border);
-        }
-
-        /* Map tile */
         #mapContainer {
             width: 100%;
-            height: 420px;
-            background: #e5e3df;
-            position: relative;
+            height: 380px;
+            background: #E5E7EB;
         }
 
-        /* Footer */
         #mapFooter {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 14px 20px;
-            border-top: 1px solid var(--border);
-            background: #fff;
-            gap: 12px;
+            border-top: 1px solid var(--border-light);
+            background: #FFFFFF;
         }
 
-        #mapFooterInfo {
-            font-size: 12px;
-            color: var(--muted);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        #mapFooterInfo i {
-            color: var(--gold);
-        }
-
-        #mapViewBtn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 22px;
-            border-radius: 9px;
-            background: var(--ink);
-            color: #fff;
-            border: none;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            font-family: inherit;
-            transition: var(--t);
-            white-space: nowrap;
-        }
-
-        #mapViewBtn:hover {
-            background: #222;
-        }
-
-        #mapViewBtn.hidden {
-            display: none;
-        }
-
-        /* Custom Leaflet markers */
-        .user-marker-wrap,
-        .worker-marker-wrap {
-            position: relative;
-        }
-
-        .user-pulse {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #3b82f6;
-            border: 3px solid #fff;
-            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
-            animation: userPulse 2s infinite;
-        }
-
-        @keyframes userPulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
+        /* ── RESPONSIVE MEDIA QUERIES ── */
+        @media (max-width: 1024px) {
+            .services-grid {
+                grid-template-columns: repeat(3, 1fr);
             }
-
-            70% {
-                box-shadow: 0 0 0 12px rgba(59, 130, 246, 0);
+            .steps-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
-
-            100% {
-                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+            .why-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
-        .worker-pin {
-            width: 32px;
-            height: 32px;
-            border-radius: 50% 50% 50% 0;
-            transform: rotate(-45deg);
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            border: 2.5px solid #fff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: markerDrop .4s cubic-bezier(.34, 1.56, .64, 1);
-        }
-
-        .worker-pin i {
-            transform: rotate(45deg);
-            color: #fff;
-            font-size: 13px;
-        }
-
-        @keyframes markerDrop {
-            from {
-                opacity: 0;
-                transform: rotate(-45deg) scale(0) translateY(-20px);
+        @media (max-width: 768px) {
+            .header {
+                height: 64px;
             }
-
-            to {
-                opacity: 1;
-                transform: rotate(-45deg) scale(1) translateY(0);
+            .header-inner {
+                padding: 0 16px;
+            }
+            .brand-logo {
+                font-size: 19px;
+            }
+            .location-picker .loc-city {
+                font-size: 12px;
+            }
+            .hero-section {
+                padding: 36px 16px 28px;
+            }
+            .hero-title {
+                font-size: 26px;
+            }
+            .hero-subtitle {
+                font-size: 14px;
+                margin-bottom: 24px;
+            }
+            .category-row {
+                gap: 16px;
+            }
+            .cat-circle {
+                width: 58px;
+                height: 58px;
+                font-size: 20px;
+            }
+            .cat-item {
+                width: 70px;
+            }
+            .cat-label {
+                font-size: 11.5px;
+                max-width: 70px;
+            }
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 14px;
+            }
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+            .why-grid {
+                grid-template-columns: 1fr;
+            }
+            .section {
+                padding: 40px 16px;
             }
         }
 
-        /* Leaflet popup tweak */
-        .leaflet-popup-content-wrapper {
-            border-radius: 12px !important;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
-            font-family: 'Inter', sans-serif !important;
-            font-size: 13px !important;
-            padding: 2px 4px !important;
-        }
-
-        .leaflet-popup-content {
-            margin: 10px 14px !important;
-        }
-
-        .popup-worker-name {
-            font-weight: 700;
-            color: #0f0f0f;
-        }
-
-        .popup-worker-info {
-            color: #6b7280;
-            font-size: 12px;
-            margin-top: 2px;
-        }
-
-        .popup-worker-badge {
-            display: inline-block;
-            margin-top: 6px;
-            background: #fef9ee;
-            color: #b8860b;
-            border: 1px solid #e9c97a;
-            padding: 2px 10px;
-            border-radius: 50px;
-            font-size: 11px;
-            font-weight: 700;
+        @media (max-width: 480px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-inner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
+</head>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<body>
 
-    <script>
-        /* â”€â”€ MAP SEARCH LOGIC â”€â”€ */
-        let _map = null;
-        let _mapTimers = [];
-        const WORKER_DATA = [
-            { name: 'Ramesh Kumar', dist: '0.4 km', rating: '4.5â˜…' },
-            { name: 'Suresh Patel', dist: '0.7 km', rating: '4.7â˜…' },
-            { name: 'Amit Sharma', dist: '1.1 km', rating: '4.6â˜…' },
-            { name: 'Raj Malhotra', dist: '1.4 km', rating: '4.8â˜…' },
-            { name: 'Priya Singh', dist: '0.9 km', rating: '4.9â˜…' },
-            { name: 'Vikram Joshi', dist: '1.8 km', rating: '4.4â˜…' },
-        ];
+    <!-- Flash notification messages -->
+    <div class="flash-messages">
+        <div th:if="${flash_success != null}" class="flash success" th:text="${flash_success}"></div>
+        <div th:if="${flash_error != null}" class="flash error" th:text="${flash_error}"></div>
+    </div>
 
-        function selectService(n) {
-            document.getElementById('searchInput').value = n;
-            showMapSearch(n);
-        }
+    <!-- 1. TOP BAR -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="header-left">
+                <!-- Logo -->
+                <a href="/" class="brand-logo">
+                    <i class="fa-solid fa-house-chimney"></i>
+                    <span>Ghar<em>Fix</em></span>
+                </a>
 
-        function showMapSearch(serviceName) {
-            // Reset UI
-            document.getElementById('mapServiceName').textContent = serviceName;
-            document.getElementById('mapStatusText').textContent = 'Getting your locationâ€¦';
-            document.getElementById('mapStatusDot').className = '';
-            document.getElementById('mapViewBtn').classList.add('hidden');
-            document.getElementById('mapModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            _mapTimers.forEach(clearTimeout); _mapTimers = [];
+                <!-- Location label "Vadodara" with pin and chevron (static visual Urban Company pattern) -->
+                <div class="location-picker" title="Service location">
+                    <i class="fa-solid fa-location-dot loc-pin"></i>
+                    <span class="loc-city">Vadodara</span>
+                    <i class="fa-solid fa-chevron-down loc-chevron"></i>
+                </div>
+            </div>
 
-            // Destroy old map
-            if (_map) { _map.remove(); _map = null; }
+            <!-- Right user avatar / sign in buttons -->
+            <div class="header-right">
+                <a href="/worker" class="nav-link-partner">Become a Professional</a>
 
-            // Try geolocation, fallback to New Delhi
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    pos => initMap(pos.coords.latitude, pos.coords.longitude, serviceName),
-                    () => initMap(28.6139, 77.2090, serviceName),
-                    { timeout: 6000 }
-                );
-            } else {
-                initMap(28.6139, 77.2090, serviceName);
-            }
-        }
+                <!-- Logged in state -->
+                <div th:if="${currentUser != null}" class="user-menu-wrap">
+                    <button type="button" class="u-avatar" id="userAvatarBtn" onclick="toggleUserDropdown(event)" aria-label="User profile menu">
+                        <span th:text="${currentUser.name != null && !currentUser.name.isEmpty() ? currentUser.name.substring(0,1).toUpperCase() : 'U'}">U</span>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="ud-header">
+                            <div class="ud-name" th:text="${currentUser.name}">User Name</div>
+                            <div class="ud-email" th:text="${currentUser.email}">user@example.com</div>
+                        </div>
+                        <ul class="ud-list">
+                            <li>
+                                <a href="/my-bookings" class="ud-item">
+                                    <i class="fa-solid fa-calendar-check"></i>
+                                    <span>My Bookings</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/logout" class="ud-item ud-logout">
+                                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                    <span>Logout</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
 
-        function initMap(lat, lng, serviceName) {
-            document.getElementById('mapStatusText').textContent = 'Searching nearby professionalsâ€¦';
+                <!-- Logged out state -->
+                <div th:if="${currentUser == null}" style="display:flex; align-items:center; gap:8px;">
+                    <button type="button" class="btn-header-signin" onclick="openPopup('loginBox')">Sign In</button>
+                    <button type="button" class="btn-header-primary" onclick="openPopup('signupBox')">Get Started</button>
+                </div>
+            </div>
+        </div>
+    </header>
 
-            _map = L.map('mapContainer', {
-                zoomControl: true,
-                attributionControl: true
-            }).setView([lat, lng], 14);
+    <!-- 2. HERO AREA & CIRCULAR CATEGORIES -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <h1 class="hero-title">Home services at your doorstep</h1>
+            <p class="hero-subtitle">Book verified, background-checked professionals for repairs, installations and maintenance</p>
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: 'Â© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-                maxZoom: 19
-            }).addTo(_map);
+            <!-- Row of circular category icons in soft pastel backgrounds -->
+            <div class="category-row-wrapper">
+                <div class="category-row">
+                    <!-- Dynamic Service Category Circles -->
+                    <a th:each="service : ${services}"
+                       th:href="@{'/book/' + ${service.name}}"
+                       class="cat-item"
+                       th:title="${service.name}">
+                        <div class="cat-circle"
+                             th:classappend="'cat-' + ${#strings.toLowerCase(#strings.replace(service.name, ' ', '-'))}">
+                            <i class="fa-solid" th:classappend="${service.icon != null ? service.icon : 'fa-wrench'}"></i>
+                        </div>
+                        <span class="cat-label" th:text="${service.name}">Service</span>
+                    </a>
 
-            // User "You are here" marker
-            const userIcon = L.divIcon({
-                html: '<div class="user-pulse"></div>',
-                className: '', iconSize: [18, 18], iconAnchor: [9, 9]
-            });
-            L.marker([lat, lng], { icon: userIcon })
-                .addTo(_map)
-                .bindPopup('<span style="font-weight:700;font-size:13px">ðŸ“ You are here</span>')
-                .openPopup();
+                    <!-- "All services" icon linking to Most booked grid -->
+                    <a href="#most-booked" class="cat-item" title="View all services">
+                        <div class="cat-circle cat-all">
+                            <i class="fa-solid fa-table-cells-large"></i>
+                        </div>
+                        <span class="cat-label">All services</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            // Scatter worker markers around the user
-            const offsets = [
-                [-0.003, 0.005], [0.004, -0.003], [-0.005, -0.006],
-                [0.006, 0.004], [-0.002, 0.008], [0.007, -0.005]
-            ];
-            const count = 4 + Math.floor(Math.random() * 3);
-            const workerIcon = L.divIcon({
-                html: '<div class="worker-pin"><i class="fa-solid fa-person"></i></div>',
-                className: '', iconSize: [32, 32], iconAnchor: [16, 32]
-            });
+    <!-- 3. "SEE HOW IT WORKS" SECTION (Horizontally scrollable preview cards) -->
+    <!-- TODO: replace with real video/image assets per service -->
+    <section class="section section-alt" id="see-how-it-works">
+        <div class="sec-container">
+            <div class="sec-head">
+                <h2 class="sec-title">See how it works</h2>
+                <p class="sec-sub">Watch how our certified experts handle home services with precision and safety</p>
+            </div>
 
-            offsets.slice(0, count).forEach((off, i) => {
-                const t = setTimeout(() => {
-                    const wLat = lat + off[0] + (Math.random() - 0.5) * 0.002;
-                    const wLng = lng + off[1] + (Math.random() - 0.5) * 0.002;
-                    const w = WORKER_DATA[i % WORKER_DATA.length];
-                    L.marker([wLat, wLng], { icon: workerIcon })
-                        .addTo(_map)
-                        .bindPopup(`
-                        <div class="popup-worker-name">${w.name}</div>
-                        <div class="popup-worker-info">${w.dist} away Â· ${w.rating}</div>
-                        <div class="popup-worker-badge">${serviceName}</div>
-                    `);
+            <!-- Horizontally scrollable preview cards -->
+            <div class="preview-scroll-wrapper">
+                <div class="preview-cards-row">
+                    <div th:each="service : ${services}"
+                         class="preview-card"
+                         th:data-service="${service.name}"
+                         onclick="window.location.href='/book/' + encodeURIComponent(this.getAttribute('data-service'))">
+                        <div class="preview-placeholder"
+                             th:classappend="'prev-' + ${#strings.toLowerCase(#strings.replace(service.name, ' ', '-'))}">
+                            <div class="preview-bg-icon">
+                                <i class="fa-solid" th:classappend="${service.icon != null ? service.icon : 'fa-wrench'}"></i>
+                            </div>
+                            <!-- Video play-button overlay -->
+                            <div class="play-button-overlay" aria-label="Play demo video">
+                                <i class="fa-solid fa-play"></i>
+                            </div>
+                            <div class="preview-caption-overlay">
+                                <span class="preview-caption-tag" th:text="${service.name}">Service</span>
+                                <div class="preview-caption-text" th:text="${'Complete ' + service.name + ' Service'}">Service Preview</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                    // After last marker â€” show "found" state
-                    if (i === count - 1) {
-                        const t2 = setTimeout(() => {
-                            document.getElementById('mapStatusDot').className = 'found';
-                            document.getElementById('mapStatusText').textContent =
-                                count + ' professionals found nearby';
-                            const btn = document.getElementById('mapViewBtn');
-                            document.getElementById('mapViewBtnText').textContent =
-                                'View ' + count + ' Professionals';
-                            btn.classList.remove('hidden');
-                        }, 600);
-                        _mapTimers.push(t2);
-                    }
-                }, 800 + i * 500);
-                _mapTimers.push(t);
-            });
-        }
+    <!-- 4. "MOST BOOKED SERVICES" SECTION (Responsive grid: icon, name, price ONLY) -->
+    <section class="section" id="most-booked">
+        <div class="sec-container">
+            <div class="sec-head">
+                <h2 class="sec-title">Most booked services</h2>
+                <p class="sec-sub">Select a service to check upfront rates and request an expert</p>
+            </div>
 
-        function closeMapModal(scrollToWorkers = false) {
-            _mapTimers.forEach(clearTimeout); _mapTimers = [];
-            if (_map) { _map.remove(); _map = null; }
-            document.getElementById('mapModal').classList.remove('active');
-            document.body.style.overflow = '';
-            if (scrollToWorkers) {
-                setTimeout(() => document.getElementById('workers')
-                    .scrollIntoView({ behavior: 'smooth' }), 200);
-            }
-        }
+            <div class="services-grid">
+                <div th:each="service : ${services}"
+                     class="service-card"
+                     th:data-service="${service.name}"
+                     onclick="window.location.href='/book/' + encodeURIComponent(this.getAttribute('data-service'))">
+                    <!-- Placeholder Media Banner -->
+                    <div class="service-card-media"
+                         th:classappend="'card-' + ${#strings.toLowerCase(#strings.replace(service.name, ' ', '-'))}">
+                        <i class="fa-solid" th:classappend="${service.icon != null ? service.icon : 'fa-wrench'}"></i>
+                    </div>
+                    <!-- Body: Name and Price ONLY -->
+                    <div class="service-card-body">
+                        <div class="service-name" th:text="${service.name}">Electrician</div>
+                        <div class="service-price-wrap">
+                            <span class="price-prefix">Starts at</span>
+                            <span class="service-price" th:text="${service.basePricePerHour != null ? '₹' + service.basePricePerHour : '₹150'}">₹150</span>
+                            <span class="service-price-rate">/ hr</span>
+                        </div>
+                        <button type="button" class="service-book-action">Book Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        // Close on backdrop
-        document.getElementById('mapModal').addEventListener('click', function (e) {
-            if (e.target === this) closeMapModal();
-        });
-    </script>
+    <!-- 5. "HOW IT WORKS" (4-STEP) SECTION -->
+    <section class="section section-alt" id="how-it-works">
+        <div class="sec-container">
+            <div class="sec-head center">
+                <h2 class="sec-title">Booking in 4 simple steps</h2>
+                <p class="sec-sub">Fast, seamless, and transparent home care at your fingertips</p>
+            </div>
 
-    <!-- User Negotiation Notification Bar -->
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-badge">1</div>
+                    <h3 class="step-title">Choose a Service</h3>
+                    <p class="step-desc">Pick from our verified home service categories and describe your requirement.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-badge">2</div>
+                    <h3 class="step-title">Pick a Slot</h3>
+                    <p class="step-desc">Select a convenient date and time window that best fits your daily routine.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-badge">3</div>
+                    <h3 class="step-title">Pro Accepts</h3>
+                    <p class="step-desc">Nearby verified experts are alerted and confirm your appointment instantly.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-badge">4</div>
+                    <h3 class="step-title">Relax &amp; Done</h3>
+                    <p class="step-desc">Your dedicated technician arrives on schedule and completes the work reliably.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. "WHY GHARFIX" SECTION -->
+    <section class="section" id="why-gharfix">
+        <div class="sec-container">
+            <div class="sec-head center">
+                <h2 class="sec-title">Why GharFix</h2>
+                <p class="sec-sub">Quality service, verified experts, and total peace of mind at every step</p>
+            </div>
+
+            <div class="why-grid">
+                <div class="why-card">
+                    <div class="why-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                    <h3 class="why-title">Find Nearby Pros</h3>
+                    <p class="why-desc">Instantly discover verified electricians, plumbers, cleaners, and technicians close to your location in Vadodara.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon"><i class="fa-solid fa-bolt"></i></div>
+                    <h3 class="why-title">Book in Seconds</h3>
+                    <p class="why-desc">Select your desired service, pick your schedule, and submit your request in just a few taps.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3 class="why-title">Verified &amp; Trusted</h3>
+                    <p class="why-desc">Every technician is background-checked, credential-screened, and vetted before accepting jobs.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon"><i class="fa-solid fa-bell"></i></div>
+                    <h3 class="why-title">Real-Time Updates</h3>
+                    <p class="why-desc">Get live notifications and transparent price negotiation whenever a professional responds.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon"><i class="fa-solid fa-tag"></i></div>
+                    <h3 class="why-title">Transparent Pricing</h3>
+                    <p class="why-desc">Honest hourly rates with flexible counter-offer negotiation and absolutely no hidden fees.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon"><i class="fa-solid fa-rotate-left"></i></div>
+                    <h3 class="why-title">Re-service Guarantee</h3>
+                    <p class="why-desc">Customer satisfaction first. If a job is not completed properly, we will re-service it.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-left">
+                <div class="footer-logo">Ghar<em>Fix</em></div>
+                <div class="footer-copy">© 2026 GharFix Technologies Inc. All rights reserved.</div>
+            </div>
+            <div class="footer-links">
+                <a href="/worker">Partner with Us</a>
+                <a href="#most-booked">Services</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#why-gharfix">Why Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ── POPUPS: LOGIN ── -->
+    <div class="popup" id="loginBox">
+        <div class="popup-box">
+            <div class="ph">
+                <div class="ph-title">
+                    <h2>Welcome back</h2>
+                    <p>Sign in to your GharFix account</p>
+                </div>
+                <button type="button" class="ph-close" onclick="closePopup('loginBox')" aria-label="Close dialog"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="pb">
+                <div class="modal-toggle-wrap">
+                    <button type="button" class="toggle-btn-active">I'm a Customer</button>
+                    <button type="button" onclick="window.location.href='/worker'" class="toggle-btn-inactive">I'm a Worker <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px; margin-left:3px;"></i></button>
+                </div>
+                <form id="loginForm" action="/login" method="POST">
+                    <div class="fg">
+                        <label>Email Address</label>
+                        <input type="email" name="email" placeholder="you@example.com" required>
+                    </div>
+                    <div class="fg">
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="Your password" required>
+                    </div>
+                    <button type="submit" class="pop-btn">Sign In</button>
+                </form>
+                <p class="pop-foot">Don't have an account? <a onclick="switchPopup('loginBox','signupBox')">Create one free</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── POPUPS: SIGNUP ── -->
+    <div class="popup" id="signupBox">
+        <div class="popup-box">
+            <div class="ph">
+                <div class="ph-title">
+                    <h2>Create Account</h2>
+                    <p>Join thousands of happy homeowners in Vadodara</p>
+                </div>
+                <button type="button" class="ph-close" onclick="closePopup('signupBox')" aria-label="Close dialog"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="pb">
+                <div class="modal-toggle-wrap">
+                    <button type="button" class="toggle-btn-active">I'm a Customer</button>
+                    <button type="button" onclick="window.location.href='/worker'" class="toggle-btn-inactive">I'm a Worker <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px; margin-left:3px;"></i></button>
+                </div>
+                <form id="userSignupForm" action="/register" method="POST">
+                    <div class="fg">
+                        <label>Full Name</label>
+                        <input type="text" name="name" placeholder="Your full name" required>
+                    </div>
+                    <div class="fg">
+                        <label>Email Address</label>
+                        <input type="email" name="email" placeholder="you@example.com" required>
+                    </div>
+                    <div class="fg">
+                        <label>Phone Number</label>
+                        <input type="tel" name="phone" placeholder="+91 98765 43210" required>
+                    </div>
+                    <div class="fg">
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="Create a password" required>
+                    </div>
+                    <div class="fg">
+                        <label>Confirm Password</label>
+                        <input type="password" name="confirm_password" placeholder="Repeat password" required>
+                    </div>
+                    <button type="submit" class="pop-btn">Create Account</button>
+                </form>
+                <p class="pop-foot">Already have an account? <a onclick="switchPopup('signupBox','loginBox')">Sign in</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── POPUPS: BOOKING MODAL (Direct booking helper) ── -->
+    <div class="popup" id="bookingBox">
+        <div class="popup-box">
+            <div class="ph">
+                <div class="ph-title">
+                    <h2>Book Service</h2>
+                    <p>Fill in your service details below</p>
+                </div>
+                <button type="button" class="ph-close" onclick="closePopup('bookingBox')" aria-label="Close dialog"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="pb">
+                <div class="worker-preview" id="workerPreview" style="display:none;">
+                    <img id="previewImg" src="" alt="">
+                    <div>
+                        <div class="wp-name" id="previewName"></div>
+                        <div class="wp-service" id="previewService"></div>
+                    </div>
+                </div>
+                <form action="/book" method="POST">
+                    <input type="hidden" name="worker_id" id="bookingWorkerId">
+                    <div class="fg">
+                        <label>Service</label>
+                        <input type="text" name="service" id="bookingService" readonly>
+                    </div>
+                    <div class="fg">
+                        <label>Your Address</label>
+                        <input type="text" name="address" placeholder="House / Flat no., street, area" required>
+                    </div>
+                    <div class="fg">
+                        <label>City</label>
+                        <input type="text" name="city" value="Vadodara" placeholder="Vadodara" required>
+                    </div>
+                    <div class="fg">
+                        <label>Preferred Date</label>
+                        <input type="date" name="date" required>
+                    </div>
+                    <div class="fg">
+                        <label>Preferred Time</label>
+                        <input type="time" name="time" required>
+                    </div>
+                    <button type="submit" class="pop-btn">Confirm Booking</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Negotiation Notification Bar Fragment -->
     <div th:if="${currentUser != null}" th:replace="~{fragments/negotiation-bar :: userNegotiationBar}"></div>
 
+    <!-- Modal Scripts & Handlers -->
+    <script>
+        function openPopup(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closePopup(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function switchPopup(closeId, openId) {
+            closePopup(closeId);
+            setTimeout(() => openPopup(openId), 180);
+        }
+
+        function toggleUserDropdown(e) {
+            if (e) e.stopPropagation();
+            const ud = document.getElementById('userDropdown');
+            if (ud) ud.classList.toggle('active');
+        }
+
+        document.addEventListener('click', function (e) {
+            const ud = document.getElementById('userDropdown');
+            if (ud && ud.classList.contains('active')) {
+                const wrap = document.querySelector('.user-menu-wrap');
+                if (wrap && !wrap.contains(e.target)) {
+                    ud.classList.remove('active');
+                }
+            }
+        });
+
+        // Close popups on backdrop click
+        document.querySelectorAll('.popup').forEach(p => {
+            p.addEventListener('click', function (e) {
+                if (e.target === p) closePopup(p.id);
+            });
+        });
+
+        // Flash message auto dismiss
+        setTimeout(() => {
+            document.querySelectorAll('.flash').forEach(f => {
+                f.style.opacity = '0';
+                f.style.transition = 'opacity .4s';
+                setTimeout(() => f.remove(), 400);
+            });
+        }, 4000);
+    </script>
 </body>
 
 </html>

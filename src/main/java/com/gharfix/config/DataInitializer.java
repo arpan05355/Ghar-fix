@@ -48,6 +48,7 @@ public class DataInitializer implements CommandLineRunner {
         importFromSqliteIfPresent();
     }
 
+    @SuppressWarnings("null")
     private void seedServices() {
         if (serviceRepository.count() == 0) {
             List<ServiceEntity> services = List.of(
@@ -90,6 +91,7 @@ public class DataInitializer implements CommandLineRunner {
         }
     }
 
+    @SuppressWarnings("null")
     private void seedWorkers() {
         if (workerRepository.count() == 0) {
             String hashedPassword = passwordEncoder.encode("worker123");

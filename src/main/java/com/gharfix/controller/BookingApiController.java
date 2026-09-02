@@ -88,7 +88,7 @@ public class BookingApiController {
                 ? worker.getServices()
                 : workerDetails.getServices();
 
-        List<Booking> requests = bookingService.getRequestedBookingsForServices(services);
+        List<Booking> requests = bookingService.getRequestedBookingsForServices(services, workerDetails.getId());
         List<BookingResponseDto> result = requests.stream()
                 .map(BookingResponseDto::fromEntity)
                 .collect(Collectors.toList());
