@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Negotiation Bar</title>
+</head>
 <body>
 
 <!-- USER NEGOTIATION FLOATING BOTTOM BAR -->
-<div th:fragment="userNegotiationBar" id="userNegBarWrapper" style="display: none;">
+<div th:fragment="userNegotiationBar" id="userNegBarWrapper">
     <style>
+        #userNegBarWrapper {
+            display: none;
+        }
+
         .user-neg-bar {
             position: fixed;
             bottom: 24px;
@@ -22,6 +31,7 @@
             align-items: center;
             justify-content: space-between;
             gap: 16px;
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             animation: unbSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             font-family: inherit;

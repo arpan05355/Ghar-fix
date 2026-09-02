@@ -79,7 +79,7 @@ public class SecurityConfig {
     public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
         http
             .securityMatcher("/api/**")
-            .csrf(AbstractHttpConfigurer::disable)
+            .csrf(csrf -> csrf.disable())
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/services", "/api/workers", "/api/search").permitAll()
@@ -109,7 +109,7 @@ public class SecurityConfig {
     @Order(2)
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/worker", "/worker/", "/worker/login", "/register/worker").permitAll()
                 .requestMatchers("/worker/dashboard/**").hasRole("WORKER")
