@@ -56,6 +56,8 @@
         .btn-ghost:hover { border-color:var(--ink); color:var(--ink); }
         .btn-dark { background:var(--ink); color:#fff; }
         .btn-dark:hover { background:#222; }
+        .btn-ai-help { font-size: 12px; padding: 6px 12px; }
+        .ai-help-icon { color: var(--gold-mid); }
         .user-chip { display:flex; align-items:center; gap:10px; }
         .u-avatar { width:32px; height:32px; border-radius:50%; background:var(--ink); color:var(--gold-mid); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; }
         .u-name { font-weight:600; font-size:13px; color:var(--ink-soft); }
@@ -353,12 +355,12 @@
                         <i class="fa-solid fa-shield-check"></i>
                         <span th:text="'ID: ' + (${booking.razorpayPaymentId != null ? booking.razorpayPaymentId : 'Paid'})">ID: Paid</span>
                     </span>
-                    <button type="button" class="btn btn-ghost" style="font-size: 12px; padding: 6px 12px;"
+                    <button type="button" class="btn btn-ghost btn-ai-help"
                             th:data-booking-id="${booking.id}"
                             th:data-service="${booking.service}"
                             onclick="if (window.openGharFixAI) window.openGharFixAI('I need help with my ' + this.getAttribute('data-service') + ' booking #' + this.getAttribute('data-booking-id'), this.getAttribute('data-booking-id'))"
                             title="Ask AI Assistant about this booking">
-                        <i class="fa-solid fa-wand-magic-sparkles" style="color: #F59E0B;"></i> AI Help
+                        <i class="fa-solid fa-wand-magic-sparkles ai-help-icon"></i> AI Help
                     </button>
                 </div>
             </div>
