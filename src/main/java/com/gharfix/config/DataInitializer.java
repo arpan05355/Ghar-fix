@@ -48,7 +48,6 @@ public class DataInitializer implements CommandLineRunner {
         importFromSqliteIfPresent();
     }
 
-    @SuppressWarnings("null")
     private void seedServices() {
         if (serviceRepository.count() == 0) {
             List<ServiceEntity> services = List.of(
@@ -59,15 +58,23 @@ public class DataInitializer implements CommandLineRunner {
                     new ServiceEntity("House Maid", "fa-broom", "Home cleaning services", 120, 100),
                     new ServiceEntity("Laundry", "fa-shirt", "Cloth washing and ironing", 45, 80),
                     new ServiceEntity("Labour", "fa-person-digging", "General labor work", 180, 120),
-                    new ServiceEntity("Contractor", "fa-building", "Construction and renovation", 240, 250)
+                    new ServiceEntity("Cook", "fa-utensils", "Home cooking and meal preparation", 240, 250)
             );
             serviceRepository.saveAll(services);
             log.info("Default services seeded successfully ({} items).", services.size());
         } else {
-            // Update existing services if price or duration is missing/zero
+            // Update existing services if price or duration is missing/zero, and migrate Contractor -> Cook
             List<ServiceEntity> existing = serviceRepository.findAll();
             for (ServiceEntity s : existing) {
                 boolean updated = false;
+                if ("Contractor".equalsIgnoreCase(s.getName())) {
+                    s.setName("Cook");
+                    s.setIcon("fa-utensils");
+                    s.setDescription("Home cooking and meal preparation");
+                    s.setEstimatedDurationMinutes(240);
+                    s.setBasePricePerHour(250);
+                    updated = true;
+                }
                 if (s.getBasePricePerHour() == null || s.getBasePricePerHour() == 0 ||
                     s.getEstimatedDurationMinutes() == null || s.getEstimatedDurationMinutes() == 0) {
                     switch (s.getName()) {
@@ -78,7 +85,7 @@ public class DataInitializer implements CommandLineRunner {
                         case "House Maid" -> { s.setEstimatedDurationMinutes(120); s.setBasePricePerHour(100); }
                         case "Laundry" -> { s.setEstimatedDurationMinutes(45); s.setBasePricePerHour(80); }
                         case "Labour" -> { s.setEstimatedDurationMinutes(180); s.setBasePricePerHour(120); }
-                        case "Contractor" -> { s.setEstimatedDurationMinutes(240); s.setBasePricePerHour(250); }
+                        case "Cook" -> { s.setEstimatedDurationMinutes(240); s.setBasePricePerHour(250); }
                         default -> { s.setEstimatedDurationMinutes(60); s.setBasePricePerHour(150); }
                     }
                     updated = true;
@@ -91,7 +98,6 @@ public class DataInitializer implements CommandLineRunner {
         }
     }
 
-    @SuppressWarnings("null")
     private void seedWorkers() {
         if (workerRepository.count() == 0) {
             String hashedPassword = passwordEncoder.encode("worker123");
@@ -129,22 +135,48 @@ public class DataInitializer implements CommandLineRunner {
             workerRepository.saveAll(List.of(w1, w2, w3, w4, w5, w6));
             log.info("Default workers seeded successfully (6 items, all with email/password credentials and services).");
         } else {
-            // Migrate existing workers to multi-service structure if empty
+            // Migrate existing workers to multi-service structure and update Contractor -> Cook
             List<Worker> existingWorkers = workerRepository.findAll();
             for (Worker w : existingWorkers) {
+                boolean workerUpdated = false;
                 if (w.getServices() == null || w.getServices().isEmpty()) {
                     if (w.getService() != null && !w.getService().isBlank()) {
                         String[] parts = w.getService().split(",");
                         List<String> list = new java.util.ArrayList<>();
                         for (String p : parts) {
                             if (!p.trim().isEmpty()) {
-                                list.add(p.trim());
+                                list.add("Contractor".equalsIgnoreCase(p.trim()) ? "Cook" : p.trim());
                             }
                         }
                         w.setServices(list);
-                        workerRepository.save(w);
-                        log.info("Migrated existing worker {} to services: {}", w.getEmail(), list);
+                        workerUpdated = true;
                     }
+                } else {
+                    List<String> updatedSkills = new java.util.ArrayList<>();
+                    for (String s : w.getServices()) {
+                        updatedSkills.add("Contractor".equalsIgnoreCase(s.trim()) ? "Cook" : s.trim());
+                    }
+                    if (!updatedSkills.equals(w.getServices())) {
+                        w.setServices(updatedSkills);
+                        workerUpdated = true;
+                    }
+                }
+                if ("Contractor".equalsIgnoreCase(w.getService())) {
+                    w.setService("Cook");
+                    workerUpdated = true;
+                }
+                if (workerUpdated) {
+                    workerRepository.save(w);
+                    log.info("Migrated existing worker {} to services: {}", w.getEmail(), w.getServices());
+                }
+            }
+
+            // Migrate any existing bookings with serviceName Contractor to Cook
+            List<Booking> existingBookings = bookingRepository.findAll();
+            for (Booking b : existingBookings) {
+                if (b.getServiceName() != null && b.getServiceName().contains("Contractor")) {
+                    b.setServiceName(b.getServiceName().replace("Contractor", "Cook").replace("contractor", "cook"));
+                    bookingRepository.save(b);
                 }
             }
         }

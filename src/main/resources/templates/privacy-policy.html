@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Privacy Policy for GharFix - Home services at your doorstep in Vadodara.">
+    <title>Privacy Policy — GharFix</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-page: #121214;
+            --bg-card: #1A1A1E;
+            --bg-card-subtle: #222228;
+            --border-color: #2A2A32;
+            --border-hover: #3E3E48;
+            --text-primary: #FFFFFF;
+            --text-secondary: #D1D5DB;
+            --text-muted: #9CA3AF;
+            --text-faint: #6B7280;
+            --accent-gold: #F59E0B;
+            --accent-gold-soft: rgba(245, 158, 11, 0.12);
+            --accent-blue: #3B82F6;
+            --accent-blue-soft: rgba(59, 130, 246, 0.12);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-secondary);
+            line-height: 1.7;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ── NAVBAR ── */
+        .legal-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(26, 26, 26, 0.95);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            width: 100%;
+        }
+
+        .header-inner {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .brand-logo i {
+            color: var(--text-primary);
+            font-size: 18px;
+        }
+
+        .brand-logo em {
+            font-style: normal;
+            color: var(--text-faint);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: var(--bg-card-subtle);
+            border: 1px solid var(--border-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .btn-back-home:hover {
+            color: var(--text-primary);
+            border-color: var(--border-hover);
+            background: #2A2A32;
+        }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .u-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-card-subtle);
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* ── LEGAL PAGE LAYOUT ── */
+        .legal-main {
+            flex: 1;
+            padding: 48px 24px 72px;
+        }
+
+        .legal-container {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        /* ── BREADCRUMB & HEADER ── */
+        .legal-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .legal-breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .legal-breadcrumb a:hover {
+            color: var(--text-primary);
+        }
+
+        .legal-breadcrumb i {
+            font-size: 10px;
+            color: var(--text-faint);
+        }
+
+        .legal-breadcrumb .active-crumb {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .legal-hero {
+            margin-bottom: 32px;
+        }
+
+        .legal-hero h1 {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.8px;
+            margin-bottom: 12px;
+        }
+
+        .legal-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .effective-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 5px 12px;
+            background: var(--accent-blue-soft);
+            color: #60A5FA;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .legal-nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-top: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .legal-tab {
+            padding: 8px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--text-muted);
+            background: transparent;
+            transition: var(--transition);
+        }
+
+        .legal-tab:hover {
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+
+        .legal-tab.active {
+            color: var(--text-primary);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+        }
+
+        /* ── LEGAL CONTENT CARD ── */
+        .legal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 44px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
+        }
+
+        .legal-section {
+            margin-bottom: 36px;
+        }
+
+        .legal-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .legal-section h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .legal-section p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            line-height: 1.75;
+        }
+
+        .legal-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        .legal-section ul {
+            margin: 12px 0 16px 20px;
+            list-style-type: disc;
+        }
+
+        .legal-section li {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .legal-section li:last-child {
+            margin-bottom: 0;
+        }
+
+        .legal-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 28px 0;
+            border: none;
+        }
+
+        /* ── FOOTER NAVIGATION BAR ── */
+        .legal-bottom-nav {
+            margin-top: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 20px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+        }
+
+        .lbn-text {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .lbn-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-lbn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-card-subtle);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .btn-lbn:hover {
+            background: #2A2A32;
+            border-color: var(--border-hover);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .header-inner {
+                padding: 0 16px;
+            }
+
+            .legal-main {
+                padding: 32px 16px 56px;
+            }
+
+            .legal-hero h1 {
+                font-size: 28px;
+            }
+
+            .legal-card {
+                padding: 26px 20px;
+            }
+
+            .legal-section h2 {
+                font-size: 18px;
+            }
+
+            .legal-section p, .legal-section li {
+                font-size: 14.5px;
+            }
+
+            .legal-bottom-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── NAVBAR ── -->
+    <header class="legal-header">
+        <div class="header-inner">
+            <a href="/" class="brand-logo" aria-label="GharFix Home">
+                <i class="fa-solid fa-house-chimney"></i>
+                <span>Ghar<em>Fix</em></span>
+            </a>
+
+            <div class="header-actions">
+                <a href="/" class="btn-back-home">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <div th:if="${currentUser != null}" class="user-chip">
+                    <div class="u-avatar" th:text="${currentUser.name != null && !currentUser.name.isEmpty() ? currentUser.name.substring(0,1).toUpperCase() : 'U'}">U</div>
+                    <span th:text="${currentUser.name != null ? currentUser.name.split(' ')[0] : 'User'}">User</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ── MAIN CONTENT ── -->
+    <main class="legal-main">
+        <div class="legal-container">
+
+            <!-- Breadcrumb -->
+            <nav class="legal-breadcrumb" aria-label="Breadcrumb">
+                <a href="/"><i class="fa-solid fa-house"></i> Home</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span>Legal</span>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span class="active-crumb">Privacy Policy</span>
+            </nav>
+
+            <!-- Hero Title & Meta -->
+            <div class="legal-hero">
+                <h1>Privacy Policy</h1>
+                <div class="legal-meta-row">
+                    <span class="effective-badge">
+                        <i class="fa-regular fa-calendar-check"></i> Effective Date: September 6, 2026
+                    </span>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <div class="legal-nav-tabs">
+                    <a href="/terms-of-service" class="legal-tab">Terms of Service</a>
+                    <a href="/privacy-policy" class="legal-tab active">Privacy Policy</a>
+                </div>
+            </div>
+
+            <!-- Content Card -->
+            <article class="legal-card">
+
+                <section class="legal-section">
+                    <h2>1. Introduction</h2>
+                    <p>GharFix ("we", "our", or "us") respects your privacy and is committed to protecting your personal information.</p>
+                    <p>This Privacy Policy explains what information we collect, how we use it, and how you can manage your information when using GharFix.</p>
+                </section>
+
+                <hr class="legal-divider">
+
+                <section class="legal-section">
+                    <h2>2. Information We Collect</h2>
+                    <p>Depending on how you use GharFix, we may collect:</p>
+                    <ul>
+                        <li>Name</li>
+                        <li>Email address</li>
+                        <li>Phone number</li>
+                        <li>Address</li>
+                        <li>Location information, when permission is granted</li>
+                        <li>Account information</li>
+                        <li>Booking and service history</li>
+                        <li>Information you provide when contacting customer support</li>
+                        <li>Device and technical information required to operate and secure the platform</li>
+                    </ul>
+                </section>
+
+                <hr class="legal-divider">
+
+                <section class="legal-section">
+                    <h2>3. How We Use Your Information</h2>
+                    <p>We may use your information to:</p>
+                    <ul>
+                        <li>Create and manage your account</li>
+                        <li>Process service bookings</li>
+                        <li>Connect customers with service professionals</li>
+                        <li>Provide customer support</li>
+                        <li>Send booking and service-related notifications</li>
+                        <li>Improve the GharFix platform</li>
+                        <li>Detect and prevent fraud or misuse</li>
+                        <li>Maintain platform security</li>
+                        <li>Comply with applicable legal requirements</li>
+                    </ul>
+                </section>
+
+                <hr class="legal-divider">
+
+                <section class="legal-section">
+                    <h2>4. Location Information</h2>
+                    <p>If you grant location permission, GharFix may use your location to help provide location-based services, such as identifying nearby service professionals or determining service availability.</p>
+                    <p>You can disable location permissions through your device or browser settings.</p>
+                </section>
+
+                <hr class="legal-divider">
+
+                <section class="legal-section">
+                    <h2>5. Sharing Information</h2>
+                    <p>GharFix does not sell your personal information.</p>
+                    <p>We may share necessary information with:</p>
+                    <ul>
+                        <li>Service professionals involved in fulfilling your booking</li>
+                        <li>Payment processing providers</li>
+                        <li>Hosting and infrastructure providers</li>
+                        <li>Analytics or technical service providers</li>
+                        <li>Government or law-enforcement authorities when legally required</li>
+                    </ul>
+                </section>
+
+                <hr class="legal-divider">
+
+                <section class="legal-section">
+                    <h2>6. Payment Information</h2>
+                    <p>Payments may be processed by third-party payment providers.</p>
+                    <p>GharFix does not intentionally store complete debit card or credit card details unless explicitly stated.</p>
+                </section>
+
+                <hr class="legal-divider">
+
+                <section class="legal-section">
+                    <h2>7. Data Security</h2>
+                    <p>We use reasonable technical and organizational measures to protect user information from unauthorized access, misuse, alteration, or disclosure.</p>
+                    <p>However, no online system can guarantee complete security.</p>
+                </section>
+
+                <hr class="legal-divider">
+
+                <section class="legal-section">
+                    <h2>8. Data Retention</h2>
+                    <p>We retain personal information only for as long as reasonably necessary to provide our services, maintain business records, resolve disputes, prevent fraud, and comply with legal obligations.</p>
+                </section>
+
+                <hr class="legal-divider">
+
+                <section class="legal-section">
+                    <h2>9. Your Privacy Rights</h2>
+                    <p>Depending on applicable law, you may have rights to:</p>
+                    <ul>
+                        <li>Access your personal information</li>
+                        <li>Correct inaccurate information</li>
+                        <li>Request deletion of your information</li>
+                        <li>Withdraw certain permissions or consent</li>
+                        <li>Request information about how your data is processed</li>
+                    </ul>
+                </section>
+
+                <hr class="legal-divider">
+
+                <section class="legal-section">
+                    <h2>10. Children's Privacy</h2>
+                    <p>GharFix is not intended for children under 18 years of age.</p>
+                    <p>We do not knowingly collect personal information from children.</p>
+                </section>
+
+                <hr class="legal-divider">
+
+                <section class="legal-section">
+                    <h2>11. Cookies and Similar Technologies</h2>
+                    <p>The GharFix website may use cookies or similar technologies where necessary for functionality, security, analytics, or improving the user experience.</p>
+                </section>
+
+                <hr class="legal-divider">
+
+                <section class="legal-section">
+                    <h2>12. Changes to This Privacy Policy</h2>
+                    <p>We may update this Privacy Policy when our services, technology, or legal requirements change.</p>
+                    <p>The latest version will always be made available through GharFix.</p>
+                </section>
+
+                <hr class="legal-divider">
+
+                <section class="legal-section">
+                    <h2>13. Contact</h2>
+                    <p>For privacy-related questions or requests, contact GharFix through the official contact details provided on the website.</p>
+                </section>
+
+            </article>
+
+            <!-- Bottom Navigation -->
+            <div class="legal-bottom-nav">
+                <span class="lbn-text">Have questions about our terms or privacy practices?</span>
+                <div class="lbn-links">
+                    <a href="/terms-of-service" class="btn-lbn">
+                        <span>Read Terms of Service</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <a href="/" class="btn-lbn">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Return to GharFix</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ── REUSABLE FOOTER ── -->
+    <div th:replace="~{fragments/footer :: siteFooter}"></div>
+
+    <!-- Negotiation notification bar if logged in -->
+    <div th:if="${currentUser != null}" th:replace="~{fragments/negotiation-bar :: userNegotiationBar}"></div>
+
+</body>
+</html>

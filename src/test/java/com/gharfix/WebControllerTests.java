@@ -74,4 +74,26 @@ class WebControllerTests {
                 .andExpect(redirectedUrl("/"))
                 .andExpect(request().sessionAttribute("flash_success", "Logged out successfully!"));
     }
+
+    @Test
+    void testTermsOfService() throws Exception {
+        mockMvc.perform(get("/terms-of-service"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Terms of Service")))
+                .andExpect(content().string(containsString("1. Acceptance of Terms")))
+                .andExpect(content().string(containsString("Effective Date: September 6, 2026")))
+                .andExpect(content().string(containsString("/terms-of-service")))
+                .andExpect(content().string(containsString("/privacy-policy")));
+    }
+
+    @Test
+    void testPrivacyPolicy() throws Exception {
+        mockMvc.perform(get("/privacy-policy"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Privacy Policy")))
+                .andExpect(content().string(containsString("1. Introduction")))
+                .andExpect(content().string(containsString("Effective Date: September 6, 2026")))
+                .andExpect(content().string(containsString("/terms-of-service")))
+                .andExpect(content().string(containsString("/privacy-policy")));
+    }
 }

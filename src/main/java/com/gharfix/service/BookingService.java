@@ -16,7 +16,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
-@SuppressWarnings("null")
 public class BookingService {
 
     private final BookingRepository bookingRepository;
@@ -256,6 +255,44 @@ public class BookingService {
         booking.setProposedPrice(price);
         booking.setProposedBy("WORKER");
         booking.setNegotiationStatus("PENDING_USER");
+        return bookingRepository.save(booking);
+    }
+
+    public java.util.Optional<Booking> findUserBookingById(Long bookingId, Long userId) {
+        if (bookingId == null || userId == null) {
+            return java.util.Optional.empty();
+        }
+        return bookingRepository.findById(bookingId)
+                .filter(b -> b.getUser() != null && userId.equals(b.getUser().getId()));
+    }
+
+    public java.util.Optional<Booking> findLatestActiveBookingForUser(Long userId) {
+        if (userId == null) {
+            return java.util.Optional.empty();
+        }
+        return getUserBookings(userId).stream()
+                .filter(b -> !"cancelled".equalsIgnoreCase(b.getStatus()) && !"completed".equalsIgnoreCase(b.getStatus()))
+                .findFirst();
+    }
+
+    @Transactional
+    public Booking cancelBooking(Long bookingId, Long userId, String reason) {
+        Booking booking = findUserBookingById(bookingId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found or not owned by the current user."));
+
+        if ("cancelled".equalsIgnoreCase(booking.getStatus())) {
+            throw new IllegalStateException("Booking #" + bookingId + " is already cancelled.");
+        }
+
+        if ("completed".equalsIgnoreCase(booking.getStatus())) {
+            throw new IllegalStateException("Completed bookings cannot be cancelled. You may request a refund or file a service complaint.");
+        }
+
+        booking.setStatus("cancelled");
+        if (booking.getNegotiationStatus() != null && !"NONE".equalsIgnoreCase(booking.getNegotiationStatus())) {
+            booking.setNegotiationStatus("CANCELLED");
+        }
+
         return bookingRepository.save(booking);
     }
 }

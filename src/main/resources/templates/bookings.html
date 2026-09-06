@@ -103,6 +103,7 @@
             font-size:12px; font-weight:600;
             display:flex; align-items:center; gap:5px;
         }
+        .status-badge i { font-size:6px; }
         .status-badge.pending   { background:#fef9c3; color:#92400e; border:1px solid #fde68a; }
         .status-badge.confirmed { background:#d1fae5; color:#065f46; border:1px solid #6ee7b7; }
         .status-badge.completed { background:var(--gold-lt); color:var(--gold); border:1px solid #e9c97a; }
@@ -129,15 +130,103 @@
         .dc-value { font-size:13px; font-weight:600; color:var(--ink); }
 
         /* EMPTY STATE */
-        .empty-state { text-align:center; padding:80px 20px; }
-        .empty-icon { width:88px; height:88px; border-radius:50%; background:var(--gold-lt); border:1px solid #e9c97a; margin:0 auto 24px; display:flex; align-items:center; justify-content:center; font-size:34px; color:var(--gold); }
-        .empty-state h2 { font-size:22px; font-weight:800; margin-bottom:8px; }
-        .empty-state p   { color:var(--muted); margin-bottom:24px; font-size:14px; }
+        .empty-state { text-align:center; padding:70px 20px; }
+        .empty-icon { width:80px; height:80px; border-radius:50%; background:#E9F3FB; border:1px solid #DBEAFE; margin:0 auto 20px; display:flex; align-items:center; justify-content:center; color:#2563EB; }
+        .empty-state h2 { font-size:20px; font-weight:800; color:var(--ink); margin-bottom:8px; letter-spacing:-0.3px; }
+        .empty-state p   { color:var(--muted); margin-bottom:24px; font-size:14px; line-height:1.5; }
 
         /* FOOTER */
         .footer { background:var(--surface); border-top:1px solid var(--border); padding:22px 64px; display:flex; align-items:center; justify-content:space-between; font-size:13px; color:var(--muted); }
         .footer-logo { font-size:16px; font-weight:800; color:var(--ink); }
         .footer-logo em { font-style:normal; color:var(--gold); }
+
+        /* RAZORPAY PAYMENT STYLES */
+        .bc-top { display:flex; align-items:center; justify-content:space-between; padding:18px 24px; }
+        .bc-left { display:flex; align-items:center; gap:14px; }
+        .bc-details { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; padding:16px 24px; background:#fafafa; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+        @media (max-width: 768px) {
+            .bc-details { grid-template-columns:repeat(2,1fr); }
+            .navbar { padding:0 20px; }
+            .page-header { padding:36px 20px; }
+        }
+
+        .bc-footer {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:14px 24px; background:var(--surface);
+            gap:12px; flex-wrap:wrap;
+        }
+        .bc-pay-info { display:flex; align-items:center; gap:12px; }
+        .pay-amount-label { font-size:12px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+        .pay-amount-val { font-size:18px; font-weight:800; color:var(--ink); }
+        .pay-status-pill {
+            display:inline-flex; align-items:center; gap:6px;
+            padding:4px 12px; border-radius:30px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px;
+        }
+        .pay-status-pill.paid { background:#d1fae5; color:#065f46; border:1px solid #6ee7b7; }
+        .pay-status-pill.unpaid { background:#fef3c7; color:#92400e; border:1px solid #fde68a; }
+
+        .btn-razorpay-pay {
+            display:inline-flex; align-items:center; gap:8px;
+            background:#0c2340; color:#ffffff;
+            padding:9px 18px; border-radius:9px; font-size:13px; font-weight:700;
+            border:none; cursor:pointer; transition:var(--t);
+            box-shadow:0 2px 8px rgba(12,35,64,0.18);
+        }
+        .btn-razorpay-pay:hover { background:#1e3a8a; transform:translateY(-1px); box-shadow:0 4px 12px rgba(12,35,64,0.28); }
+        .btn-razorpay-pay:disabled { opacity:0.65; cursor:not-allowed; transform:none; }
+
+        .paid-receipt-info {
+            font-size:12px; font-weight:600; color:#065f46;
+            display:inline-flex; align-items:center; gap:6px;
+            background:#ecfdf5; padding:6px 14px; border-radius:8px; border:1px solid #a7f3d0;
+        }
+        .paid-receipt-info i { color:#059669; }
+
+        /* QUICK CHECKOUT CARD */
+        .quick-checkout-card {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color:#fff; border-radius:18px; padding:24px 28px; margin-bottom:32px;
+            box-shadow: 0 10px 30px rgba(15,23,42,0.18);
+            border:1px solid rgba(255,255,255,0.1);
+        }
+        .qcc-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px; }
+        .qcc-title { display:flex; align-items:center; gap:12px; }
+        .qcc-icon {
+            width:40px; height:40px; border-radius:10px; background:rgba(59,130,246,0.2);
+            color:#60a5fa; display:flex; align-items:center; justify-content:center; font-size:18px;
+            border:1px solid rgba(96,165,250,0.3);
+        }
+        .qcc-title h2 { font-size:17px; font-weight:800; color:#fff; }
+        .qcc-title p { font-size:12px; color:rgba(255,255,255,0.65); margin-top:2px; }
+        .qcc-badge {
+            background:rgba(16,185,129,0.2); color:#34d399; border:1px solid rgba(52,211,153,0.3);
+            font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px;
+            display:inline-flex; align-items:center; gap:5px;
+        }
+        .qcc-body { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+        .qcc-chips { display:flex; gap:8px; flex-wrap:wrap; }
+        .qcc-chip {
+            background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.15);
+            padding:7px 14px; border-radius:8px; font-size:13px; font-weight:600;
+            cursor:pointer; transition:var(--t); font-family:inherit;
+        }
+        .qcc-chip:hover, .qcc-chip.active {
+            background:#2563eb; border-color:#3b82f6; color:#fff;
+        }
+        .qcc-input-wrap { display:flex; align-items:center; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:0 12px; }
+        .qcc-input-prefix { color:rgba(255,255,255,0.6); font-weight:700; font-size:14px; }
+        .qcc-input {
+            background:transparent; border:none; color:#fff; font-size:14px; font-weight:700;
+            padding:8px 8px; width:90px; outline:none; font-family:inherit;
+        }
+        .btn-qcc-pay {
+            background: #2563eb; color:#fff; border:none; padding:10px 22px;
+            border-radius:9px; font-size:14px; font-weight:700; cursor:pointer;
+            display:inline-flex; align-items:center; gap:8px; transition:var(--t);
+            box-shadow:0 4px 14px rgba(37,99,235,0.4); font-family:inherit;
+        }
+        .btn-qcc-pay:hover { background:#1d4ed8; transform:translateY(-1px); }
+        .btn-qcc-pay:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
     </style>
 </head>
 <body>
@@ -174,8 +263,40 @@
     </div>
 
     <div class="content">
+
+        <!-- Razorpay Instant Web Checkout Widget -->
+        <div class="quick-checkout-card">
+            <div class="qcc-header">
+                <div class="qcc-title">
+                    <div class="qcc-icon"><i class="fa-solid fa-credit-card"></i></div>
+                    <div>
+                        <h2>Razorpay Instant Checkout</h2>
+                        <p>Pay for home services securely via UPI, Cards, NetBanking, or Wallets</p>
+                    </div>
+                </div>
+                <div class="qcc-badge">
+                    <i class="fa-solid fa-shield-halved"></i> Test Mode Active
+                </div>
+            </div>
+            <div class="qcc-body">
+                <div class="qcc-chips">
+                    <button type="button" class="qcc-chip" onclick="setQuickAmount(100, this)">₹100</button>
+                    <button type="button" class="qcc-chip active" onclick="setQuickAmount(499, this)">₹499</button>
+                    <button type="button" class="qcc-chip" onclick="setQuickAmount(999, this)">₹999</button>
+                    <button type="button" class="qcc-chip" onclick="setQuickAmount(1499, this)">₹1,499</button>
+                </div>
+                <div class="qcc-input-wrap">
+                    <span class="qcc-input-prefix">₹</span>
+                    <input type="number" id="quickAmountInput" class="qcc-input" value="499" min="1" step="1" placeholder="Amount">
+                </div>
+                <button type="button" class="btn-qcc-pay" id="btnQuickPay" onclick="handleQuickCheckout()">
+                    <i class="fa-solid fa-lock"></i> Pay with Razorpay
+                </button>
+            </div>
+        </div>
+
     <div th:if="${bookings != null && !bookings.isEmpty()}" class="bookings-grid">
-        <div th:each="booking : ${bookings}" class="booking-card">
+        <div th:each="booking : ${bookings}" class="booking-card" th:id="'booking-card-' + ${booking.id}">
             <div class="bc-top">
                 <div class="bc-left">
                     <div class="bc-icon"><i class="fa-solid fa-wrench"></i></div>
@@ -185,7 +306,7 @@
                     </div>
                 </div>
                 <span class="status-badge" th:classappend="${booking.status}">
-                    <i class="fa-solid fa-circle" style="font-size:6px"></i>
+                    <i class="fa-solid fa-circle"></i>
                     <span th:text="${booking.status != null ? #strings.capitalize(booking.status) : 'Pending'}">Pending</span>
                 </span>
             </div>
@@ -207,22 +328,134 @@
                     <div class="dc-value" th:text="${booking.city}">New Delhi</div>
                 </div>
             </div>
+            <div class="bc-footer">
+                <div class="bc-pay-info">
+                    <span class="pay-amount-label">Service Fee:</span>
+                    <span class="pay-amount-val" th:text="'₹' + ${booking.proposedPrice != null ? #numbers.formatDecimal(booking.proposedPrice, 1, 0) : '499'}">₹499</span>
+                    <span th:if="${'PAID'.equalsIgnoreCase(booking.paymentStatus)}" class="pay-status-pill paid" th:id="'pill-paid-' + ${booking.id}">
+                        <i class="fa-solid fa-circle-check"></i> Paid via Razorpay
+                    </span>
+                    <span th:if="${!'PAID'.equalsIgnoreCase(booking.paymentStatus)}" class="pay-status-pill unpaid" th:id="'pill-unpaid-' + ${booking.id}">
+                        <i class="fa-regular fa-clock"></i> Payment Pending
+                    </span>
+                </div>
+                <div th:id="'pay-action-wrap-' + ${booking.id}">
+                    <button th:if="${!'PAID'.equalsIgnoreCase(booking.paymentStatus)}"
+                            type="button"
+                            class="btn-razorpay-pay"
+                            th:data-booking-id="${booking.id}"
+                            th:data-amount="${booking.proposedPrice != null ? booking.proposedPrice : 499}"
+                            th:data-service="${booking.serviceName}"
+                            onclick="payForBooking(this)">
+                        <i class="fa-solid fa-bolt"></i> Pay with Razorpay
+                    </button>
+                    <span th:if="${'PAID'.equalsIgnoreCase(booking.paymentStatus)}" class="paid-receipt-info">
+                        <i class="fa-solid fa-shield-check"></i>
+                        <span th:text="'ID: ' + (${booking.razorpayPaymentId != null ? booking.razorpayPaymentId : 'Paid'})">ID: Paid</span>
+                    </span>
+                    <button type="button" class="btn btn-ghost" style="font-size: 12px; padding: 6px 12px;"
+                            th:data-booking-id="${booking.id}"
+                            th:data-service="${booking.service}"
+                            onclick="if (window.openGharFixAI) window.openGharFixAI('I need help with my ' + this.getAttribute('data-service') + ' booking #' + this.getAttribute('data-booking-id'), this.getAttribute('data-booking-id'))"
+                            title="Ask AI Assistant about this booking">
+                        <i class="fa-solid fa-wand-magic-sparkles" style="color: #F59E0B;"></i> AI Help
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
     <div th:if="${bookings == null || bookings.isEmpty()}" class="empty-state">
-        <i class="fa-solid fa-calendar-xmark"></i>
-        <h3>No Bookings Yet</h3>
-        <p>You haven't booked any home services yet. Browse our services and book a professional!</p>
-        <a href="/" class="btn btn-dark" style="margin-top:16px"><i class="fa-solid fa-magnifying-glass"></i> Browse Services</a>
+        <div class="empty-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 5m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
+                <path d="M16 3l0 4"></path>
+                <path d="M8 3l0 4"></path>
+                <path d="M4 11l16 0"></path>
+                <path d="M8 15h2v2h-2z"></path>
+            </svg>
+        </div>
+        <h2>No bookings yet</h2>
+        <p>Book your first service and it'll show up here. You can also test Razorpay checkout using the widget above!</p>
+        <a href="/#most-booked" class="btn btn-dark">Browse services</a>
     </div>
     </div>
 
-    <footer class="footer">
-        <div class="footer-logo">Ghar<em>Fix</em></div>
-        <span>© 2026 GharFix. All rights reserved.</span>
-    </footer>
+    <div th:replace="~{fragments/footer :: siteFooter}"></div>
 
-    <script>
+    <!-- Razorpay Standard Web Checkout SDK & Integration Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="/js/razorpay-checkout.js"></script>
+
+    <script th:inline="javascript">
+        /* Quick Checkout Amount Selection */
+        function setQuickAmount(amt, chip) {
+            document.querySelectorAll('.qcc-chip').forEach(c => c.classList.remove('active'));
+            if (chip) chip.classList.add('active');
+            document.getElementById('quickAmountInput').value = amt;
+        }
+
+        /* Handler for Quick Checkout */
+        function handleQuickCheckout() {
+            const amt = parseFloat(document.getElementById('quickAmountInput').value);
+            if (isNaN(amt) || amt < 1) {
+                showPaymentToast('Please enter an amount of at least ₹1.00', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('btnQuickPay');
+            /*<![CDATA[*/
+            const userName = /*[[${currentUser != null ? currentUser.name : 'GharFix Customer'}]]*/ 'GharFix Customer';
+            const userEmail = /*[[${currentUser != null ? currentUser.username : 'customer@gharfix.com'}]]*/ 'customer@gharfix.com';
+            /*]]>*/
+
+            initiateRazorpayPayment({
+                amount: amt,
+                description: 'GharFix Quick Payment',
+                customerName: userName,
+                customerEmail: userEmail,
+                triggerButton: btn,
+                onSuccess: function(verifyData, paymentResponse) {
+                    showPaymentToast('Payment Verified! ID: ' + paymentResponse.razorpay_payment_id, 'success');
+                    setTimeout(() => window.location.reload(), 1800);
+                }
+            });
+        }
+
+        /* Handler for Booking Specific Pay Button */
+        function payForBooking(btn) {
+            const bookingId = btn.getAttribute('data-booking-id');
+            const amount = parseFloat(btn.getAttribute('data-amount')) || 499;
+            const serviceName = btn.getAttribute('data-service') || 'Home Service';
+
+            /*<![CDATA[*/
+            const userName = /*[[${currentUser != null ? currentUser.name : 'GharFix Customer'}]]*/ 'GharFix Customer';
+            const userEmail = /*[[${currentUser != null ? currentUser.username : 'customer@gharfix.com'}]]*/ 'customer@gharfix.com';
+            /*]]>*/
+
+            initiateRazorpayPayment({
+                amount: amount,
+                bookingId: bookingId,
+                description: 'Payment for ' + serviceName + ' (Booking #' + bookingId + ')',
+                customerName: userName,
+                customerEmail: userEmail,
+                triggerButton: btn,
+                onSuccess: function(verifyData, paymentResponse) {
+                    showPaymentToast('Booking #' + bookingId + ' Paid & Verified Successfully!', 'success');
+                    // Update UI immediately
+                    const unpaidPill = document.getElementById('pill-unpaid-' + bookingId);
+                    if (unpaidPill) {
+                        unpaidPill.className = 'pay-status-pill paid';
+                        unpaidPill.innerHTML = '<i class="fa-solid fa-circle-check"></i> Paid via Razorpay';
+                    }
+                    const actionWrap = document.getElementById('pay-action-wrap-' + bookingId);
+                    if (actionWrap) {
+                        actionWrap.innerHTML = '<span class="paid-receipt-info"><i class="fa-solid fa-shield-check"></i> Txn: ' + paymentResponse.razorpay_payment_id + '</span>';
+                    }
+                    setTimeout(() => window.location.reload(), 2000);
+                }
+            });
+        }
+
         setTimeout(()=>{
             document.querySelectorAll('.flash').forEach(f=>{
                 f.style.opacity='0'; f.style.transition='opacity .4s';
@@ -232,5 +465,8 @@
     </script>
     <!-- User Negotiation Notification Bar -->
     <div th:if="${currentUser != null}" th:replace="~{fragments/negotiation-bar :: userNegotiationBar}"></div>
+
+    <!-- GharFix AI Assistant Fragment -->
+    <div th:replace="~{fragments/ai-assistant-modal :: aiAssistant}"></div>
 </body>
 </html>

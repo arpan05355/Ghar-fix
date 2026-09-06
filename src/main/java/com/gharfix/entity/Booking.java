@@ -49,6 +49,15 @@ public class Booking {
     @Column(name = "negotiation_status", length = 30)
     private String negotiationStatus = "NONE";
 
+    @Column(name = "payment_status", length = 20)
+    private String paymentStatus = "UNPAID";
+
+    @Column(name = "razorpay_order_id", length = 100)
+    private String razorpayOrderId;
+
+    @Column(name = "razorpay_payment_id", length = 100)
+    private String razorpayPaymentId;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -162,6 +171,30 @@ public class Booking {
 
     public void setNegotiationStatus(String negotiationStatus) {
         this.negotiationStatus = negotiationStatus;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getRazorpayOrderId() {
+        return razorpayOrderId;
+    }
+
+    public void setRazorpayOrderId(String razorpayOrderId) {
+        this.razorpayOrderId = razorpayOrderId;
+    }
+
+    public String getRazorpayPaymentId() {
+        return razorpayPaymentId;
+    }
+
+    public void setRazorpayPaymentId(String razorpayPaymentId) {
+        this.razorpayPaymentId = razorpayPaymentId;
     }
 
     public LocalDateTime getCreatedAt() {

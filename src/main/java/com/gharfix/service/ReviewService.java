@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@SuppressWarnings("null")
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;

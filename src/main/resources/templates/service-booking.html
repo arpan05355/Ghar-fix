@@ -1,33 +1,46 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="'Book ' + ${serviceName} + ' - GharFix'">Book Service - GharFix</title>
-    <meta name="description" content="Book verified home service professionals on GharFix.">
+    <meta name="description" content="Book trusted home service professionals on GharFix.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Leaflet CSS for Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <style>
         :root {
-            --ink: #0f0f0f;
-            --ink-soft: #374151;
-            --muted: #6b7280;
-            --gold: #b8860b;
-            --gold-lt: #fef9ee;
-            --gold-mid: #f59e0b;
-            --border: #e5e7eb;
-            --surface: #ffffff;
-            --bg: #f7f7f5;
-            --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.06);
-            --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.07);
-            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.10);
-            --radius: 14px;
-            --t: all 0.22s ease;
+            --bg-page: #FFFFFF;
+            --bg-subtle: #F8F9FA;
+            --bg-card: #FFFFFF;
+            --border-light: #E5E7EB;
+            --border-subtle: #F0F2F5;
+            --text-primary: #1A1A1A;
+            --text-secondary: #4B5563;
+            --text-muted: #6B7280;
+            --text-light: #9CA3AF;
+
+            --btn-primary: #1A1A1A;
+            --btn-primary-hover: #2E2E2E;
+            --btn-secondary-bg: #F3F4F6;
+            --btn-secondary-hover: #E5E7EB;
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+
+            --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.04);
+            --shadow-hover: 0 10px 24px rgba(0, 0, 0, 0.08);
+
+            --transition: all 0.2s ease-in-out;
         }
 
         * {
@@ -37,677 +50,1210 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--ink);
-            line-height: 1.6;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-subtle);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            padding-bottom: 90px; /* Space for sticky confirm bar */
         }
 
-        /* ── NAVBAR ── */
-        nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 48px;
-            height: 64px;
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--ink);
-            display: flex;
-            align-items: center;
-            gap: 9px;
+        a {
             text-decoration: none;
-            letter-spacing: -0.4px;
+            color: inherit;
         }
 
-        .logo-mark {
-            width: 34px;
-            height: 34px;
-            background: var(--ink);
-            border-radius: 9px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo-mark i {
-            color: var(--gold-mid);
-            font-size: 15px;
-        }
-
-        .logo em {
-            font-style: normal;
-            color: var(--gold);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 24px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--muted);
-            font-size: 13.5px;
-            font-weight: 500;
-            transition: var(--t);
-        }
-
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: var(--ink);
-        }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 9px 20px;
-            border-radius: 9px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            text-decoration: none;
-            border: none;
-            font-family: inherit;
-            transition: var(--t);
-        }
-
-        .btn-ghost {
-            background: transparent;
-            color: var(--ink-soft);
-            border: 1.5px solid var(--border);
-        }
-
-        .btn-ghost:hover {
-            background: var(--bg);
-            border-color: #ccc;
-        }
-
-        .btn-gold {
-            background: var(--gold-mid);
-            color: #fff;
-        }
-
-        .btn-gold:hover {
-            background: #e08e0b;
-            transform: translateY(-1px);
-        }
-
-        .user-chip {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .u-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--ink);
-            color: var(--gold-mid);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 12px;
-        }
-
-        .u-name {
-            font-weight: 600;
-            font-size: 13px;
-            color: var(--ink-soft);
-        }
-
-        /* ── FLASH ── */
+        /* ── FLASH MESSAGES ── */
         .flash-messages {
             position: fixed;
             top: 76px;
             right: 20px;
-            z-index: 2000;
+            z-index: 2100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .flash {
             padding: 12px 18px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            font-size: 13px;
+            border-radius: var(--radius-sm);
+            font-size: 13.5px;
             font-weight: 500;
-            box-shadow: var(--shadow-sm);
-            animation: slideIn .3s ease;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            animation: flashSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .flash.success {
-            background: #14532d;
-            color: #fff;
+            background: #14532D;
+            color: #FFFFFF;
         }
 
         .flash.error {
-            background: #7f1d1d;
-            color: #fff;
+            background: #991B1B;
+            color: #FFFFFF;
         }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(50px); }
+        @keyframes flashSlideIn {
+            from { opacity: 0; transform: translateX(30px); }
             to { opacity: 1; transform: translateX(0); }
         }
 
-        /* ── LAYOUT ── */
-        .booking-page-container {
-            max-width: 1280px;
+        /* ── HEADER / NAVBAR ── */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--border-subtle);
+            height: 72px;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 100%;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+
+        .brand-logo i {
+            color: var(--text-primary);
+            font-size: 20px;
+        }
+
+        .brand-logo em {
+            font-style: normal;
+            color: #4B5563;
+            font-weight: 600;
+        }
+
+        .location-picker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 14px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-full);
+            background: #FFFFFF;
+            cursor: pointer;
+            transition: var(--transition);
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .location-picker:hover {
+            border-color: var(--text-primary);
+            background: var(--bg-subtle);
+        }
+
+        .location-picker .loc-pin {
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .location-picker .loc-city {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .location-picker .loc-chevron {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-left: 2px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .nav-link-partner {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+
+        .nav-link-partner:hover {
+            color: var(--text-primary);
+            background: var(--bg-subtle);
+        }
+
+        .btn-header-signin {
+            padding: 8px 16px;
+            font-size: 13.5px;
+            font-weight: 600;
+            font-family: inherit;
+            color: var(--text-primary);
+            background: transparent;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-header-signin:hover {
+            border-color: var(--text-primary);
+            background: var(--bg-subtle);
+        }
+
+        .btn-header-primary {
+            padding: 8px 18px;
+            font-size: 13.5px;
+            font-weight: 600;
+            font-family: inherit;
+            color: #FFFFFF;
+            background: var(--btn-primary);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-header-primary:hover {
+            background: var(--btn-primary-hover);
+        }
+
+        /* User Menu */
+        .user-menu-wrap {
+            position: relative;
+        }
+
+        .u-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #1A1A1A;
+            color: #FFFFFF;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .u-avatar:hover {
+            transform: scale(1.04);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .user-dropdown {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 10px);
+            width: 220px;
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+            display: none;
+            flex-direction: column;
+            padding: 8px 0;
+            z-index: 1010;
+        }
+
+        .user-dropdown.active {
+            display: flex;
+            animation: dropFade 0.2s ease;
+        }
+
+        @keyframes dropFade {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ud-header {
+            padding: 10px 16px 12px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .ud-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .ud-email {
+            font-size: 12px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 2px;
+        }
+
+        .ud-list {
+            list-style: none;
+            padding: 6px 0 0;
+        }
+
+        .ud-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .ud-item:hover {
+            background: var(--bg-subtle);
+            color: var(--text-primary);
+        }
+
+        .ud-item i {
+            font-size: 14px;
+            color: var(--text-muted);
+            width: 16px;
+        }
+
+        .ud-logout {
+            color: #DC2626;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 6px;
+            padding-top: 10px;
+        }
+
+        .ud-logout:hover {
+            background: #FEF2F2;
+            color: #B91C1C;
+        }
+
+        .ud-logout i {
+            color: #DC2626;
+        }
+
+        /* ── CATEGORY PASTEL STYLES (MATCH HOMEPAGE EXACTLY) ── */
+        .cat-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .cat-electrician {
+            background-color: #FFF7ED;
+            color: #EA580C;
+            border: 1px solid #FFEDD5;
+        }
+
+        .cat-plumber {
+            background-color: #EFF6FF;
+            color: #2563EB;
+            border: 1px solid #DBEAFE;
+        }
+
+        .cat-carpenter {
+            background-color: #FAF5FF;
+            color: #9333EA;
+            border: 1px solid #F3E8FF;
+        }
+
+        .cat-ac-service {
+            background-color: #F0F9FF;
+            color: #0284C7;
+            border: 1px solid #E0F2FE;
+        }
+
+        .cat-house-maid {
+            background-color: #ECFDF5;
+            color: #059669;
+            border: 1px solid #D1FAE5;
+        }
+
+        .cat-laundry {
+            background-color: #FDF2F8;
+            color: #DB2777;
+            border: 1px solid #FCE7F3;
+        }
+
+        .cat-labour {
+            background-color: #FFFBEB;
+            color: #D97706;
+            border: 1px solid #FEF3C7;
+        }
+
+        .cat-cook {
+            background-color: #FBEAEA;
+            color: #D64545;
+            border: 1px solid #FEE2E2;
+        }
+
+        .cat-all {
+            background-color: #F3F4F6;
+            color: #374151;
+            border: 1px solid #E5E7EB;
+        }
+
+        /* ── UBER-STYLE 3-COLUMN BOOKING CONTAINER ── */
+        .uber-booking-container {
+            max-width: 1400px;
             width: 100%;
             margin: 24px auto 40px;
             padding: 0 24px;
             display: grid;
-            grid-template-columns: 310px 1fr;
-            gap: 28px;
+            grid-template-columns: 270px minmax(0, 1fr) 420px;
+            gap: 24px;
             align-items: start;
             flex: 1;
         }
 
-        @media (max-width: 960px) {
-            .booking-page-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* ── SIDEBAR ── */
-        .sidebar-card {
-            background: var(--surface);
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            box-shadow: var(--shadow-xs);
+        /* ── COLUMN 1: LEFT SIDEBAR (Service Categories) ── */
+        .booking-sidebar {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            box-shadow: var(--shadow-subtle);
             position: sticky;
-            top: 84px;
+            top: 96px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
         }
 
-        .sidebar-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--border);
+        .booking-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .booking-sidebar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .sidebar-header-box {
+            padding: 8px 8px 14px;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 10px;
         }
 
         .sidebar-title {
-            font-size: 14px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            color: var(--muted);
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.2px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
         }
 
-        .sidebar-badge {
-            background: var(--gold-lt);
-            color: var(--gold);
-            padding: 2px 8px;
-            border-radius: 20px;
+        .sidebar-count-badge {
             font-size: 11px;
-            font-weight: 700;
-            border: 1px solid #e9c97a;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
         }
 
-        .service-list {
+        .category-nav-list {
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
-        .service-nav-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 14px;
-            border-radius: 10px;
-            border: 1.5px solid transparent;
-            cursor: pointer;
-            transition: var(--t);
-            background: var(--bg);
-            color: var(--ink-soft);
-            text-decoration: none;
-        }
-
-        .service-nav-item:hover {
-            border-color: var(--gold-mid);
-            background: var(--gold-lt);
-            transform: translateX(3px);
-        }
-
-        .service-nav-item.active {
-            border-color: var(--gold-mid);
-            background: var(--gold-lt);
-            color: var(--ink);
-            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
-        }
-
-        .sni-left {
+        .category-nav-item {
             display: flex;
             align-items: center;
             gap: 12px;
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: var(--transition);
+            background: #FFFFFF;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
-        .sni-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            background: var(--surface);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 15px;
-            color: var(--ink-soft);
-            transition: var(--t);
-            border: 1px solid var(--border);
+        .category-nav-item:hover {
+            background: var(--bg-subtle);
+            border-color: var(--border-subtle);
         }
 
-        .service-nav-item.active .sni-icon,
-        .service-nav-item:hover .sni-icon {
-            background: var(--gold-mid);
-            color: #fff;
-            border-color: var(--gold-mid);
+        .category-nav-item.active {
+            background: #F3F4F6;
+            border-color: var(--border-light);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
         }
 
-        .sni-name {
-            font-size: 14px;
+        /* Active tint per category */
+        .category-nav-item.active.tint-electrician { background: #FFF7ED; border-color: #FED7AA; }
+        .category-nav-item.active.tint-plumber { background: #EFF6FF; border-color: #BFDBFE; }
+        .category-nav-item.active.tint-carpenter { background: #FAF5FF; border-color: #E9D5FF; }
+        .category-nav-item.active.tint-ac-service { background: #F0F9FF; border-color: #BAE6FD; }
+        .category-nav-item.active.tint-house-maid { background: #ECFDF5; border-color: #A7F3D0; }
+        .category-nav-item.active.tint-laundry { background: #FDF2F8; border-color: #FBCFE8; }
+        .category-nav-item.active.tint-labour { background: #FFFBEB; border-color: #FDE68A; }
+        .category-nav-item.active.tint-cook { background: #FBEAEA; border-color: #FECACA; }
+
+        .cat-nav-name {
+            font-size: 13.5px;
             font-weight: 600;
+            color: var(--text-primary);
+            flex-grow: 1;
         }
 
-        .sni-arrow {
-            font-size: 12px;
-            color: var(--muted);
-            transition: var(--t);
+        .cat-nav-chevron {
+            font-size: 11px;
+            color: var(--text-light);
+            transition: var(--transition);
         }
 
-        .service-nav-item.active .sni-arrow {
-            color: var(--gold);
+        .category-nav-item.active .cat-nav-chevron {
+            color: var(--text-primary);
             transform: translateX(2px);
         }
 
-        /* ── MAIN BOOKING AREA ── */
-        .booking-main-card {
-            background: var(--surface);
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius);
-            padding: 32px;
-            box-shadow: var(--shadow-sm);
+        /* ── COLUMN 2: MAIN AREA (Uber-style subcategory options & details) ── */
+        .booking-main-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .bm-top {
+        .main-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        /* Active Category Banner */
+        .category-banner {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 18px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 20px;
+            gap: 16px;
         }
 
-        .bm-service-info {
+        .cb-left {
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: 16px;
         }
 
-        .bm-service-icon {
-            width: 64px;
-            height: 64px;
-            border-radius: 16px;
-            background: var(--ink);
-            color: var(--gold-mid);
+        .cb-circle {
+            width: 56px;
+            height: 56px;
+            font-size: 24px;
+        }
+
+        .cb-title-box h1 {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            color: var(--text-primary);
+        }
+
+        .cb-title-box p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .cb-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-full);
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        /* Uber Ride-Option Subcategory Rows */
+        .subcategories-section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .subcategories-section-subtitle {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .subcategories-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .subcategory-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 18px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            background: #FFFFFF;
+            cursor: pointer;
+            transition: var(--transition);
+            gap: 16px;
+            position: relative;
+        }
+
+        .subcategory-row:hover {
+            border-color: var(--text-primary);
+            background: var(--bg-subtle);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .subcategory-row.selected {
+            border-color: var(--text-primary);
+            background: #FAFAFA;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .sub-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-grow: 1;
+        }
+
+        .custom-checkbox {
+            position: relative;
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border-light);
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 26px;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+            background: #FFFFFF;
+            transition: var(--transition);
+            flex-shrink: 0;
         }
 
-        .bm-service-text h1 {
-            font-size: 26px;
+        .subcategory-row:hover .custom-checkbox {
+            border-color: var(--text-secondary);
+        }
+
+        .subcategory-row.selected .custom-checkbox {
+            background: var(--btn-primary);
+            border-color: var(--btn-primary);
+        }
+
+        .custom-checkbox i {
+            color: #FFFFFF;
+            font-size: 11px;
+            display: none;
+        }
+
+        .subcategory-row.selected .custom-checkbox i {
+            display: block;
+        }
+
+        .sub-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--text-primary);
+            flex-shrink: 0;
+        }
+
+        .sub-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .sub-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .sub-desc {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .sub-right {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 3px;
+            flex-shrink: 0;
+        }
+
+        .sub-price {
+            font-size: 16px;
             font-weight: 800;
-            color: var(--ink);
-            line-height: 1.2;
+            color: var(--text-primary);
+            letter-spacing: -0.2px;
         }
 
-        .bm-service-text p {
+        .sub-duration {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ── RUNNING SUMMARY OF SELECTED SERVICES ── */
+        .cart-summary-box {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 18px 20px;
+            margin-bottom: 24px;
+        }
+
+        .cs-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .cs-title {
             font-size: 13.5px;
-            color: var(--muted);
-            margin-top: 4px;
-        }
-
-        /* Price Estimate Pill */
-        .price-badge-pill {
-            display: inline-flex;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
             align-items: center;
             gap: 8px;
-            background: linear-gradient(135deg, #fef9ee 0%, #fff7ed 100%);
-            border: 1.5px solid #e9c97a;
-            color: #92400e;
-            padding: 10px 18px;
-            border-radius: 50px;
-            font-size: 14px;
+        }
+
+        .cs-chips-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+            min-height: 32px;
+        }
+
+        .cs-service-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            padding: 5px 12px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .cs-chip-remove {
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-left: 2px;
+        }
+
+        .cs-chip-remove:hover {
+            color: #DC2626;
+        }
+
+        .cs-empty-text {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .cs-metrics-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border-light);
+        }
+
+        .cs-metric-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cs-metric-label {
+            font-size: 12.5px;
+            color: var(--text-muted);
+        }
+
+        .cs-metric-val {
+            font-size: 14.5px;
             font-weight: 700;
-            box-shadow: 0 2px 10px rgba(245, 158, 11, 0.12);
+            color: var(--text-primary);
         }
 
-        .price-badge-pill i {
-            color: var(--gold-mid);
+        .cs-total-val {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        /* ── SECTION: DATE & TIME SLOT PICKER ── */
+        .booking-step-title {
             font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* Form Grid */
-        .form-grid {
+        .datetime-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1.5fr;
             gap: 20px;
             margin-bottom: 24px;
         }
 
-        @media (max-width: 640px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
+        .fg-date label,
+        .fg-slots label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
         }
 
-        .form-group {
+        .date-input-field {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 13.5px;
+            font-family: inherit;
+            color: var(--text-primary);
+            background: #FFFFFF;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .date-input-field:focus {
+            border-color: var(--text-primary);
+            box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
+        }
+
+        /* Time slot buttons/chips */
+        .time-slots-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .time-slot-chip {
+            padding: 8px 14px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-full);
+            background: #FFFFFF;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: var(--transition);
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .time-slot-chip:hover {
+            border-color: var(--text-primary);
+            color: var(--text-primary);
+            background: var(--bg-subtle);
+        }
+
+        .time-slot-chip.active {
+            background: var(--btn-primary);
+            color: #FFFFFF;
+            border-color: var(--btn-primary);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        /* ── SECTION: ADDRESS & CITY DETAILS ── */
+        .location-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 16px;
+        }
+
+        .form-field-group {
             display: flex;
             flex-direction: column;
-            gap: 7px;
+            gap: 6px;
         }
 
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .form-group label {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--ink-soft);
+        .form-field-group label {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
-        .form-group label i {
-            color: var(--gold-mid);
-            font-size: 13px;
+        .form-field-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 13.5px;
+            font-family: inherit;
+            color: var(--text-primary);
+            background: #FFFFFF;
+            outline: none;
+            transition: var(--transition);
         }
 
-        .input-with-action {
+        .form-field-group input:focus {
+            border-color: var(--text-primary);
+            box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
+        }
+
+        .input-with-button {
             position: relative;
             display: flex;
             align-items: center;
         }
 
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1.5px solid var(--border);
-            border-radius: 9px;
-            font-size: 14px;
-            font-family: inherit;
-            color: var(--ink);
-            background: #fff;
-            outline: none;
-            transition: var(--t);
+        .input-with-button input {
+            padding-right: 90px;
         }
 
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: var(--gold-mid);
-            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.12);
-        }
-
-        .btn-loc-detect {
+        .btn-detect-loc {
             position: absolute;
-            right: 8px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 6px;
+            right: 6px;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
             padding: 6px 10px;
             font-size: 12px;
             font-weight: 600;
-            color: var(--ink-soft);
+            color: var(--text-primary);
             cursor: pointer;
-            transition: var(--t);
+            transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
 
-        .btn-loc-detect:hover {
-            background: var(--gold-lt);
-            border-color: #e9c97a;
-            color: var(--gold);
+        .btn-detect-loc:hover {
+            background: var(--border-light);
         }
 
-        /* Map Section */
-        .map-section {
-            margin: 24px 0 28px;
-            border: 1.5px solid var(--border);
-            border-radius: 12px;
+        /* ── COLUMN 3: RIGHT PANEL (Leaflet Map & Nearby Workers) ── */
+        .booking-map-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            background: #fff;
+            box-shadow: var(--shadow-subtle);
+            position: sticky;
+            top: 96px;
+            display: flex;
+            flex-direction: column;
         }
 
-        .map-header {
+        .map-card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 16px;
-            background: #fafafa;
-            border-bottom: 1px solid var(--border);
         }
 
-        .map-status-row {
+        .map-card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--muted);
+        }
+
+        .map-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: #059669;
+            background: #ECFDF5;
+            padding: 3px 10px;
+            border-radius: var(--radius-full);
+            border: 1px solid #D1FAE5;
         }
 
         .map-status-dot {
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
-            background: #f59e0b;
-            box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
-            animation: dotPulse 1.2s infinite;
-        }
-
-        .map-status-dot.found {
-            background: #10b981;
-            animation: none;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            background: #059669;
+            animation: dotPulse 1.5s infinite;
         }
 
         @keyframes dotPulse {
-            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5); }
-            70% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(5, 150, 105, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
         }
 
         #bookingMap {
             width: 100%;
-            height: 300px;
-            background: #e5e3df;
+            height: 400px;
+            background: #F3F4F6;
         }
 
-        /* Leaflet elements */
+        .map-card-footer {
+            padding: 12px 18px;
+            background: var(--bg-subtle);
+            border-top: 1px solid var(--border-subtle);
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Leaflet Marker custom styles */
         .user-pulse {
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
-            background: #3b82f6;
-            border: 3px solid #fff;
-            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
+            background: #1A1A1A;
+            border: 3px solid #FFFFFF;
+            box-shadow: 0 0 0 0 rgba(26, 26, 26, 0.5);
             animation: userPulse 2s infinite;
         }
 
         @keyframes userPulse {
-            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5); }
-            70% { box-shadow: 0 0 0 12px rgba(59, 130, 246, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(26, 26, 26, 0.5); }
+            70% { box-shadow: 0 0 0 10px rgba(26, 26, 26, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(26, 26, 26, 0); }
         }
 
         .worker-pin {
             width: 32px;
             height: 32px;
-            border-radius: 50% 50% 50% 0;
-            transform: rotate(-45deg);
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            border: 2.5px solid #fff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            border-radius: 50%;
+            background: #FFFFFF;
+            border: 2px solid var(--text-primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             display: flex;
             align-items: center;
             justify-content: center;
-            animation: markerDrop .4s cubic-bezier(.34, 1.56, .64, 1);
-        }
-
-        .worker-pin i {
-            transform: rotate(45deg);
-            color: #fff;
+            color: var(--text-primary);
             font-size: 13px;
+            transition: transform 0.2s ease;
         }
 
-        @keyframes markerDrop {
-            from { opacity: 0; transform: rotate(-45deg) scale(0) translateY(-20px); }
-            to { opacity: 1; transform: rotate(-45deg) scale(1) translateY(0); }
+        .worker-pin:hover {
+            transform: scale(1.15);
         }
 
-        .popup-worker-name {
+        .leaflet-popup-content-wrapper {
+            border-radius: var(--radius-sm);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+            border: 1px solid var(--border-light);
+            padding: 4px;
+        }
+
+        .leaflet-popup-content {
+            margin: 8px 12px;
+            line-height: 1.4;
+        }
+
+        .map-pro-popup {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .map-pro-name {
+            font-size: 13px;
             font-weight: 700;
-            color: #0f0f0f;
+            color: var(--text-primary);
         }
 
-        .popup-worker-info {
-            color: #6b7280;
-            font-size: 12px;
+        .map-pro-eta {
+            font-size: 11px;
+            color: var(--text-muted);
             margin-top: 2px;
         }
 
-        .popup-worker-badge {
-            display: inline-block;
-            margin-top: 6px;
-            background: #fef9ee;
-            color: #b8860b;
-            border: 1px solid #e9c97a;
-            padding: 2px 10px;
-            border-radius: 50px;
-            font-size: 11px;
-            font-weight: 700;
+        /* ── STICKY BOTTOM CONFIRM BAR (UBER STYLE) ── */
+        .bottom-confirm-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: #FFFFFF;
+            border-top: 1px solid var(--border-light);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+            padding: 14px 24px;
         }
 
-        /* Price Breakdown Callout */
-        .pricing-callout {
-            background: #fafafa;
-            border: 1.5px dashed var(--border);
-            border-radius: 12px;
-            padding: 20px 24px;
-            margin-bottom: 28px;
+        .confirm-bar-inner {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .bar-left {
+            display: flex;
+            align-items: baseline;
             gap: 16px;
         }
 
-        .pricing-callout-items {
+        .bar-summary-text {
             display: flex;
-            align-items: center;
-            gap: 28px;
+            flex-direction: column;
         }
 
-        .pci-item span {
-            display: block;
-            font-size: 12px;
-            color: var(--muted);
-            font-weight: 500;
-        }
-
-        .pci-item strong {
-            font-size: 17px;
-            color: var(--ink);
+        .bar-service-names {
+            font-size: 14px;
             font-weight: 700;
+            color: var(--text-primary);
+            max-width: 500px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .pricing-total {
-            text-align: right;
-        }
-
-        .pricing-total span {
-            display: block;
+        .bar-detail-meta {
             font-size: 12px;
-            color: var(--muted);
-            font-weight: 500;
+            color: var(--text-muted);
         }
 
-        .pricing-total strong {
-            font-size: 22px;
-            color: var(--gold);
-            font-weight: 800;
-        }
-
-        .pricing-note {
-            width: 100%;
-            font-size: 12px;
-            color: var(--muted);
-            margin-top: 4px;
+        .bar-price-box {
             display: flex;
-            align-items: center;
+            align-items: baseline;
             gap: 6px;
         }
 
-        /* Submit Button */
-        .submit-btn {
-            width: 100%;
-            padding: 16px;
-            font-size: 15px;
-            font-weight: 700;
-            border-radius: 10px;
-            justify-content: center;
-            box-shadow: 0 4px 18px rgba(245, 158, 11, 0.28);
+        .bar-price-label {
+            font-size: 12px;
+            color: var(--text-muted);
         }
 
-        /* ── MODALS (Sign in / Sign up) ── */
+        .bar-price-amount {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .bar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-confirm-booking {
+            padding: 13px 32px;
+            background: var(--btn-primary);
+            color: #FFFFFF;
+            font-size: 14.5px;
+            font-weight: 700;
+            font-family: inherit;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-confirm-booking:hover {
+            background: var(--btn-primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-confirm-booking:disabled {
+            background: #E5E7EB;
+            color: #9CA3AF;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ── AUTH POPUPS / MODALS (MATCH INDEX.HTML) ── */
         .popup {
             position: fixed;
             inset: 0;
-            background: rgba(15, 15, 15, 0.7);
-            z-index: 1000;
+            background: rgba(0, 0, 0, 0.45);
             display: none;
-            align-items: center;
             justify-content: center;
-            padding: 20px;
+            align-items: center;
             -webkit-backdrop-filter: blur(4px);
             backdrop-filter: blur(4px);
+            z-index: 2000;
+            padding: 20px;
         }
 
         .popup.active {
@@ -715,408 +1261,633 @@
         }
 
         .popup-box {
-            background: var(--surface);
+            background: #FFFFFF;
+            border-radius: var(--radius-lg);
             width: 100%;
-            max-width: 440px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-md);
-            overflow: hidden;
-            animation: slideIn .2s ease;
+            max-width: 400px;
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.16);
+            border: 1px solid var(--border-light);
+            animation: popupScale 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes popupScale {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         .ph {
+            padding: 24px 24px 0;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 22px 24px 16px;
-            border-bottom: 1px solid var(--border);
+            align-items: flex-start;
         }
 
         .ph-title h2 {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 800;
+            color: var(--text-primary);
         }
 
         .ph-title p {
-            font-size: 12px;
-            color: var(--muted);
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 3px;
         }
 
         .ph-close {
             width: 32px;
             height: 32px;
-            border-radius: 8px;
-            background: var(--bg);
-            border: 1px solid var(--border);
+            border-radius: 50%;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--muted);
-            transition: var(--t);
+            color: var(--text-secondary);
+            font-size: 13px;
+            transition: var(--transition);
         }
 
         .ph-close:hover {
-            background: var(--border);
-            color: var(--ink);
+            background: var(--border-light);
+            color: var(--text-primary);
         }
 
         .pb {
-            padding: 24px;
+            padding: 20px 24px 24px;
         }
 
         .fg {
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .fg label {
             display: block;
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 600;
+            color: var(--text-secondary);
             margin-bottom: 5px;
-            color: var(--ink-soft);
         }
 
         .fg input {
             width: 100%;
-            padding: 10px 14px;
-            border: 1.5px solid var(--border);
-            border-radius: 8px;
-            font-size: 14px;
+            padding: 10px 12px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 13.5px;
             font-family: inherit;
-            color: var(--ink);
+            color: var(--text-primary);
+            background: #FFFFFF;
             outline: none;
-            transition: var(--t);
+            transition: var(--transition);
         }
 
         .fg input:focus {
-            border-color: var(--gold-mid);
+            border-color: var(--text-primary);
+            box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
         }
 
         .pop-btn {
             width: 100%;
             padding: 12px;
-            background: var(--ink);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
+            border-radius: var(--radius-sm);
+            background: var(--text-primary);
+            color: #FFFFFF;
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
+            border: none;
             font-family: inherit;
-            transition: var(--t);
-            margin-top: 8px;
+            transition: var(--transition);
+            margin-top: 6px;
         }
 
         .pop-btn:hover {
-            background: #222;
+            background: var(--btn-primary-hover);
         }
 
         .pop-foot {
             text-align: center;
-            font-size: 12px;
-            color: var(--muted);
-            margin-top: 16px;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 14px;
         }
 
         .pop-foot a {
-            color: var(--gold);
+            color: var(--text-primary);
             font-weight: 700;
             cursor: pointer;
             text-decoration: underline;
         }
 
-        /* Footer */
-        footer {
-            background: var(--ink);
-            color: #fff;
-            padding: 30px 48px;
-            text-align: center;
-            margin-top: auto;
-            border-top: 1px solid #222;
+        /* ── RESPONSIVE MEDIA QUERIES ── */
+        @media (max-width: 1180px) {
+            .uber-booking-container {
+                grid-template-columns: 240px minmax(0, 1fr);
+            }
+            .booking-map-card {
+                display: none; /* Hide sticky right map on narrow desktop/tablet to keep booking flow clean */
+            }
         }
 
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
+        @media (max-width: 768px) {
+            .header {
+                height: 64px;
+            }
+            .header-inner {
+                padding: 0 16px;
+            }
+            .uber-booking-container {
+                grid-template-columns: 1fr;
+                margin: 16px auto 30px;
+                padding: 0 16px;
+                gap: 16px;
+            }
+            .booking-sidebar {
+                position: static;
+                max-height: none;
+                overflow-x: auto;
+            }
+            .category-nav-list {
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 6px;
+            }
+            .category-nav-item {
+                flex-shrink: 0;
+            }
+            .datetime-grid,
+            .location-form-grid {
+                grid-template-columns: 1fr;
+            }
+            .bar-service-names {
+                max-width: 200px;
+            }
+        }
+
+        .header-auth-buttons {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.6);
+            gap: 8px;
         }
 
-        .footer-links {
+        .verified-shield-icon {
+            color: #059669;
+        }
+
+        .mt-10 {
+            margin-top: 10px;
+        }
+
+        .bar-right {
             display: flex;
-            gap: 20px;
+            gap: 10px;
+            align-items: center;
         }
 
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.6);
-            text-decoration: none;
-            transition: var(--t);
-        }
-
-        .footer-links a:hover {
-            color: var(--gold-mid);
+        .btn-pay-razorpay {
+            background: #0c2340 !important;
+            border-color: #0c2340 !important;
+            box-shadow: 0 4px 14px rgba(12,35,64,0.25) !important;
         }
     </style>
 </head>
 
 <body>
-    <!-- FLASH MESSAGES -->
+
+    <!-- Flash notification messages -->
     <div class="flash-messages">
-        <div th:if="${flash_success}" class="flash success" th:text="${flash_success}"></div>
-        <div th:if="${flash_error}" class="flash error" th:text="${flash_error}"></div>
+        <div th:if="${flash_success != null}" class="flash success" th:text="${flash_success}"></div>
+        <div th:if="${flash_error != null}" class="flash error" th:text="${flash_error}"></div>
     </div>
 
-    <!-- NAVBAR -->
-    <nav>
-        <a href="/" class="logo">
-            <div class="logo-mark"><i class="fa-solid fa-wrench"></i></div>
-            Ghar<em>Fix</em>
-        </a>
-        <ul class="nav-links">
-            <li><a href="/">Home</a></li>
-            <li><a href="/#services" class="active">Services</a></li>
-            <li><a href="/#workers">Professionals</a></li>
-            <li><a href="/#reviews">Reviews</a></li>
-            <li th:if="${currentUser != null}">
-                <a href="/my-bookings">My Bookings</a>
-            </li>
-        </ul>
-        <div class="nav-right">
-            <div th:if="${currentUser != null}" class="user-chip">
-                <div class="u-avatar" th:text="${currentUser.name != null && !currentUser.name.isEmpty() ? currentUser.name.substring(0,1).toUpperCase() : 'U'}">U</div>
-                <span class="u-name" th:text="${currentUser.name != null ? currentUser.name.split(' ')[0] : 'User'}">User</span>
-                <a href="/logout" class="btn btn-ghost">Logout</a>
+    <!-- 1. TOP BAR / NAVBAR (IDENTICAL TO INDEX.HTML) -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="header-left">
+                <!-- Logo -->
+                <a href="/" class="brand-logo">
+                    <i class="fa-solid fa-house-chimney"></i>
+                    <span>Ghar<em>Fix</em></span>
+                </a>
+
+                <!-- Location Selector -->
+                <div class="location-picker" title="Service location">
+                    <i class="fa-solid fa-location-dot loc-pin"></i>
+                    <span class="loc-city">Vadodara</span>
+                    <i class="fa-solid fa-chevron-down loc-chevron"></i>
+                </div>
             </div>
-            <div th:if="${currentUser == null}" style="display:contents;">
-                <button class="btn btn-ghost" onclick="openPopup('loginBox')">Sign In</button>
-                <button class="btn btn-gold" onclick="openPopup('signupBox')">Get Started</button>
+
+            <!-- Right user avatar / sign in buttons -->
+            <div class="header-right">
+                <a href="/worker" class="nav-link-partner">Become a Professional</a>
+
+                <!-- Logged in state -->
+                <div th:if="${currentUser != null}" class="user-menu-wrap">
+                    <button type="button" class="u-avatar" id="userAvatarBtn" onclick="toggleUserDropdown(event)" aria-label="User profile menu">
+                        <span th:text="${currentUser.name != null && !currentUser.name.isEmpty() ? currentUser.name.substring(0,1).toUpperCase() : 'U'}">U</span>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="ud-header">
+                            <div class="ud-name" th:text="${currentUser.name}">User Name</div>
+                            <div class="ud-email" th:text="${currentUser.email}">user@example.com</div>
+                        </div>
+                        <ul class="ud-list">
+                            <li>
+                                <a href="/my-bookings" class="ud-item">
+                                    <i class="fa-solid fa-calendar-check"></i>
+                                    <span>My Bookings</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/logout" class="ud-item ud-logout">
+                                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                    <span>Logout</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Logged out state -->
+                <div th:if="${currentUser == null}" class="header-auth-buttons">
+                    <button type="button" class="btn-header-signin" onclick="openPopup('loginBox')">Sign In</button>
+                    <button type="button" class="btn-header-primary" onclick="openPopup('signupBox')">Get Started</button>
+                </div>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <!-- BOOKING PAGE WRAPPER -->
-    <div class="booking-page-container">
-        <!-- LEFT SIDEBAR -->
-        <aside class="sidebar-card">
-            <div class="sidebar-header">
+    <!-- 2. UBER-STYLE 3-COLUMN BOOKING CONTAINER -->
+    <div class="uber-booking-container">
+
+        <!-- ── COLUMN 1: LEFT SIDEBAR (Service Categories) ── -->
+        <aside class="booking-sidebar">
+            <div class="sidebar-header-box">
                 <div class="sidebar-title">
-                    <i class="fa-solid fa-sliders"></i> All Services
+                    <span>Service Categories</span>
+                    <span class="sidebar-count-badge" th:text="${#lists.size(services)} + ' total'">8 total</span>
                 </div>
-                <span class="sidebar-badge" th:text="${#lists.size(services)} + ' available'">8 available</span>
             </div>
-            <ul class="service-list" id="serviceList">
-                <li th:each="svc : ${services}">
-                    <div class="service-nav-item"
-                         th:classappend="${svc.name.equalsIgnoreCase(serviceName)} ? 'active' : ''"
-                         th:data-name="${svc.name}"
-                         th:data-icon="${svc.icon}"
-                         th:data-duration="${svc.estimatedDurationMinutes != null ? svc.estimatedDurationMinutes : 60}"
-                         th:data-price="${svc.basePricePerHour != null ? svc.basePricePerHour : 150}"
-                         onclick="switchService(this.getAttribute('data-name'))">
-                        <div class="sni-left">
-                            <div class="sni-icon">
-                                <i class="fa-solid" th:classappend="${svc.icon != null ? svc.icon : 'fa-star'}"></i>
-                            </div>
-                            <span class="sni-name" th:text="${svc.name}">Service Name</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-right sni-arrow"></i>
+
+            <ul class="category-nav-list" id="categoryNavList">
+                <li th:each="svc : ${services}"
+                    class="category-nav-item"
+                    th:id="'cat-item-' + ${#strings.toLowerCase(#strings.replace(svc.name, ' ', '-'))}"
+                    th:classappend="${svc.name.equalsIgnoreCase(serviceName)} ? 'active tint-' + ${#strings.toLowerCase(#strings.replace(svc.name, ' ', '-'))} : ''"
+                    th:data-service-name="${svc.name}"
+                    th:data-service-icon="${svc.icon}"
+                    th:data-service-price="${svc.basePricePerHour}"
+                    th:data-service-duration="${svc.estimatedDurationMinutes}"
+                    th:data-service-desc="${svc.description}"
+                    th:onclick="switchCategory([[${svc.name}]])">
+                    <div class="cat-circle"
+                         th:classappend="'cat-' + ${#strings.toLowerCase(#strings.replace(svc.name, ' ', '-'))}">
+                        <th:block th:switch="${#strings.toLowerCase(svc.name)}">
+                            <svg th:case="'electrician'" viewBox="0 0 160 160" width="28" height="28"><circle cx="80" cy="80" r="58" fill="#FDF1E7"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#F5A623"/><circle cx="80" cy="54" r="17" fill="#F1C27D"/><path d="M63 50 Q80 28 97 50 Z" fill="#2A1E14"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><polygon points="101,87 108,87 104,93 109,93 99,103 102,94 98,94" fill="#E08E0B"/></svg>
+                            <svg th:case="'plumber'" viewBox="0 0 160 160" width="28" height="28"><circle cx="80" cy="80" r="58" fill="#E9F3FB"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#3B7DA8"/><circle cx="80" cy="54" r="17" fill="#D9A066"/><path d="M63 50 Q80 30 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><line x1="99" y1="100" x2="108" y2="89" stroke="#2E5C8A" stroke-width="3" stroke-linecap="round"/><circle cx="98" cy="101" r="2.4" fill="none" stroke="#2E5C8A" stroke-width="1.6"/><circle cx="109" cy="88" r="2.4" fill="none" stroke="#2E5C8A" stroke-width="1.6"/></svg>
+                            <svg th:case="'carpenter'" viewBox="0 0 160 160" width="28" height="28"><circle cx="80" cy="80" r="58" fill="#F3EEFB"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#7357B0"/><circle cx="80" cy="54" r="17" fill="#8D5524"/><path d="M63 50 Q80 28 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#F5EFE6"/><circle cx="86" cy="54" r="2" fill="#F5EFE6"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#F5EFE6" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><line x1="99" y1="100" x2="107" y2="90" stroke="#5B3F94" stroke-width="3" stroke-linecap="round"/><rect x="103" y="84" width="9" height="6" rx="1" fill="#5B3F94" transform="rotate(30 107 87)"/></svg>
+                            <svg th:case="'ac service'" viewBox="0 0 160 160" width="28" height="28"><circle cx="80" cy="80" r="58" fill="#EAF7FB"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#4FB3D9"/><circle cx="80" cy="54" r="17" fill="#F1C27D"/><path d="M63 50 Q80 28 97 50 Z" fill="#2A1E14"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><line x1="97" y1="94" x2="111" y2="94" stroke="#2E8CB0" stroke-width="2" stroke-linecap="round"/><line x1="99" y1="89" x2="109" y2="99" stroke="#2E8CB0" stroke-width="2" stroke-linecap="round"/><line x1="99" y1="99" x2="109" y2="89" stroke="#2E8CB0" stroke-width="2" stroke-linecap="round"/></svg>
+                            <svg th:case="'house maid'" viewBox="0 0 160 160" width="28" height="28"><circle cx="80" cy="80" r="58" fill="#EEF7EA"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#4C8C3B"/><circle cx="80" cy="54" r="17" fill="#D9A066"/><path d="M63 50 Q80 30 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><line x1="98" y1="100" x2="108" y2="88" stroke="#3B6E2E" stroke-width="2.4" stroke-linecap="round"/><polygon points="96,101 100,101 98,105" fill="#3B6E2E"/></svg>
+                            <svg th:case="'laundry'" viewBox="0 0 160 160" width="28" height="28"><circle cx="80" cy="80" r="58" fill="#FDEEF3"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#D6336C"/><circle cx="80" cy="54" r="17" fill="#8D5524"/><path d="M63 50 Q80 28 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#F5EFE6"/><circle cx="86" cy="54" r="2" fill="#F5EFE6"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#F5EFE6" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><path d="M98 90 L101 87 104 89 107 87 110 90 108 93 108 100 100 100 100 93 Z" fill="#A8265A"/></svg>
+                            <svg th:case="'labour'" viewBox="0 0 160 160" width="28" height="28"><circle cx="80" cy="80" r="58" fill="#F7EFE7"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#C2703D"/><circle cx="80" cy="54" r="17" fill="#F1C27D"/><path d="M63 50 Q80 30 97 50 Z" fill="#2A1E14"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><path d="M98 96 A7 5 0 0 1 112 96 Z" fill="#8F5228"/><rect x="97" y="96" width="16" height="2" fill="#8F5228"/></svg>
+                            <svg th:case="'cook'" viewBox="0 0 160 160" width="28" height="28"><circle cx="80" cy="80" r="58" fill="#FBEAEA"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#F5EFE6"/><circle cx="80" cy="54" r="17" fill="#D9A066"/><path d="M63 50 Q80 28 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><rect x="92" y="88" width="4" height="20" fill="#D64545"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><rect x="100" y="97" width="8" height="4" rx="1" fill="#B23333"/><ellipse cx="104" cy="93" rx="6" ry="5" fill="#B23333"/></svg>
+                            <i th:case="*" class="fa-solid" th:classappend="${svc.icon != null ? svc.icon : 'fa-wrench'}"></i>
+                        </th:block>
                     </div>
+                    <span class="cat-nav-name" th:text="${svc.name}">Electrician</span>
+                    <i class="fa-solid fa-chevron-right cat-nav-chevron"></i>
                 </li>
             </ul>
         </aside>
 
-        <!-- MAIN AREA -->
-        <main class="booking-main-card">
-            <div class="bm-top">
-                <div class="bm-service-info">
-                    <div class="bm-service-icon" id="headerServiceIcon">
-                        <i class="fa-solid" th:classappend="${serviceIcon != null ? serviceIcon : 'fa-bolt'}"></i>
+        <!-- ── COLUMN 2: MAIN AREA (Subcategories Cart + Date/Slot Picker) ── -->
+        <main class="booking-main-panel">
+            <form action="/book" method="POST" id="bookingForm" onsubmit="return handleBookingSubmit(event)">
+                <!-- Hidden inputs for backend submission -->
+                <!-- If multiple subcategories selected, JS concatenates them into service input -->
+                <input type="hidden" name="service" id="formServiceInput" th:value="${serviceName}">
+                <input type="hidden" name="time" id="formTimeSlotInput" value="09:00">
+                <input type="hidden" name="worker_id" id="formWorkerIdInput" value="">
+
+                <!-- Active Category Header Card -->
+                <div class="main-card">
+                    <div class="category-banner">
+                        <div class="cb-left">
+                            <div class="cat-circle cb-circle" id="mainCatCircle"
+                                 th:classappend="'cat-' + ${#strings.toLowerCase(#strings.replace(serviceName, ' ', '-'))}">
+                                <th:block th:switch="${#strings.toLowerCase(serviceName)}">
+                                    <svg th:case="'electrician'" viewBox="0 0 160 160" width="36" height="36"><circle cx="80" cy="80" r="58" fill="#FDF1E7"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#F5A623"/><circle cx="80" cy="54" r="17" fill="#F1C27D"/><path d="M63 50 Q80 28 97 50 Z" fill="#2A1E14"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><polygon points="101,87 108,87 104,93 109,93 99,103 102,94 98,94" fill="#E08E0B"/></svg>
+                                    <svg th:case="'plumber'" viewBox="0 0 160 160" width="36" height="36"><circle cx="80" cy="80" r="58" fill="#E9F3FB"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#3B7DA8"/><circle cx="80" cy="54" r="17" fill="#D9A066"/><path d="M63 50 Q80 30 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><line x1="99" y1="100" x2="108" y2="89" stroke="#2E5C8A" stroke-width="3" stroke-linecap="round"/><circle cx="98" cy="101" r="2.4" fill="none" stroke="#2E5C8A" stroke-width="1.6"/><circle cx="109" cy="88" r="2.4" fill="none" stroke="#2E5C8A" stroke-width="1.6"/></svg>
+                                    <svg th:case="'carpenter'" viewBox="0 0 160 160" width="36" height="36"><circle cx="80" cy="80" r="58" fill="#F3EEFB"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#7357B0"/><circle cx="80" cy="54" r="17" fill="#8D5524"/><path d="M63 50 Q80 28 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#F5EFE6"/><circle cx="86" cy="54" r="2" fill="#F5EFE6"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#F5EFE6" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><line x1="99" y1="100" x2="107" y2="90" stroke="#5B3F94" stroke-width="3" stroke-linecap="round"/><rect x="103" y="84" width="9" height="6" rx="1" fill="#5B3F94" transform="rotate(30 107 87)"/></svg>
+                                    <svg th:case="'ac service'" viewBox="0 0 160 160" width="36" height="36"><circle cx="80" cy="80" r="58" fill="#EAF7FB"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#4FB3D9"/><circle cx="80" cy="54" r="17" fill="#F1C27D"/><path d="M63 50 Q80 28 97 50 Z" fill="#2A1E14"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><line x1="97" y1="94" x2="111" y2="94" stroke="#2E8CB0" stroke-width="2" stroke-linecap="round"/><line x1="99" y1="89" x2="109" y2="99" stroke="#2E8CB0" stroke-width="2" stroke-linecap="round"/><line x1="99" y1="99" x2="109" y2="89" stroke="#2E8CB0" stroke-width="2" stroke-linecap="round"/></svg>
+                                    <svg th:case="'house maid'" viewBox="0 0 160 160" width="36" height="36"><circle cx="80" cy="80" r="58" fill="#EEF7EA"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#4C8C3B"/><circle cx="80" cy="54" r="17" fill="#D9A066"/><path d="M63 50 Q80 30 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><line x1="98" y1="100" x2="108" y2="88" stroke="#3B6E2E" stroke-width="2.4" stroke-linecap="round"/><polygon points="96,101 100,101 98,105" fill="#3B6E2E"/></svg>
+                                    <svg th:case="'laundry'" viewBox="0 0 160 160" width="36" height="36"><circle cx="80" cy="80" r="58" fill="#FDEEF3"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#D6336C"/><circle cx="80" cy="54" r="17" fill="#8D5524"/><path d="M63 50 Q80 28 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#F5EFE6"/><circle cx="86" cy="54" r="2" fill="#F5EFE6"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#F5EFE6" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><path d="M98 90 L101 87 104 89 107 87 110 90 108 93 108 100 100 100 100 93 Z" fill="#A8265A"/></svg>
+                                    <svg th:case="'labour'" viewBox="0 0 160 160" width="36" height="36"><circle cx="80" cy="80" r="58" fill="#F7EFE7"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#C2703D"/><circle cx="80" cy="54" r="17" fill="#F1C27D"/><path d="M63 50 Q80 30 97 50 Z" fill="#2A1E14"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><path d="M98 96 A7 5 0 0 1 112 96 Z" fill="#8F5228"/><rect x="97" y="96" width="16" height="2" fill="#8F5228"/></svg>
+                                    <svg th:case="'cook'" viewBox="0 0 160 160" width="36" height="36"><circle cx="80" cy="80" r="58" fill="#FBEAEA"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#F5EFE6"/><circle cx="80" cy="54" r="17" fill="#D9A066"/><path d="M63 50 Q80 28 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><rect x="92" y="88" width="4" height="20" fill="#D64545"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><rect x="100" y="97" width="8" height="4" rx="1" fill="#B23333"/><ellipse cx="104" cy="93" rx="6" ry="5" fill="#B23333"/></svg>
+                                    <i th:case="*" class="fa-solid" id="mainCatIcon" th:classappend="${serviceIcon != null ? serviceIcon : 'fa-bolt'}"></i>
+                                </th:block>
+                            </div>
+                            <div class="cb-title-box">
+                                <h1 id="mainCatTitle" th:text="'Book ' + ${serviceName}">Book Electrician</h1>
+                                <p id="mainCatDesc" th:text="${selectedService != null && selectedService.description != null ? selectedService.description : 'Verified professionals with upfront transparent pricing.'}">
+                                    Electrical repairs and installations
+                                </p>
+                            </div>
+                        </div>
+                        <div class="cb-badge">
+                            <i class="fa-solid fa-shield-halved verified-shield-icon"></i>
+                            <span>Verified Experts</span>
+                        </div>
                     </div>
-                    <div class="bm-service-text">
-                        <h1 id="headerServiceName" th:text="'Book ' + ${serviceName}">Book Electrician</h1>
-                        <p id="headerServiceDesc" th:text="${selectedService != null && selectedService.description != null ? selectedService.description : 'Verified professionals with upfront transparent pricing.'}">Professional home service verified by GharFix</p>
+
+                    <!-- Uber Option Rows: Subcategories -->
+                    <div class="subcategories-section-title">
+                        <span>Select Services</span>
+                        <span class="subcategories-section-subtitle">Select one or more options</span>
+                    </div>
+
+                    <div class="subcategories-list" id="subcategoriesList">
+                        <!-- Subcategory cards dynamically populated via JS -->
+                    </div>
+
+                    <!-- Live Running Summary Box -->
+                    <div class="cart-summary-box">
+                        <div class="cs-header">
+                            <span class="cs-title">
+                                <i class="fa-solid fa-cart-shopping"></i> Selected services
+                            </span>
+                            <span class="sidebar-count-badge" id="selectedCountBadge">0 selected</span>
+                        </div>
+                        <div class="cs-chips-wrap" id="selectedChipsContainer">
+                            <span class="cs-empty-text">No services selected yet. Please check one or more services above.</span>
+                        </div>
+                        <div class="cs-metrics-row">
+                            <div class="cs-metric-item">
+                                <span class="cs-metric-label">Total Duration:</span>
+                                <span class="cs-metric-val" id="summaryTotalDuration">0 mins</span>
+                            </div>
+                            <div class="cs-metric-item">
+                                <span class="cs-metric-label">Estimated Total:</span>
+                                <span class="cs-total-val" id="summaryTotalPrice">₹0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Date & Time Slot Picker -->
+                    <div class="booking-step-title">
+                        <i class="fa-solid fa-calendar-day"></i> Choose Date & Time Slot
+                    </div>
+                    <div class="datetime-grid">
+                        <div class="fg-date">
+                            <label for="bookingDate"><i class="fa-regular fa-calendar"></i> Service Date</label>
+                            <input type="date" name="date" id="bookingDate" class="date-input-field" required>
+                        </div>
+                        <div class="fg-slots">
+                            <label><i class="fa-regular fa-clock"></i> Select Time Slot</label>
+                            <!-- Fixed slot buttons with bracket placeholders per requirement -->
+                            <div class="time-slots-wrapper" id="timeSlotsWrapper">
+                                <button type="button" class="time-slot-chip active" data-time="09:00" onclick="selectTimeSlot(this)">[9:00 AM]</button>
+                                <button type="button" class="time-slot-chip" data-time="11:00" onclick="selectTimeSlot(this)">[11:00 AM]</button>
+                                <button type="button" class="time-slot-chip" data-time="14:00" onclick="selectTimeSlot(this)">[2:00 PM]</button>
+                                <button type="button" class="time-slot-chip" data-time="16:00" onclick="selectTimeSlot(this)">[4:00 PM]</button>
+                                <button type="button" class="time-slot-chip" data-time="18:00" onclick="selectTimeSlot(this)">[6:00 PM]</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Service Location Inputs -->
+                    <div class="booking-step-title mt-10">
+                        <i class="fa-solid fa-map-pin"></i> Service Location
+                    </div>
+                    <div class="location-form-grid">
+                        <div class="form-field-group">
+                            <label for="bookingCity"><i class="fa-solid fa-city"></i> City</label>
+                            <input type="text" name="city" id="bookingCity" value="Vadodara" placeholder="e.g. Vadodara" required>
+                        </div>
+                        <div class="form-field-group">
+                            <label for="bookingAddress"><i class="fa-solid fa-location-dot"></i> Street Address</label>
+                            <div class="input-with-button">
+                                <input type="text" name="address" id="bookingAddress" placeholder="Flat / House no., street, area" required>
+                                <button type="button" class="btn-detect-loc" onclick="requestCurrentLocation()" title="Detect current address">
+                                    <i class="fa-solid fa-crosshairs"></i> Detect
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </form>
+        </main>
 
-                <!-- Price pill -->
-                <div class="price-badge-pill" id="headerPricePill">
-                    <i class="fa-solid fa-tag"></i>
-                    <span id="headerPriceEstimateText" th:text="'Estimated: ₹' + ${estimatedPrice} + ' for ~' + ${estimatedDurationMinutes} + ' mins'">Estimated: ₹225 for ~90 mins</span>
+        <!-- ── COLUMN 3: RIGHT PANEL (Map & Nearby Mock Workers) ── -->
+        <aside class="booking-map-card">
+            <div class="map-card-header">
+                <div class="map-card-title">
+                    <i class="fa-solid fa-location-crosshairs"></i> Nearby Professionals
+                </div>
+                <div class="map-status-pill">
+                    <span class="map-status-dot"></span>
+                    <span id="mapStatusText">Available Nearby</span>
                 </div>
             </div>
 
-            <!-- Booking Form -->
-            <form action="/book" method="POST" id="bookingForm" onsubmit="return handleFormSubmit(event)">
-                <!-- Hidden inputs -->
-                <input type="hidden" name="service" id="bookingServiceInput" th:value="${serviceName}">
-                <input type="hidden" name="worker_id" id="bookingWorkerId" value="">
+            <!-- Leaflet Map Container -->
+            <div id="bookingMap"></div>
 
-                <div class="form-grid">
-                    <!-- Date Picker -->
-                    <div class="form-group">
-                        <label for="bookingDate"><i class="fa-solid fa-calendar-days"></i> Preferred Date</label>
-                        <input type="date" name="date" id="bookingDate" required>
-                    </div>
-
-                    <!-- Time Picker -->
-                    <div class="form-group">
-                        <label for="bookingTime"><i class="fa-solid fa-clock"></i> Preferred Time Slot</label>
-                        <input type="time" name="time" id="bookingTime" value="10:00" required>
-                    </div>
-
-                    <!-- City -->
-                    <div class="form-group">
-                        <label for="bookingCity"><i class="fa-solid fa-city"></i> City</label>
-                        <input type="text" name="city" id="bookingCity" placeholder="e.g. New Delhi" value="New Delhi" required>
-                    </div>
-
-                    <!-- Address with detect location button -->
-                    <div class="form-group">
-                        <label for="bookingAddress"><i class="fa-solid fa-location-dot"></i> Street Address</label>
-                        <div class="input-with-action">
-                            <input type="text" name="address" id="bookingAddress" placeholder="House no., street, area" required>
-                            <button type="button" class="btn-loc-detect" onclick="requestCurrentLocation()">
-                                <i class="fa-solid fa-crosshairs"></i> Detect
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Leaflet Map Section -->
-                <div class="map-section">
-                    <div class="map-header">
-                        <div class="map-status-row">
-                            <span class="map-status-dot" id="bookingMapStatusDot"></span>
-                            <span id="bookingMapStatusText">Searching nearby professionals...</span>
-                        </div>
-                        <div style="font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px;">
-                            <i class="fa-solid fa-shield-halved" style="color: var(--gold-mid);"></i> ID Verified
-                        </div>
-                    </div>
-                    <div id="bookingMap"></div>
-                </div>
-
-                <!-- Pricing Summary Breakdown -->
-                <div class="pricing-callout">
-                    <div class="pricing-callout-items">
-                        <div class="pci-item">
-                            <span>Base Rate</span>
-                            <strong id="summaryBaseRate" th:text="'₹' + ${basePricePerHour} + '/hr'">₹150/hr</strong>
-                        </div>
-                        <div class="pci-item">
-                            <span>Est. Duration</span>
-                            <strong id="summaryDuration" th:text="'~' + ${estimatedDurationMinutes} + ' mins'">~90 mins</strong>
-                        </div>
-                    </div>
-                    <div class="pricing-total">
-                        <span>Total Estimated</span>
-                        <strong id="summaryTotalPrice" th:text="'₹' + ${estimatedPrice}">₹225</strong>
-                    </div>
-                    <div class="pricing-note">
-                        <i class="fa-solid fa-circle-info" style="color: var(--gold);"></i>
-                        Final amount is calculated at actual completion time. No hidden convenience fees.
-                    </div>
-                </div>
-
-                <!-- Confirm Booking Button -->
-                <button type="submit" class="btn btn-gold submit-btn" id="confirmBookingBtn">
-                    <i class="fa-solid fa-circle-check"></i> Confirm Booking
-                </button>
-            </form>
-        </main>
+            <div class="map-card-footer">
+                <span><i class="fa-solid fa-street-view"></i> Live GPS coverage</span>
+                <span>Vadodara, Gujarat</span>
+            </div>
+        </aside>
     </div>
 
-    <!-- LOGIN POPUP -->
+    <!-- ── STICKY BOTTOM CONFIRM BAR (UBER STYLE) ── -->
+    <div class="bottom-confirm-bar">
+        <div class="confirm-bar-inner">
+            <div class="bar-left">
+                <div class="bar-summary-text">
+                    <div class="bar-service-names" id="barServiceSummary">Select services to proceed</div>
+                    <div class="bar-detail-meta" id="barDurationSummary">0 services selected · ~0 mins</div>
+                </div>
+                <div class="bar-price-box">
+                    <span class="bar-price-label">Estimated:</span>
+                    <span class="bar-price-amount" id="barTotalPrice">₹0</span>
+                </div>
+            </div>
+            <div class="bar-right">
+                <button type="button" class="btn-confirm-booking" id="confirmBookingBtn" onclick="triggerBookingForm()">
+                    <i class="fa-solid fa-bolt"></i> Confirm Booking
+                </button>
+                <button type="button" class="btn-confirm-booking btn-pay-razorpay" id="payRazorpayBtn" onclick="triggerRazorpayBookingCheckout()">
+                    <i class="fa-solid fa-credit-card"></i> Pay Online
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── AUTH POPUPS (LOGIN / SIGNUP) ── -->
+    <!-- Sign In Modal -->
     <div class="popup" id="loginBox">
         <div class="popup-box">
             <div class="ph">
                 <div class="ph-title">
                     <h2>Welcome back</h2>
-                    <p>Sign in to your GharFix account to book</p>
+                    <p>Sign in to your GharFix account</p>
                 </div>
-                <button class="ph-close" onclick="closePopup('loginBox')"><i class="fa-solid fa-xmark"></i></button>
+                <button type="button" class="ph-close" onclick="closePopup('loginBox')" aria-label="Close modal">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
             <div class="pb">
-                <form id="loginForm" action="/login" method="POST">
-                    <div class="fg"><label>Email Address</label><input type="email" name="email" placeholder="you@example.com" required></div>
-                    <div class="fg"><label>Password</label><input type="password" name="password" placeholder="Your password" required></div>
+                <form action="/login" method="POST">
+                    <div class="fg">
+                        <label>Email Address</label>
+                        <input type="email" name="email" placeholder="you@example.com" required>
+                    </div>
+                    <div class="fg">
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="••••••••" required>
+                    </div>
                     <button type="submit" class="pop-btn">Sign In & Continue</button>
                 </form>
-                <p class="pop-foot">Don't have an account? <a onclick="switchPopup('loginBox','signupBox')">Create one free</a></p>
+                <div class="pop-foot">
+                    Don't have an account? <a onclick="switchPopup('loginBox', 'signupBox')">Get Started</a>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- SIGNUP POPUP -->
+    <!-- Sign Up Modal -->
     <div class="popup" id="signupBox">
         <div class="popup-box">
             <div class="ph">
                 <div class="ph-title">
                     <h2>Create Account</h2>
-                    <p>Join thousands of happy homeowners</p>
+                    <p>Book verified home experts in seconds</p>
                 </div>
-                <button class="ph-close" onclick="closePopup('signupBox')"><i class="fa-solid fa-xmark"></i></button>
+                <button type="button" class="ph-close" onclick="closePopup('signupBox')" aria-label="Close modal">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
             <div class="pb">
-                <form id="userSignupForm" action="/register" method="POST">
-                    <div class="fg"><label>Full Name</label><input type="text" name="name" placeholder="Your full name" required></div>
-                    <div class="fg"><label>Email Address</label><input type="email" name="email" placeholder="you@example.com" required></div>
-                    <div class="fg"><label>Phone Number</label><input type="tel" name="phone" placeholder="+91 98765 43210" required></div>
-                    <div class="fg"><label>Password</label><input type="password" name="password" placeholder="Create a password" required></div>
-                    <div class="fg"><label>Confirm Password</label><input type="password" name="confirm_password" placeholder="Repeat password" required></div>
+                <form action="/register" method="POST">
+                    <div class="fg">
+                        <label>Full Name</label>
+                        <input type="text" name="name" placeholder="John Doe" required>
+                    </div>
+                    <div class="fg">
+                        <label>Email Address</label>
+                        <input type="email" name="email" placeholder="you@example.com" required>
+                    </div>
+                    <div class="fg">
+                        <label>Phone Number</label>
+                        <input type="tel" name="phone" placeholder="9876543210" required>
+                    </div>
+                    <div class="fg">
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="••••••••" required>
+                    </div>
                     <button type="submit" class="pop-btn">Create Account</button>
                 </form>
-                <p class="pop-foot">Already have an account? <a onclick="switchPopup('signupBox','loginBox')">Sign in</a></p>
+                <div class="pop-foot">
+                    Already have an account? <a onclick="switchPopup('signupBox', 'loginBox')">Sign In</a>
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-content">
-            <div>&copy; 2026 GharFix Technologies Inc. All rights reserved.</div>
-            <div class="footer-links">
-                <a href="/">Home</a>
-                <a href="/#services">Services</a>
-                <a href="/#workers">Professionals</a>
-                <a href="/#reviews">Reviews</a>
-            </div>
-        </div>
-    </footer>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script th:inline="javascript">
-        /* Global State & Service Registry */
-        let currentServiceName = /*[[${serviceName}]]*/ 'Electrician';
-        let currentServiceIcon = /*[[${serviceIcon}]]*/ 'fa-bolt';
-        let currentDuration = /*[[${estimatedDurationMinutes}]]*/ 90;
-        let currentPricePerHour = /*[[${basePricePerHour}]]*/ 150;
+        /* ── GLOBAL STATE & PLACEHOLDER SUBCATEGORIES ── */
+        let activeCategoryName = /*[[${serviceName}]]*/ 'Electrician';
+        let activeCategoryIcon = /*[[${serviceIcon}]]*/ 'fa-bolt';
         const isAuthenticated = /*[[${currentUser != null}]]*/ false;
 
+        // Leaflet state
         let _bMap = null;
-        let _bMapTimers = [];
-        let _currentLat = 28.6139;
-        let _currentLng = 77.2090;
+        let _currentLat = 22.3072; // Vadodara default
+        let _currentLng = 73.1812;
+        let _workerMarkers = [];
 
-        const WORKER_DATA = [
-            { name: 'Ramesh Kumar', dist: '0.4 km', rating: '4.5★' },
-            { name: 'Suresh Patel', dist: '0.7 km', rating: '4.7★' },
-            { name: 'Amit Sharma', dist: '1.1 km', rating: '4.6★' },
-            { name: 'Raj Malhotra', dist: '1.4 km', rating: '4.8★' },
-            { name: 'Priya Singh', dist: '0.9 km', rating: '4.9★' },
-            { name: 'Vikram Joshi', dist: '1.8 km', rating: '4.4★' },
-        ];
+        const CATEGORY_SVGS = {
+            'electrician': '<svg viewBox="0 0 160 160" width="36" height="36"><circle cx="80" cy="80" r="58" fill="#FDF1E7"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#F5A623"/><circle cx="80" cy="54" r="17" fill="#F1C27D"/><path d="M63 50 Q80 28 97 50 Z" fill="#2A1E14"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><polygon points="101,87 108,87 104,93 109,93 99,103 102,94 98,94" fill="#E08E0B"/></svg>',
+            'plumber': '<svg viewBox="0 0 160 160" width="36" height="36"><circle cx="80" cy="80" r="58" fill="#E9F3FB"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#3B7DA8"/><circle cx="80" cy="54" r="17" fill="#D9A066"/><path d="M63 50 Q80 30 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><line x1="99" y1="100" x2="108" y2="89" stroke="#2E5C8A" stroke-width="3" stroke-linecap="round"/><circle cx="98" cy="101" r="2.4" fill="none" stroke="#2E5C8A" stroke-width="1.6"/><circle cx="109" cy="88" r="2.4" fill="none" stroke="#2E5C8A" stroke-width="1.6"/></svg>',
+            'carpenter': '<svg viewBox="0 0 160 160" width="36" height="36"><circle cx="80" cy="80" r="58" fill="#F3EEFB"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#7357B0"/><circle cx="80" cy="54" r="17" fill="#8D5524"/><path d="M63 50 Q80 28 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#F5EFE6"/><circle cx="86" cy="54" r="2" fill="#F5EFE6"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#F5EFE6" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><line x1="99" y1="100" x2="107" y2="90" stroke="#5B3F94" stroke-width="3" stroke-linecap="round"/><rect x="103" y="84" width="9" height="6" rx="1" fill="#5B3F94" transform="rotate(30 107 87)"/></svg>',
+            'ac-service': '<svg viewBox="0 0 160 160" width="36" height="36"><circle cx="80" cy="80" r="58" fill="#EAF7FB"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#4FB3D9"/><circle cx="80" cy="54" r="17" fill="#F1C27D"/><path d="M63 50 Q80 28 97 50 Z" fill="#2A1E14"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><line x1="97" y1="94" x2="111" y2="94" stroke="#2E8CB0" stroke-width="2" stroke-linecap="round"/><line x1="99" y1="89" x2="109" y2="99" stroke="#2E8CB0" stroke-width="2" stroke-linecap="round"/><line x1="99" y1="99" x2="109" y2="89" stroke="#2E8CB0" stroke-width="2" stroke-linecap="round"/></svg>',
+            'house-maid': '<svg viewBox="0 0 160 160" width="36" height="36"><circle cx="80" cy="80" r="58" fill="#EEF7EA"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#4C8C3B"/><circle cx="80" cy="54" r="17" fill="#D9A066"/><path d="M63 50 Q80 30 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><line x1="98" y1="100" x2="108" y2="88" stroke="#3B6E2E" stroke-width="2.4" stroke-linecap="round"/><polygon points="96,101 100,101 98,105" fill="#3B6E2E"/></svg>',
+            'laundry': '<svg viewBox="0 0 160 160" width="36" height="36"><circle cx="80" cy="80" r="58" fill="#FDEEF3"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#D6336C"/><circle cx="80" cy="54" r="17" fill="#8D5524"/><path d="M63 50 Q80 28 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#F5EFE6"/><circle cx="86" cy="54" r="2" fill="#F5EFE6"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#F5EFE6" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><path d="M98 90 L101 87 104 89 107 87 110 90 108 93 108 100 100 100 100 93 Z" fill="#A8265A"/></svg>',
+            'labour': '<svg viewBox="0 0 160 160" width="36" height="36"><circle cx="80" cy="80" r="58" fill="#F7EFE7"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#C2703D"/><circle cx="80" cy="54" r="17" fill="#F1C27D"/><path d="M63 50 Q80 30 97 50 Z" fill="#2A1E14"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><path d="M98 96 A7 5 0 0 1 112 96 Z" fill="#8F5228"/><rect x="97" y="96" width="16" height="2" fill="#8F5228"/></svg>',
+            'cook': '<svg viewBox="0 0 160 160" width="36" height="36"><circle cx="80" cy="80" r="58" fill="#FBEAEA"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#F5EFE6"/><circle cx="80" cy="54" r="17" fill="#D9A066"/><path d="M63 50 Q80 28 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><rect x="92" y="88" width="4" height="20" fill="#D64545"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><rect x="100" y="97" width="8" height="4" rx="1" fill="#B23333"/><ellipse cx="104" cy="93" rx="6" ry="5" fill="#B23333"/></svg>'
+        };
 
-        /* Init Date picker min date to today */
+        /*
+         * PLACEHOLDER subcategories per category using literal bracket placeholders
+         * as requested: "[Subcategory Name 1]" — ₹[Price] — [Duration] mins
+         * with fallback numeric values for live cart calculations.
+         */
+        const SUBCATEGORIES_DATA = {
+            'electrician': [
+                { id: 'elec_1', name: '[Subcategory Name 1]', price: 149, priceDisplay: '₹[Price]', duration: 45, durationDisplay: '[Duration] mins', desc: 'Standard inspection, switchboard repair, and wiring check' },
+                { id: 'elec_2', name: '[Subcategory Name 2]', price: 199, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Fan installation, regulator replacement, and chandelier hanging' },
+                { id: 'elec_3', name: '[Subcategory Name 3]', price: 249, priceDisplay: '₹[Price]', duration: 45, durationDisplay: '[Duration] mins', desc: 'MCB tripping fix, fuse renewal, and main board servicing' },
+                { id: 'elec_4', name: '[Subcategory Name 4]', price: 499, priceDisplay: '₹[Price]', duration: 90, durationDisplay: '[Duration] mins', desc: 'Comprehensive full-home electrical safety assessment' }
+            ],
+            'plumber': [
+                { id: 'plumb_1', name: '[Subcategory Name 1]', price: 149, priceDisplay: '₹[Price]', duration: 45, durationDisplay: '[Duration] mins', desc: 'Tap washer replacement, minor leak repair, and drain clearance' },
+                { id: 'plumb_2', name: '[Subcategory Name 2]', price: 229, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Washbasin pipe fitting, trap cleaning, and angle valve change' },
+                { id: 'plumb_3', name: '[Subcategory Name 3]', price: 299, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Toilet cistern repair, jet spray installation, and seat hinge fix' },
+                { id: 'plumb_4', name: '[Subcategory Name 4]', price: 599, priceDisplay: '₹[Price]', duration: 90, durationDisplay: '[Duration] mins', desc: 'Overhead water tank connection and motorized pump line check' }
+            ],
+            'carpenter': [
+                { id: 'carp_1', name: '[Subcategory Name 1]', price: 199, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Door lock fitting, hinge tightening, and latch alignment' },
+                { id: 'carp_2', name: '[Subcategory Name 2]', price: 349, priceDisplay: '₹[Price]', duration: 90, durationDisplay: '[Duration] mins', desc: 'Bed, table, and modular furniture assembly with leveling' },
+                { id: 'carp_3', name: '[Subcategory Name 3]', price: 249, priceDisplay: '₹[Price]', duration: 45, durationDisplay: '[Duration] mins', desc: 'Cabinet door handle fixing, drawer channel lubrication' },
+                { id: 'carp_4', name: '[Subcategory Name 4]', price: 649, priceDisplay: '₹[Price]', duration: 120, durationDisplay: '[Duration] mins', desc: 'Custom shelf cutting, wood trimming, and polish touchup' }
+            ],
+            'ac-service': [
+                { id: 'ac_1', name: '[Subcategory Name 1]', price: 399, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Power-jet foam wash, filter cleaning, and indoor unit sanitization' },
+                { id: 'ac_2', name: '[Subcategory Name 2]', price: 799, priceDisplay: '₹[Price]', duration: 90, durationDisplay: '[Duration] mins', desc: 'Freon gas leak detection, brazing test, and optimal pressure refill' },
+                { id: 'ac_3', name: '[Subcategory Name 3]', price: 699, priceDisplay: '₹[Price]', duration: 90, durationDisplay: '[Duration] mins', desc: 'Split AC safe uninstallation and copper piping bracket setup' },
+                { id: 'ac_4', name: '[Subcategory Name 4]', price: 499, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Compressor capacitor replacement and PCB sensor diagnostics' }
+            ],
+            'house-maid': [
+                { id: 'maid_1', name: '[Subcategory Name 1]', price: 299, priceDisplay: '₹[Price]', duration: 90, durationDisplay: '[Duration] mins', desc: 'Living room and bedroom floor mopping, dusting, and trash clearance' },
+                { id: 'maid_2', name: '[Subcategory Name 2]', price: 399, priceDisplay: '₹[Price]', duration: 120, durationDisplay: '[Duration] mins', desc: 'Kitchen degreasing, slab scrubbing, and appliance exterior wipe' },
+                { id: 'maid_3', name: '[Subcategory Name 3]', price: 249, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Bathroom tile scaling removal, fixture descaling, and disinfectant' },
+                { id: 'maid_4', name: '[Subcategory Name 4]', price: 349, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Sofa dry vacuuming, cushion beating, and curtain dust removal' }
+            ],
+            'laundry': [
+                { id: 'laun_1', name: '[Subcategory Name 1]', price: 199, priceDisplay: '₹[Price]', duration: 45, durationDisplay: '[Duration] mins', desc: 'Wash, fold & crisp steam ironing for up to 10 garments' },
+                { id: 'laun_2', name: '[Subcategory Name 2]', price: 349, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Delicate dry cleaning for suits, blazers, and ethnic wear' },
+                { id: 'laun_3', name: '[Subcategory Name 3]', price: 299, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Heavy comforter, duvet, and curtain antimicrobial wash' },
+                { id: 'laun_4', name: '[Subcategory Name 4]', price: 249, priceDisplay: '₹[Price]', duration: 45, durationDisplay: '[Duration] mins', desc: 'Sneaker deep scrubbing, sole whitening, and deodorizing' }
+            ],
+            'labour': [
+                { id: 'lab_1', name: '[Subcategory Name 1]', price: 349, priceDisplay: '₹[Price]', duration: 120, durationDisplay: '[Duration] mins', desc: 'Heavy household carton shifting and furniture rearrangement' },
+                { id: 'lab_2', name: '[Subcategory Name 2]', price: 449, priceDisplay: '₹[Price]', duration: 150, durationDisplay: '[Duration] mins', desc: 'Garden clearing, renovation debris packing, and safe disposal' },
+                { id: 'lab_3', name: '[Subcategory Name 3]', price: 399, priceDisplay: '₹[Price]', duration: 120, durationDisplay: '[Duration] mins', desc: 'Loading/unloading luggage and household appliances from vehicle' },
+                { id: 'lab_4', name: '[Subcategory Name 4]', price: 799, priceDisplay: '₹[Price]', duration: 240, durationDisplay: '[Duration] mins', desc: 'Half-day dedicated handyman helper for miscellaneous home jobs' }
+            ],
+            'cook': [
+                { id: 'cook_1', name: '[Subcategory Name 1]', price: 250, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Daily home meal preparation (breakfast, lunch, or dinner)' },
+                { id: 'cook_2', name: '[Subcategory Name 2]', price: 399, priceDisplay: '₹[Price]', duration: 90, durationDisplay: '[Duration] mins', desc: 'Special multi-course meal and family gathering cooking' },
+                { id: 'cook_3', name: '[Subcategory Name 3]', price: 299, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Healthy dietary and regional specialty meal preparation' },
+                { id: 'cook_4', name: '[Subcategory Name 4]', price: 599, priceDisplay: '₹[Price]', duration: 120, durationDisplay: '[Duration] mins', desc: 'Full-day dedicated chef for festival or party catering' }
+            ]
+        };
+
+        // Cart state: map of subcategoryId -> { id, name, price, duration, category }
+        const selectedCart = new Map();
+
+        /* ── INITIALIZATION ON DOM READY ── */
         document.addEventListener('DOMContentLoaded', () => {
+            // Set min date to today for HTML5 date picker
             const todayStr = new Date().toISOString().split('T')[0];
             const dateInput = document.getElementById('bookingDate');
             if (dateInput) {
@@ -1124,255 +1895,460 @@
                 dateInput.value = todayStr;
             }
 
-            // Initialize map with geolocation or fallback
+            // Render subcategories for initial active category
+            renderSubcategoriesForCategory(activeCategoryName);
+
+            // Initialize Leaflet map
+            initLeafletMap(_currentLat, _currentLng);
             requestCurrentLocation();
 
-            // Set up popstate listener for back/forward navigation
+            // Setup popstate for back/forward navigation
             window.addEventListener('popstate', (e) => {
                 const pathParts = window.location.pathname.split('/');
                 if (pathParts.length >= 3 && pathParts[1] === 'book') {
                     const svcName = decodeURIComponent(pathParts[2]);
-                    switchService(svcName, false);
+                    switchCategory(svcName, false);
                 }
             });
         });
 
-        /* Switch active service category */
-        async function switchService(targetServiceName, pushState = true) {
-            if (!targetServiceName) return;
+        /* ── SWITCH CATEGORY (SIDEBAR INTERACTION) ── */
+        function switchCategory(targetCategoryName, pushState = true) {
+            if (!targetCategoryName) return;
+            activeCategoryName = targetCategoryName;
 
-            // Highlight sidebar item immediately
-            const items = document.querySelectorAll('.service-nav-item');
-            let foundItem = null;
-            items.forEach(el => {
-                const itemService = el.getAttribute('data-name');
-                if (itemService.toLowerCase() === targetServiceName.toLowerCase()) {
-                    el.classList.add('active');
-                    foundItem = el;
-                } else {
-                    el.classList.remove('active');
+            const slug = targetCategoryName.toLowerCase().replace(/\s+/g, '-');
+
+            // 1. Update visual highlight on sidebar
+            document.querySelectorAll('.category-nav-item').forEach(el => {
+                el.classList.remove('active', 'tint-electrician', 'tint-plumber', 'tint-carpenter', 'tint-ac-service', 'tint-house-maid', 'tint-laundry', 'tint-labour', 'tint-cook');
+                const name = el.getAttribute('data-service-name');
+                if (name && name.toLowerCase() === targetCategoryName.toLowerCase()) {
+                    el.classList.add('active', 'tint-' + slug);
+                    activeCategoryIcon = el.getAttribute('data-service-icon') || 'fa-wrench';
                 }
             });
 
-            // Fetch service details from /api/services to ensure fresh state
-            let sData = null;
-            try {
-                const res = await fetch('/api/services');
-                if (res.ok) {
-                    const list = await res.json();
-                    sData = list.find(s => s.name.toLowerCase() === targetServiceName.toLowerCase());
-                }
-            } catch (err) {
-                console.warn('Could not fetch /api/services, falling back to DOM metadata', err);
-            }
-
-            if (!sData && foundItem) {
-                sData = {
-                    name: foundItem.getAttribute('data-name'),
-                    icon: foundItem.getAttribute('data-icon'),
-                    estimatedDurationMinutes: parseInt(foundItem.getAttribute('data-duration') || '60', 10),
-                    basePricePerHour: parseInt(foundItem.getAttribute('data-price') || '150', 10),
-                    description: 'Professional ' + foundItem.getAttribute('data-name') + ' services by verified experts.'
-                };
-            }
-
-            if (sData) {
-                currentServiceName = sData.name;
-                currentServiceIcon = sData.icon || 'fa-bolt';
-                currentDuration = sData.estimatedDurationMinutes || 60;
-                currentPricePerHour = sData.basePricePerHour || 150;
-
-                // Price formula: (basePricePerHour / 60) * estimatedDurationMinutes
-                const estimatedTotal = Math.round((currentPricePerHour / 60.0) * currentDuration);
-
-                // Update DOM elements
-                document.getElementById('bookingServiceInput').value = currentServiceName;
-                document.getElementById('headerServiceName').textContent = 'Book ' + currentServiceName;
-                if (sData.description) {
-                    document.getElementById('headerServiceDesc').textContent = sData.description;
-                }
-                document.title = 'Book ' + currentServiceName + ' - GharFix';
-
-                // Update service icon
-                const iconContainer = document.getElementById('headerServiceIcon');
-                iconContainer.innerHTML = '<i class="fa-solid ' + (currentServiceIcon.startsWith('fa-') ? currentServiceIcon : ('fa-' + currentServiceIcon)) + '"></i>';
-
-                // Update price estimate text
-                const pillText = `Estimated: ₹${estimatedTotal} for ~${currentDuration} mins`;
-                document.getElementById('headerPriceEstimateText').textContent = pillText;
-
-                // Update pricing summary breakdown
-                document.getElementById('summaryBaseRate').textContent = `₹${currentPricePerHour}/hr`;
-                document.getElementById('summaryDuration').textContent = `~${currentDuration} mins`;
-                document.getElementById('summaryTotalPrice').textContent = `₹${estimatedTotal}`;
-
-                // Update browser URL via history.pushState
-                if (pushState) {
-                    const newUrl = '/book/' + encodeURIComponent(currentServiceName);
-                    history.pushState({ service: currentServiceName }, '', newUrl);
-                }
-
-                // Refresh map markers with new service label
-                renderMapMarkers(_currentLat, _currentLng, currentServiceName);
-            }
-        }
-
-        /* Map & Geolocation Handling */
-        function requestCurrentLocation() {
-            const statusText = document.getElementById('bookingMapStatusText');
-            if (statusText) statusText.textContent = 'Detecting your location...';
-
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    pos => {
-                        _currentLat = pos.coords.latitude;
-                        _currentLng = pos.coords.longitude;
-                        initBookingMap(_currentLat, _currentLng, currentServiceName);
-                    },
-                    () => {
-                        // Fallback to New Delhi default
-                        initBookingMap(_currentLat, _currentLng, currentServiceName);
-                    },
-                    { timeout: 6000 }
-                );
+            // 2. Update category banner in main area
+            const circle = document.getElementById('mainCatCircle');
+            circle.className = 'cat-circle cb-circle cat-' + slug;
+            const svgMarkup = CATEGORY_SVGS[slug];
+            if (svgMarkup) {
+                circle.innerHTML = svgMarkup;
             } else {
-                initBookingMap(_currentLat, _currentLng, currentServiceName);
+                circle.innerHTML = '<i class="fa-solid ' + (activeCategoryIcon.startsWith('fa-') ? activeCategoryIcon : ('fa-' + activeCategoryIcon)) + '"></i>';
             }
+            document.getElementById('mainCatTitle').textContent = 'Book ' + targetCategoryName;
+            document.title = 'Book ' + targetCategoryName + ' - GharFix';
+
+            // 3. Render subcategories for target category
+            renderSubcategoriesForCategory(targetCategoryName);
+
+            // 4. Update browser URL without full page reload
+            if (pushState) {
+                const newUrl = '/book/' + encodeURIComponent(targetCategoryName);
+                history.pushState({ service: targetCategoryName }, '', newUrl);
+            }
+
+            // 5. Update map status & worker markers
+            renderMockWorkerMarkers(_currentLat, _currentLng, targetCategoryName);
         }
 
-        function initBookingMap(lat, lng, serviceName) {
+        /* ── RENDER SUBCATEGORIES ROWS ── */
+        function renderSubcategoriesForCategory(categoryName) {
+            const container = document.getElementById('subcategoriesList');
+            if (!container) return;
+
+            const slug = categoryName.toLowerCase().replace(/\s+/g, '-');
+            const items = SUBCATEGORIES_DATA[slug] || [
+                { id: slug + '_1', name: '[Subcategory Name 1]', price: 149, priceDisplay: '₹[Price]', duration: 45, durationDisplay: '[Duration] mins', desc: 'Standard verified ' + categoryName + ' home service' },
+                { id: slug + '_2', name: '[Subcategory Name 2]', price: 199, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Advanced ' + categoryName + ' repair and testing' },
+                { id: slug + '_3', name: '[Subcategory Name 3]', price: 299, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Comprehensive ' + categoryName + ' installation & maintenance' },
+                { id: slug + '_4', name: '[Subcategory Name 4]', price: 499, priceDisplay: '₹[Price]', duration: 90, durationDisplay: '[Duration] mins', desc: 'Premium deep care and safety inspection' }
+            ];
+
+            // If user has not selected anything yet, default-select the first subcategory
+            if (selectedCart.size === 0 && items.length > 0) {
+                const first = items[0];
+                selectedCart.set(first.id, {
+                    id: first.id,
+                    name: first.name,
+                    price: first.price,
+                    duration: first.duration,
+                    category: categoryName
+                });
+            }
+
+            container.innerHTML = '';
+            items.forEach((item, index) => {
+                const isSelected = selectedCart.has(item.id);
+                const row = document.createElement('div');
+                row.className = 'subcategory-row' + (isSelected ? ' selected' : '');
+                row.setAttribute('data-id', item.id);
+                row.onclick = () => toggleSubcategory(item, categoryName, row);
+
+                row.innerHTML = `
+                    <div class="sub-left">
+                        <div class="custom-checkbox">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <div class="sub-icon">
+                            <i class="fa-solid ${activeCategoryIcon}"></i>
+                        </div>
+                        <div class="sub-info">
+                            <div class="sub-name">${item.name}</div>
+                            <div class="sub-desc">${item.desc}</div>
+                        </div>
+                    </div>
+                    <div class="sub-right">
+                        <div class="sub-price">${item.priceDisplay}</div>
+                        <div class="sub-duration">
+                            <i class="fa-regular fa-clock"></i> ${item.durationDisplay}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+
+            updateCartSummaryUI();
+        }
+
+        /* ── TOGGLE SUBCATEGORY (MULTI-SELECT CART) ── */
+        function toggleSubcategory(item, categoryName, rowElement) {
+            if (selectedCart.has(item.id)) {
+                selectedCart.delete(item.id);
+                rowElement.classList.remove('selected');
+            } else {
+                selectedCart.set(item.id, {
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    duration: item.duration,
+                    category: categoryName
+                });
+                rowElement.classList.add('selected');
+            }
+            updateCartSummaryUI();
+        }
+
+        function removeCartItem(itemId) {
+            selectedCart.delete(itemId);
+            // Refresh rows selection state
+            document.querySelectorAll('.subcategory-row').forEach(row => {
+                if (row.getAttribute('data-id') === itemId) {
+                    row.classList.remove('selected');
+                }
+            });
+            updateCartSummaryUI();
+        }
+
+        /* ── UPDATE LIVE RUNNING SUMMARY & STICKY BAR ── */
+        function updateCartSummaryUI() {
+            const chipsContainer = document.getElementById('selectedChipsContainer');
+            const countBadge = document.getElementById('selectedCountBadge');
+            const totalDurationEl = document.getElementById('summaryTotalDuration');
+            const totalPriceEl = document.getElementById('summaryTotalPrice');
+
+            // Bottom bar elements
+            const barServiceSummary = document.getElementById('barServiceSummary');
+            const barDurationSummary = document.getElementById('barDurationSummary');
+            const barTotalPrice = document.getElementById('barTotalPrice');
+            const confirmBtn = document.getElementById('confirmBookingBtn');
+
+            let totalPrice = 0;
+            let totalDuration = 0;
+            const names = [];
+
+            chipsContainer.innerHTML = '';
+
+            if (selectedCart.size === 0) {
+                chipsContainer.innerHTML = '<span class="cs-empty-text">No services selected yet. Please check one or more services above.</span>';
+                countBadge.textContent = '0 selected';
+                totalDurationEl.textContent = '0 mins';
+                totalPriceEl.textContent = '₹0';
+
+                barServiceSummary.textContent = 'Select services to proceed';
+                barDurationSummary.textContent = '0 services selected · ~0 mins';
+                barTotalPrice.textContent = '₹0';
+                confirmBtn.disabled = true;
+                return;
+            }
+
+            confirmBtn.disabled = false;
+            countBadge.textContent = selectedCart.size + ' selected';
+
+            selectedCart.forEach((item) => {
+                totalPrice += (item.price || 150);
+                totalDuration += (item.duration || 45);
+                names.push(item.name);
+
+                const chip = document.createElement('span');
+                chip.className = 'cs-service-chip';
+                chip.innerHTML = `
+                    <span>${item.category}: ${item.name}</span>
+                    <i class="fa-solid fa-xmark cs-chip-remove" onclick="removeCartItem('${item.id}')" title="Remove"></i>
+                `;
+                chipsContainer.appendChild(chip);
+            });
+
+            totalDurationEl.textContent = `~${totalDuration} mins`;
+            totalPriceEl.textContent = `₹${totalPrice}`;
+
+            barServiceSummary.textContent = names.join(', ');
+            barDurationSummary.textContent = `${selectedCart.size} selected · ~${totalDuration} mins`;
+            barTotalPrice.textContent = `₹${totalPrice}`;
+        }
+
+        /* ── TIME SLOT SELECTION ── */
+        function selectTimeSlot(buttonEl) {
+            document.querySelectorAll('.time-slot-chip').forEach(btn => btn.classList.remove('active'));
+            buttonEl.classList.add('active');
+            const timeVal = buttonEl.getAttribute('data-time') || '09:00';
+            document.getElementById('formTimeSlotInput').value = timeVal;
+        }
+
+        /* ── LEAFLET MAP & WORKER MARKERS ── */
+        function initLeafletMap(lat, lng) {
             if (_bMap) {
                 _bMap.remove();
                 _bMap = null;
             }
 
-            const mapEl = document.getElementById('bookingMap');
-            if (!mapEl) return;
+            const mapContainer = document.getElementById('bookingMap');
+            if (!mapContainer) return;
 
             _bMap = L.map('bookingMap', {
                 zoomControl: true,
-                attributionControl: true
+                attributionControl: false
             }).setView([lat, lng], 14);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
                 maxZoom: 19
             }).addTo(_bMap);
 
-            renderMapMarkers(lat, lng, serviceName);
+            renderMockWorkerMarkers(lat, lng, activeCategoryName);
         }
 
-        function renderMapMarkers(lat, lng, serviceName) {
+        function requestCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        _currentLat = pos.coords.latitude;
+                        _currentLng = pos.coords.longitude;
+                        if (_bMap) {
+                            _bMap.setView([_currentLat, _currentLng], 14);
+                            renderMockWorkerMarkers(_currentLat, _currentLng, activeCategoryName);
+                        }
+                    },
+                    (err) => {
+                        console.warn('Geolocation denied or timed out, keeping default Vadodara coordinates');
+                    },
+                    { timeout: 5000 }
+                );
+            }
+        }
+
+        // TODO: replace mock worker markers with real nearby worker data from backend
+        function renderMockWorkerMarkers(lat, lng, categoryName) {
             if (!_bMap) return;
 
-            // Clear previous timers
-            _bMapTimers.forEach(clearTimeout);
-            _bMapTimers = [];
+            // Clear previous worker markers
+            _workerMarkers.forEach(m => _bMap.removeLayer(m));
+            _workerMarkers = [];
 
-            // Clear markers except tiles
-            _bMap.eachLayer(layer => {
-                if (layer instanceof L.Marker) {
-                    _bMap.removeLayer(layer);
-                }
-            });
-
-            // User "You are here" marker
+            // User center location pulse marker
             const userIcon = L.divIcon({
                 html: '<div class="user-pulse"></div>',
                 className: '',
-                iconSize: [18, 18],
-                iconAnchor: [9, 9]
+                iconSize: [16, 16],
+                iconAnchor: [8, 8]
             });
 
-            L.marker([lat, lng], { icon: userIcon })
+            const userMarker = L.marker([lat, lng], { icon: userIcon })
                 .addTo(_bMap)
-                .bindPopup('<span style="font-weight:700;font-size:13px">📍 Your Location</span>')
-                .openPopup();
+                .bindPopup('<div class="map-pro-popup"><div class="map-pro-name">📍 Your Location</div></div>');
+            _workerMarkers.push(userMarker);
 
-            // Scatter worker markers around user
-            const offsets = [
-                [-0.003, 0.005], [0.004, -0.003], [-0.005, -0.006],
-                [0.006, 0.004], [-0.002, 0.008], [0.007, -0.005]
+            // Placeholder nearby worker markers with bracket placeholders like "[Worker Name] — [ETA] mins away"
+            const MOCK_WORKERS = [
+                { name: '[Worker Name 1]', eta: '6 mins away', off: [0.0035, 0.0042] },
+                { name: '[Worker Name 2]', eta: '9 mins away', off: [-0.0041, -0.0035] },
+                { name: '[Worker Name 3]', eta: '12 mins away', off: [0.0028, -0.0051] },
+                { name: '[Worker Name 4]', eta: '15 mins away', off: [-0.0032, 0.0048] }
             ];
-            const count = 4 + Math.floor(Math.random() * 3);
+
             const workerIcon = L.divIcon({
-                html: '<div class="worker-pin"><i class="fa-solid fa-person"></i></div>',
+                html: '<div class="worker-pin"><i class="fa-solid fa-person-digging"></i></div>',
                 className: '',
                 iconSize: [32, 32],
-                iconAnchor: [16, 32]
+                iconAnchor: [16, 16]
             });
 
-            const statusDot = document.getElementById('bookingMapStatusDot');
-            const statusText = document.getElementById('bookingMapStatusText');
-            if (statusDot) statusDot.className = 'map-status-dot';
-            if (statusText) statusText.textContent = `Finding nearby ${serviceName} pros...`;
+            MOCK_WORKERS.forEach((worker) => {
+                const wLat = lat + worker.off[0];
+                const wLng = lng + worker.off[1];
 
-            offsets.slice(0, count).forEach((off, i) => {
-                const t = setTimeout(() => {
-                    if (!_bMap) return;
-                    const wLat = lat + off[0] + (Math.random() - 0.5) * 0.002;
-                    const wLng = lng + off[1] + (Math.random() - 0.5) * 0.002;
-                    const w = WORKER_DATA[i % WORKER_DATA.length];
-
-                    L.marker([wLat, wLng], { icon: workerIcon })
-                        .addTo(_bMap)
-                        .bindPopup(`
-                            <div class="popup-worker-name">${w.name}</div>
-                            <div class="popup-worker-info">${w.dist} away · ${w.rating}</div>
-                            <div class="popup-worker-badge">${serviceName}</div>
-                        `);
-
-                    if (i === count - 1) {
-                        const t2 = setTimeout(() => {
-                            if (statusDot) statusDot.className = 'map-status-dot found';
-                            if (statusText) statusText.textContent = `${count} verified ${serviceName} pros nearby`;
-                        }, 500);
-                        _bMapTimers.push(t2);
-                    }
-                }, 400 + i * 350);
-                _bMapTimers.push(t);
+                const marker = L.marker([wLat, wLng], { icon: workerIcon })
+                    .addTo(_bMap)
+                    .bindPopup(`
+                        <div class="map-pro-popup">
+                            <div class="map-pro-name">${worker.name}</div>
+                            <div class="map-pro-eta">${categoryName} · [ETA: ${worker.eta}]</div>
+                        </div>
+                    `);
+                _workerMarkers.push(marker);
             });
+
+            const statusText = document.getElementById('mapStatusText');
+            if (statusText) {
+                statusText.textContent = `${MOCK_WORKERS.length} ${categoryName} Pros Nearby`;
+            }
         }
 
-        /* Form submission handler */
-        function handleFormSubmit(e) {
+        /* ── FORM SUBMISSION & BOTTOM BAR TRIGGER ── */
+        function triggerBookingForm() {
+            document.getElementById('bookingForm').requestSubmit();
+        }
+
+        function handleBookingSubmit(e) {
             if (!isAuthenticated) {
-                // If not logged in, prompt user to log in
+                e.preventDefault();
                 openPopup('loginBox');
                 return false;
             }
+
+            if (selectedCart.size === 0) {
+                e.preventDefault();
+                alert('Please select at least one service subcategory to proceed.');
+                return false;
+            }
+
+            // TODO: support creating multiple booking records for multi-service cart
+            // Concatenate selected subcategory names into one booking's service field as placeholder approach
+            const selectedItems = Array.from(selectedCart.values());
+            const concatenatedNames = selectedItems.map(item => item.name).join(', ');
+            const finalServiceValue = `${activeCategoryName}: ${concatenatedNames}`;
+            document.getElementById('formServiceInput').value = finalServiceValue;
+
             return true;
         }
 
-        /* Modal Helpers */
-        function openPopup(id) {
-            document.getElementById(id).classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        function closePopup(id) {
-            document.getElementById(id).classList.remove('active');
-            document.body.style.overflow = '';
-        }
-        function switchPopup(a, b) {
-            closePopup(a);
-            setTimeout(() => openPopup(b), 180);
+        /* ── MODALS / DROPDOWN HELPERS ── */
+        function toggleUserDropdown(e) {
+            e.stopPropagation();
+            const dd = document.getElementById('userDropdown');
+            if (dd) dd.classList.toggle('active');
         }
 
-        // Close modal on outside click
+        document.addEventListener('click', (e) => {
+            const dd = document.getElementById('userDropdown');
+            if (dd && dd.classList.contains('active') && !dd.contains(e.target)) {
+                dd.classList.remove('active');
+            }
+        });
+
+        function openPopup(id) {
+            const p = document.getElementById(id);
+            if (p) {
+                p.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closePopup(id) {
+            const p = document.getElementById(id);
+            if (p) {
+                p.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function switchPopup(closeId, openId) {
+            closePopup(closeId);
+            setTimeout(() => openPopup(openId), 150);
+        }
+
         document.querySelectorAll('.popup').forEach(p => {
-            p.addEventListener('click', e => {
+            p.addEventListener('click', (e) => {
                 if (e.target === p) closePopup(p.id);
             });
         });
 
-        // Auto-dismiss flash messages
+        // Auto-dismiss flash messages after 4 seconds
         setTimeout(() => {
             document.querySelectorAll('.flash').forEach(f => {
                 f.style.opacity = '0';
-                f.style.transition = 'opacity .4s';
+                f.style.transition = 'opacity 0.4s';
                 setTimeout(() => f.remove(), 400);
             });
         }, 4000);
+
+        function triggerBookingForm() {
+            const form = document.getElementById('bookingForm');
+            if (form) {
+                if (form.reportValidity && !form.reportValidity()) {
+                    return;
+                }
+                form.submit();
+            }
+        }
+
+        function triggerRazorpayBookingCheckout() {
+            const form = document.getElementById('bookingForm');
+            if (form && form.reportValidity && !form.reportValidity()) {
+                return;
+            }
+
+            // Extract price from total price element or fallback
+            const priceText = document.getElementById('barTotalPrice') ? document.getElementById('barTotalPrice').innerText : '₹499';
+            let amount = parseFloat(priceText.replace(/[^0-9.]/g, ''));
+            if (!amount || isNaN(amount) || amount < 1) amount = 499;
+
+            const serviceName = document.getElementById('formServiceInput') ? document.getElementById('formServiceInput').value : 'Home Service';
+            const btn = document.getElementById('payRazorpayBtn');
+
+            /*<![CDATA[*/
+            const userName = /*[[${currentUser != null ? currentUser.name : 'GharFix Customer'}]]*/ 'GharFix Customer';
+            const userEmail = /*[[${currentUser != null ? currentUser.username : 'customer@gharfix.com'}]]*/ 'customer@gharfix.com';
+            /*]]>*/
+
+            initiateRazorpayPayment({
+                amount: amount,
+                description: 'Payment for ' + serviceName,
+                customerName: userName,
+                customerEmail: userEmail,
+                triggerButton: btn,
+                onSuccess: function(verifyData, paymentResponse) {
+                    showPaymentToast('Payment Verified! ID: ' + paymentResponse.razorpay_payment_id + '. Submitting booking...', 'success');
+                    // Append razorpay details to form if possible
+                    if (form) {
+                        const orderInput = document.createElement('input');
+                        orderInput.type = 'hidden';
+                        orderInput.name = 'razorpayOrderId';
+                        orderInput.value = paymentResponse.razorpay_order_id;
+                        form.appendChild(orderInput);
+
+                        const payInput = document.createElement('input');
+                        payInput.type = 'hidden';
+                        payInput.name = 'razorpayPaymentId';
+                        payInput.value = paymentResponse.razorpay_payment_id;
+                        form.appendChild(payInput);
+
+                        setTimeout(() => form.submit(), 1200);
+                    } else {
+                        setTimeout(() => window.location.href = '/my-bookings', 1500);
+                    }
+                }
+            });
+        }
     </script>
+    <!-- Razorpay Standard Web Checkout SDK & Integration Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="/js/razorpay-checkout.js"></script>
+
+    <!-- GharFix AI Assistant Fragment -->
+    <div th:replace="~{fragments/ai-assistant-modal :: aiAssistant}"></div>
 </body>
+
 </html>
+

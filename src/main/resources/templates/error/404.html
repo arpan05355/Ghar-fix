@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found — GharFix</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #F8F9FA;
+            color: #1A1A1A;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .header-simple {
+            padding: 20px 32px;
+            display: flex;
+            align-items: center;
+        }
+
+        .brand-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #1A1A1A;
+            text-decoration: none;
+        }
+
+        .brand-logo i {
+            font-size: 18px;
+            color: #1A1A1A;
+        }
+
+        .brand-logo em {
+            font-style: normal;
+            color: #4B5563;
+            font-weight: 600;
+        }
+
+        .error-main {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .error-card {
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 16px;
+            padding: 56px 40px;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        .error-icon-wrap {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #FDF1E7;
+            border: 1px solid #FFEDD5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            color: #EA580C;
+        }
+
+        .error-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #1A1A1A;
+            letter-spacing: -0.5px;
+            margin-bottom: 10px;
+        }
+
+        .error-subtitle {
+            font-size: 15px;
+            color: #6B7280;
+            line-height: 1.5;
+            margin-bottom: 32px;
+        }
+
+        .btn-home {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 28px;
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .btn-home:hover {
+            background-color: #333333;
+            transform: translateY(-1px);
+        }
+
+        .footer-simple {
+            padding: 24px;
+            text-align: center;
+            font-size: 13px;
+            color: #9CA3AF;
+        }
+    </style>
+</head>
+<body>
+    <header class="header-simple">
+        <a href="/" class="brand-logo">
+            <i class="fa-solid fa-house-chimney"></i>
+            <span>Ghar<em>Fix</em></span>
+        </a>
+    </header>
+
+    <main class="error-main">
+        <div class="error-card">
+            <div class="error-icon-wrap" aria-hidden="true">
+                <!-- Tabler map-pin-off icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9.442 9.432a3 3 0 0 0 4.113 4.134m1.445 -2.566a3 3 0 0 0 -3 -3"></path>
+                    <path d="M17.152 17.162l-3.738 3.738a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 0 1 -.48 -10.795m2.539 -1.454a8 8 0 0 1 10.912 10.591"></path>
+                    <path d="M3 3l18 18"></path>
+                </svg>
+            </div>
+            <h1 class="error-title">This page wandered off</h1>
+            <p class="error-subtitle">The link might be broken, or the page has moved.</p>
+            <a href="/" class="btn-home">Back to home</a>
+        </div>
+    </main>
+
+    <footer class="footer-simple">
+        © 2026 GharFix. All rights reserved.
+    </footer>
+</body>
+</html>

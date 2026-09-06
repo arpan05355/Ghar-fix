@@ -27,10 +27,13 @@ Thumbs.db
 # Logs
 *.log
 
+# Environment variables
+.env
+.env.*
+!.env.example
+
 # Java & Maven
 target/
 *.class
 .tools/
 c/
-
-

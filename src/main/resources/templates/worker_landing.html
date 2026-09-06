@@ -278,6 +278,7 @@
             position: fixed;
             inset: 0;
             background: rgba(15, 23, 42, 0.6);
+            -webkit-backdrop-filter: blur(4px);
             backdrop-filter: blur(4px);
             display: none;
             align-items: center;
@@ -406,6 +407,7 @@
             font-weight: 600;
             color: var(--slate-800);
             cursor: pointer;
+            -webkit-user-select: none;
             user-select: none;
             transition: all .15s ease;
         }
@@ -451,6 +453,16 @@
             justify-content: space-between;
             font-size: 13px;
             color: var(--slate-600);
+        }
+
+        .site-footer-link {
+            color: var(--slate-600);
+            text-decoration: none;
+            margin-right: 16px;
+        }
+
+        .site-footer-link:last-child {
+            margin-right: 0;
         }
 
         @media (max-width: 860px) {
@@ -540,9 +552,9 @@
     <footer class="site-footer">
         <div>&copy; 2026 GharFix Pro. All rights reserved.</div>
         <div>
-            <a href="/" style="color:var(--slate-600); text-decoration:none; margin-right:16px;">Customer Home</a>
-            <a href="#" style="color:var(--slate-600); text-decoration:none; margin-right:16px;">Partner Terms</a>
-            <a href="#" style="color:var(--slate-600); text-decoration:none;">Support</a>
+            <a href="/" class="site-footer-link">Customer Home</a>
+            <a href="#" class="site-footer-link">Partner Terms</a>
+            <a href="#" class="site-footer-link">Support</a>
         </div>
     </footer>
 
@@ -630,7 +642,7 @@
                             <label class="skill-item"><input type="checkbox" name="services" value="House Maid"> House Maid</label>
                             <label class="skill-item"><input type="checkbox" name="services" value="Laundry"> Laundry</label>
                             <label class="skill-item"><input type="checkbox" name="services" value="Labour"> Labour</label>
-                            <label class="skill-item"><input type="checkbox" name="services" value="Contractor"> Contractor</label>
+                            <label class="skill-item"><input type="checkbox" name="services" value="Cook"> Cook</label>
                         </th:block>
                     </div>
 

@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GharFix AI Assistant</title>
+</head>
+<body>
+
+<!-- GHARFIX AI ASSISTANT FRAGMENT -->
+<div th:fragment="aiAssistant" id="gfAiRoot">
+    <style>
+        /* ── GHARFIX AI ASSISTANT DESIGN SYSTEM (Aligned with GharFix styles) ── */
+        :root {
+            --gf-ai-primary: var(--btn-primary, #1A1A1A);
+            --gf-ai-primary-hover: var(--btn-primary-hover, #2E2E2E);
+            --gf-ai-gold: #F59E0B;
+            --gf-ai-gold-subtle: rgba(245, 158, 11, 0.12);
+            --gf-ai-gold-border: rgba(245, 158, 11, 0.35);
+            --gf-ai-bg: var(--bg-page, #FFFFFF);
+            --gf-ai-surface: var(--bg-subtle, #F8F9FA);
+            --gf-ai-border: var(--border-light, #E5E7EB);
+            --gf-ai-text: var(--text-primary, #1A1A1A);
+            --gf-ai-muted: var(--text-muted, #6B7280);
+            --gf-ai-radius: var(--radius-lg, 16px);
+            --gf-ai-radius-pill: var(--radius-full, 9999px);
+        }
+
+        /* ── FLOATING LAUNCHER BUTTON ── */
+        .gf-ai-launcher {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 1100;
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 10px 18px;
+            background: var(--gf-ai-primary);
+            color: #FFFFFF;
+            border: 1px solid var(--gf-ai-gold-border);
+            border-radius: var(--gf-ai-radius-pill);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18), 0 1px 4px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 13.5px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, background 0.15s ease;
+            -webkit-user-select: none;
+            user-select: none;
+            text-decoration: none;
+        }
+
+        .gf-ai-launcher:hover {
+            background: var(--gf-ai-primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22), 0 2px 6px rgba(0, 0, 0, 0.1);
+            border-color: rgba(245, 158, 11, 0.6);
+        }
+
+        .gf-ai-launcher:active {
+            transform: translateY(0);
+        }
+
+        .gf-ai-launcher-icon-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gf-ai-gold);
+            font-size: 14px;
+        }
+
+        .gf-ai-launcher-text {
+            color: #FFFFFF;
+            white-space: nowrap;
+        }
+
+        .gf-ai-launcher-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2px 6px;
+            background: var(--gf-ai-gold-subtle);
+            color: #FBBF24;
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        /* ── BACKDROP (FOR MOBILE) ── */
+        .gf-ai-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 1490;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+            -webkit-backdrop-filter: blur(2px);
+            backdrop-filter: blur(2px);
+        }
+
+        .gf-ai-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ── DRAWER / MODAL CONTAINER ── */
+        .gf-ai-drawer {
+            position: fixed;
+            bottom: 82px;
+            right: 28px;
+            width: 420px;
+            max-width: calc(100vw - 32px);
+            height: 620px;
+            max-height: calc(100vh - 100px);
+            background: var(--gf-ai-bg);
+            border: 1px solid var(--gf-ai-border);
+            border-radius: var(--gf-ai-radius);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18), 0 4px 14px rgba(0, 0, 0, 0.06);
+            z-index: 1500;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(16px) scale(0.98);
+            pointer-events: none;
+            transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: inherit;
+        }
+
+        .gf-ai-drawer.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        /* ── DRAWER HEADER ── */
+        .gf-ai-header {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--gf-ai-border);
+            background: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .gf-ai-header-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .gf-ai-header-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            background: var(--gf-ai-primary);
+            color: var(--gf-ai-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .gf-ai-header-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .gf-ai-header-title {
+            font-size: 14.5px;
+            font-weight: 800;
+            color: var(--gf-ai-text);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: -0.3px;
+        }
+
+        .gf-ai-header-title em {
+            font-style: normal;
+            color: var(--text-secondary, #4B5563);
+            font-weight: 600;
+        }
+
+        .gf-ai-header-status {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11.5px;
+            color: var(--gf-ai-muted);
+            margin-top: 1px;
+        }
+
+        .gf-ai-status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #9CA3AF;
+        }
+
+        .gf-ai-status-dot.online {
+            background: #10B981;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+        }
+
+        .gf-ai-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .gf-ai-icon-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--gf-ai-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            transition: all 0.15s ease;
+        }
+
+        .gf-ai-icon-btn:hover {
+            background: var(--gf-ai-surface);
+            color: var(--gf-ai-text);
+            border-color: var(--gf-ai-border);
+        }
+
+        /* ── CHAT MESSAGES BODY ── */
+        .gf-ai-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            background: #FDFDFD;
+            scroll-behavior: smooth;
+        }
+
+        /* ── WELCOME CARD ── */
+        .gf-ai-welcome-card {
+            background: var(--gf-ai-surface);
+            border: 1px solid var(--gf-ai-border);
+            border-radius: 12px;
+            padding: 14px;
+        }
+
+        .gf-ai-welcome-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--gf-ai-text);
+            margin-bottom: 6px;
+        }
+
+        .gf-ai-welcome-desc {
+            font-size: 12.5px;
+            color: var(--gf-ai-muted);
+            line-height: 1.45;
+            margin-bottom: 12px;
+        }
+
+        .gf-ai-chips-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-secondary, #4B5563);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-bottom: 6px;
+        }
+
+        .gf-ai-chips-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .gf-ai-chip {
+            background: #FFFFFF;
+            border: 1px solid var(--gf-ai-border);
+            border-radius: var(--gf-ai-radius-pill);
+            padding: 5px 10px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--gf-ai-text);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+
+        .gf-ai-chip:hover {
+            border-color: var(--gf-ai-text);
+            background: var(--gf-ai-primary);
+            color: #FFFFFF;
+        }
+
+        /* ── MESSAGE ROWS & BUBBLES ── */
+        .gf-ai-msg {
+            display: flex;
+            gap: 8px;
+            max-width: 92%;
+            animation: gfAiFadeIn 0.2s ease;
+        }
+
+        @keyframes gfAiFadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .gf-ai-msg-user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .gf-ai-msg-assistant {
+            align-self: flex-start;
+        }
+
+        .gf-ai-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: var(--gf-ai-primary);
+            color: var(--gf-ai-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .gf-ai-bubble {
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 13px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .gf-ai-bubble-user {
+            background: var(--gf-ai-primary);
+            color: #FFFFFF;
+            border-bottom-right-radius: 3px;
+        }
+
+        .gf-ai-bubble-ai {
+            background: var(--gf-ai-surface);
+            color: var(--gf-ai-text);
+            border: 1px solid var(--gf-ai-border);
+            border-bottom-left-radius: 3px;
+        }
+
+        .gf-ai-bubble-error {
+            background: #FEF2F2;
+            border-color: #FCA5A5;
+            color: #991B1B;
+        }
+
+        .gf-ai-time {
+            display: block;
+            font-size: 10px;
+            margin-top: 5px;
+            opacity: 0.65;
+            text-align: right;
+        }
+
+        .gf-ai-user-img-wrap {
+            margin-bottom: 6px;
+            border-radius: 8px;
+            overflow: hidden;
+            max-width: 220px;
+        }
+
+        .gf-ai-user-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+
+        /* ── TYPING / THINKING INDICATOR ── */
+        .gf-ai-thinking {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 10px 14px;
+        }
+
+        .gf-ai-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gf-ai-muted);
+            animation: gfAiPulse 1.2s infinite ease-in-out;
+        }
+
+        .gf-ai-dot:nth-child(2) { animation-delay: 0.2s; }
+        .gf-ai-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes gfAiPulse {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        /* ── MARKDOWN FORMATTING IN CHAT ── */
+        .gf-ai-text p {
+            margin: 0 0 6px 0;
+        }
+        .gf-ai-text p:last-child {
+            margin-bottom: 0;
+        }
+        .gf-ai-list {
+            margin: 4px 0 8px 18px;
+            padding: 0;
+        }
+        .gf-ai-list li {
+            margin-bottom: 3px;
+        }
+
+        /* ── SERVICE CATEGORY PILL ── */
+        .gf-ai-category-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: var(--gf-ai-gold-subtle);
+            color: #92400E;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: var(--gf-ai-radius-pill);
+            font-size: 11.5px;
+            font-weight: 600;
+            margin: 8px 0;
+        }
+
+        .gf-ai-pill-link {
+            color: #B45309;
+            font-weight: 700;
+            text-decoration: underline;
+            margin-left: 4px;
+        }
+
+        /* ── STRUCTURED CARDS (COST ESTIMATE & PROPOSALS) ── */
+        .gf-ai-card {
+            background: #FFFFFF;
+            border: 1px solid var(--gf-ai-border);
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 12.5px;
+        }
+
+        .gf-ai-cost-card {
+            border-left: 3px solid var(--gf-ai-gold);
+            background: #FFFDF8;
+        }
+
+        .gf-ai-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .gf-ai-badge {
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .gf-ai-badge.grounded {
+            background: #ECFDF5;
+            color: #065F46;
+            border: 1px solid #A7F3D0;
+        }
+
+        .gf-ai-badge.preliminary {
+            background: #FFFBEB;
+            color: #92400E;
+            border: 1px solid #FDE68A;
+        }
+
+        .gf-ai-card-service {
+            font-weight: 700;
+            color: var(--gf-ai-text);
+        }
+
+        .gf-ai-card-price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .gf-ai-price-label {
+            font-size: 12px;
+            color: var(--gf-ai-muted);
+        }
+
+        .gf-ai-price-val {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--gf-ai-text);
+        }
+
+        .gf-ai-card-disclaimer {
+            font-size: 11px;
+            color: var(--gf-ai-muted);
+            margin-bottom: 10px;
+            line-height: 1.35;
+        }
+
+        .gf-ai-btn-book {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            background: var(--gf-ai-primary);
+            color: #FFFFFF;
+            padding: 7px 12px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.15s ease;
+        }
+
+        .gf-ai-btn-book:hover {
+            background: var(--gf-ai-primary-hover);
+        }
+
+        /* ── ACTION PROPOSAL CARD ── */
+        .gf-ai-action-proposal-card {
+            border: 1.5px solid var(--gf-ai-gold);
+            background: #FFFDF7;
+            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.1);
+        }
+
+        .gf-ai-action-header {
+            margin-bottom: 6px;
+        }
+
+        .gf-ai-action-badge {
+            font-size: 11px;
+            font-weight: 800;
+            color: #B45309;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .gf-ai-action-desc {
+            font-weight: 700;
+            color: var(--gf-ai-text);
+            margin-bottom: 6px;
+        }
+
+        .gf-ai-action-params {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 6px;
+            padding: 6px 10px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .gf-param-key {
+            font-weight: 600;
+            color: var(--text-secondary, #4B5563);
+        }
+
+        .gf-ai-action-prompt {
+            font-size: 12px;
+            color: #78350F;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .gf-ai-action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .gf-ai-action-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .gf-ai-btn-confirm {
+            background: var(--gf-ai-primary);
+            color: #FFFFFF;
+            border: 1px solid var(--gf-ai-primary);
+        }
+
+        .gf-ai-btn-confirm:hover:not(:disabled) {
+            background: var(--gf-ai-primary-hover);
+        }
+
+        .gf-ai-btn-dismiss {
+            background: #FFFFFF;
+            color: var(--gf-ai-text);
+            border: 1px solid var(--gf-ai-border);
+        }
+
+        .gf-ai-btn-dismiss:hover:not(:disabled) {
+            background: var(--gf-ai-surface);
+        }
+
+        .gf-ai-action-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .gf-ai-action-note {
+            text-align: center;
+            padding: 6px;
+        }
+
+        .gf-ai-signin-link {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--gf-ai-text);
+            text-decoration: underline;
+        }
+
+        /* ── ACTION RESULT FEEDBACK BOX ── */
+        .gf-ai-result-box {
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            margin-top: 8px;
+        }
+
+        .gf-ai-result-box.success {
+            background: #ECFDF5;
+            border: 1px solid #10B981;
+            color: #065F46;
+        }
+
+        .gf-ai-result-box.error {
+            background: #FEF2F2;
+            border: 1px solid #EF4444;
+            color: #991B1B;
+        }
+
+        .gf-ai-result-box.dismissed {
+            background: var(--gf-ai-surface);
+            border: 1px solid var(--gf-ai-border);
+            color: var(--gf-ai-muted);
+        }
+
+        .gf-ai-result-title {
+            font-weight: 700;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .gf-ai-result-ref {
+            font-size: 11px;
+            font-weight: 600;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        /* ── IMAGE PREVIEW STRIP ── */
+        .gf-ai-image-preview-bar {
+            display: none;
+            padding: 8px 14px;
+            background: var(--gf-ai-surface);
+            border-top: 1px solid var(--gf-ai-border);
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .gf-ai-image-preview-bar.active {
+            display: flex;
+        }
+
+        .gf-ai-preview-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .gf-ai-preview-thumb {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid var(--gf-ai-border);
+            flex-shrink: 0;
+        }
+
+        .gf-ai-preview-details {
+            min-width: 0;
+        }
+
+        .gf-ai-preview-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gf-ai-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 240px;
+        }
+
+        .gf-ai-preview-size {
+            font-size: 11px;
+            color: var(--gf-ai-muted);
+        }
+
+        .gf-ai-btn-remove-img {
+            background: none;
+            border: none;
+            color: var(--gf-ai-muted);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 50%;
+            font-size: 13px;
+            transition: color 0.15s;
+        }
+
+        .gf-ai-btn-remove-img:hover {
+            color: #EF4444;
+        }
+
+        /* ── INPUT FORM AREA ── */
+        .gf-ai-input-area {
+            padding: 10px 14px 14px;
+            border-top: 1px solid var(--gf-ai-border);
+            background: #FFFFFF;
+            flex-shrink: 0;
+        }
+
+        .gf-ai-input-box {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            background: var(--gf-ai-surface);
+            border: 1px solid var(--gf-ai-border);
+            border-radius: 12px;
+            padding: 4px 6px 4px 10px;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .gf-ai-input-box:focus-within {
+            border-color: var(--gf-ai-text);
+            box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.08);
+            background: #FFFFFF;
+        }
+
+        .gf-ai-textarea {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 13.5px;
+            color: var(--gf-ai-text);
+            resize: none;
+            padding: 8px 0;
+            outline: none;
+            min-height: 38px;
+            max-height: 120px;
+            line-height: 1.4;
+        }
+
+        .gf-ai-textarea::placeholder {
+            color: var(--gf-ai-muted);
+        }
+
+        .gf-ai-btn-attach {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: transparent;
+            border: none;
+            color: var(--gf-ai-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            transition: color 0.15s, background 0.15s;
+            flex-shrink: 0;
+            margin-bottom: 3px;
+        }
+
+        .gf-ai-btn-attach:hover {
+            color: var(--gf-ai-text);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .gf-ai-btn-send {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: var(--gf-ai-primary);
+            border: none;
+            color: #FFFFFF;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            transition: background 0.15s;
+            flex-shrink: 0;
+            margin-bottom: 2px;
+        }
+
+        .gf-ai-btn-send:hover:not(:disabled) {
+            background: var(--gf-ai-primary-hover);
+        }
+
+        .gf-ai-btn-send:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .gf-ai-footnote {
+            text-align: center;
+            font-size: 10.5px;
+            color: var(--gf-ai-muted);
+            margin-top: 6px;
+        }
+
+        .gf-ai-gold-icon {
+            color: var(--gf-ai-gold);
+        }
+
+        .gf-ai-hidden-input {
+            display: none;
+        }
+
+        /* ── RESPONSIVE MOBILE BEHAVIOR (Max 640px) ── */
+        @media (max-width: 640px) {
+            .gf-ai-launcher {
+                bottom: 20px;
+                right: 16px;
+                padding: 9px 14px;
+                font-size: 12.5px;
+            }
+
+            .gf-ai-drawer {
+                bottom: 0;
+                right: 0;
+                left: 0;
+                width: 100vw;
+                max-width: 100vw;
+                height: 88vh;
+                max-height: 88vh;
+                border-radius: 20px 20px 0 0;
+                border-bottom: none;
+                transform: translateY(100%);
+            }
+
+            .gf-ai-drawer.active {
+                transform: translateY(0);
+            }
+        }
+    </style>
+
+    <!-- BACKDROP (MOBILE / FOCUS OVERLAY) -->
+    <div class="gf-ai-backdrop" id="gfAiBackdrop"></div>
+
+    <!-- FLOATING LAUNCHER BUTTON -->
+    <button type="button" class="gf-ai-launcher" id="gfAiLauncher" title="Ask GharFix AI" aria-label="Ask GharFix AI" aria-expanded="false">
+        <div class="gf-ai-launcher-icon-wrap">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </div>
+        <span class="gf-ai-launcher-text">Ask GharFix AI</span>
+        <span class="gf-ai-launcher-badge">AI</span>
+    </button>
+
+    <!-- AI ASSISTANT DRAWER MODAL -->
+    <div class="gf-ai-drawer" id="gfAiDrawer" role="dialog" aria-modal="true" aria-labelledby="gfAiTitle">
+        <!-- HEADER -->
+        <div class="gf-ai-header">
+            <div class="gf-ai-header-brand">
+                <div class="gf-ai-header-icon">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <div class="gf-ai-header-info">
+                    <div class="gf-ai-header-title" id="gfAiTitle">
+                        Ghar<em>Fix</em> <span>AI Concierge</span>
+                    </div>
+                    <div class="gf-ai-header-status">
+                        <span class="gf-ai-status-dot online" id="gfAiStatusDot"></span>
+                        <span id="gfAiStatusText">AI Assistant Ready</span>
+                    </div>
+                </div>
+            </div>
+            <div class="gf-ai-header-actions">
+                <button type="button" class="gf-ai-icon-btn" id="gfAiClearBtn" title="Clear conversation" aria-label="Clear chat">
+                    <i class="fa-solid fa-arrow-rotate-right"></i>
+                </button>
+                <button type="button" class="gf-ai-icon-btn" id="gfAiCloseBtn" title="Close assistant" aria-label="Close assistant">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- MESSAGES STREAM -->
+        <div class="gf-ai-messages" id="gfAiMessages">
+            <!-- WELCOME GREETING -->
+            <div class="gf-ai-welcome-card">
+                <div class="gf-ai-welcome-head">
+                    <i class="fa-solid fa-wand-magic-sparkles gf-ai-gold-icon"></i>
+                    <span>Welcome to GharFix AI Assistant</span>
+                </div>
+                <p class="gf-ai-welcome-desc">
+                    Describe any household repair or upload a defect photo for an instant diagnosis, safety advice, and verified catalog cost estimate.
+                </p>
+                <div class="gf-ai-chips-title">Quick Topics</div>
+                <div class="gf-ai-chips-row">
+                    <button type="button" class="gf-ai-chip" data-prompt="My bathroom tap is leaking under the basin.">💧 Tap is leaking</button>
+                    <button type="button" class="gf-ai-chip" data-prompt="My AC is running but blowing warm air.">❄️ AC not cooling</button>
+                    <button type="button" class="gf-ai-chip" data-prompt="How much does electrician repair cost?">💰 Cost estimate</button>
+                    <button type="button" class="gf-ai-chip" data-prompt="I need help with my existing bookings.">📅 My bookings</button>
+                    <button type="button" class="gf-ai-chip" data-prompt="What is GharFix refund and cancellation policy?">🛡️ Refund policy</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MULTIMODAL IMAGE PREVIEW BAR -->
+        <div class="gf-ai-image-preview-bar" id="gfAiImagePreviewBar">
+            <div class="gf-ai-preview-left">
+                <img src="" alt="Upload thumbnail" class="gf-ai-preview-thumb" id="gfAiPreviewThumb" />
+                <div class="gf-ai-preview-details">
+                    <div class="gf-ai-preview-name" id="gfAiPreviewName">photo.jpg</div>
+                    <div class="gf-ai-preview-size" id="gfAiPreviewSize">0 KB</div>
+                </div>
+            </div>
+            <button type="button" class="gf-ai-btn-remove-img" id="gfAiRemoveImgBtn" title="Remove attached photo" aria-label="Remove photo">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- INPUT FORM -->
+        <div class="gf-ai-input-area">
+            <form id="gfAiForm" onsubmit="return false;">
+                <input type="file" id="gfAiFileInput" class="gf-ai-hidden-input" accept="image/jpeg,image/png,image/webp" />
+                <div class="gf-ai-input-box">
+                    <button type="button" class="gf-ai-btn-attach" id="gfAiAttachBtn" title="Attach problem photo (JPG, PNG, WebP < 5MB)" aria-label="Attach photo">
+                        <i class="fa-solid fa-camera"></i>
+                    </button>
+                    <textarea class="gf-ai-textarea" id="gfAiInput" rows="1" placeholder="Describe your home issue or ask a question..." aria-label="Message input"></textarea>
+                    <button type="submit" class="gf-ai-btn-send" id="gfAiSendBtn" title="Send message" aria-label="Send message">
+                        <i class="fa-solid fa-arrow-up"></i>
+                    </button>
+                </div>
+            </form>
+            <div class="gf-ai-footnote">
+                GharFix AI gives preliminary estimates. Final quotes verified on-site.
+            </div>
+        </div>
+    </div>
+
+    <!-- AI ASSISTANT JAVASCRIPT BUNDLE -->
+    <script src="/js/ai-assistant.js"></script>
+</div>
+
+</body>
+</html>

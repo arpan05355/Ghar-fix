@@ -238,6 +238,21 @@
             background: var(--btn-primary-hover);
         }
 
+        .header-auth-buttons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .worker-link-icon {
+            font-size: 10px;
+            margin-left: 3px;
+        }
+
+        .d-none {
+            display: none !important;
+        }
+
         /* User Menu */
         .user-menu-wrap {
             position: relative;
@@ -380,7 +395,88 @@
             font-size: 16px;
             color: var(--text-secondary);
             max-width: 620px;
-            margin: 0 auto 36px;
+            margin: 0 auto 24px;
+        }
+
+        /* AI Problem Diagnostic Hero Bar */
+        .hero-ai-search-wrap {
+            max-width: 680px;
+            margin: 0 auto 30px;
+            background: #FFFFFF;
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-full);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+            padding: 6px 8px 6px 16px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .hero-ai-search-wrap:hover {
+            border-color: #F59E0B;
+            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .hero-ai-search-inner {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+        }
+
+        .hero-ai-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--btn-primary);
+            color: #F59E0B;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .hero-ai-text {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hero-ai-btn {
+            background: var(--btn-primary);
+            color: #FFFFFF;
+            border: none;
+            border-radius: var(--radius-full);
+            padding: 7px 16px;
+            font-size: 12.5px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .hero-ai-search-wrap:hover .hero-ai-btn {
+            background: var(--btn-primary-hover);
+        }
+
+        @media (max-width: 640px) {
+            .hero-ai-search-wrap {
+                margin: 0 12px 24px;
+                padding: 6px 6px 6px 12px;
+            }
+            .hero-ai-text {
+                font-size: 12px;
+            }
+            .hero-ai-btn {
+                padding: 6px 12px;
+                font-size: 11.5px;
+            }
         }
 
         /* Circular Category Row */
@@ -388,7 +484,15 @@
             width: 100%;
             overflow-x: auto;
             padding: 6px 4px 14px;
-            scrollbar-width: thin;
+        }
+
+        .category-row-wrapper::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .category-row-wrapper::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
         }
 
         .category-row {
@@ -480,10 +584,10 @@
             border: 1px solid #FEF3C7;
         }
 
-        .cat-contractor {
-            background-color: #EEF2FF;
-            color: #4F46E5;
-            border: 1px solid #E0E7FF;
+        .cat-cook {
+            background-color: #FBEAEA;
+            color: #D64545;
+            border: 1px solid #FEE2E2;
         }
 
         .cat-all {
@@ -534,7 +638,15 @@
             margin: 0 -24px;
             padding-left: 24px;
             padding-right: 24px;
-            scrollbar-width: thin;
+        }
+
+        .preview-scroll-wrapper::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .preview-scroll-wrapper::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
         }
 
         .preview-cards-row {
@@ -580,7 +692,7 @@
         .prev-house-maid { background: linear-gradient(135deg, #ECFDF5, #D1FAE5); }
         .prev-laundry { background: linear-gradient(135deg, #FDF2F8, #FCE7F3); }
         .prev-labour { background: linear-gradient(135deg, #FFFBEB, #FEF3C7); }
-        .prev-contractor { background: linear-gradient(135deg, #EEF2FF, #E0E7FF); }
+        .prev-cook { background: linear-gradient(135deg, #FBEAEA, #FEE2E2); }
 
         .preview-bg-icon {
             font-size: 56px;
@@ -692,7 +804,7 @@
         .card-house-maid i { color: #059669; }
         .card-laundry i { color: #DB2777; }
         .card-labour i { color: #D97706; }
-        .card-contractor i { color: #4F46E5; }
+        .card-cook i { color: #D64545; }
 
         .service-card-body {
             padding: 16px;
@@ -756,52 +868,180 @@
             border-color: var(--btn-primary);
         }
 
+        /* ── 4b. "OUR PEOPLE" SECTION (UBER 2-COLUMN PATTERN) ── */
+        .people-section {
+            background: #FFFFFF;
+            border-top: 1px solid var(--border-subtle);
+            padding: 64px 24px;
+        }
+
+        .people-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 60px;
+        }
+
+        .people-text-col {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 480px;
+        }
+
+        .people-eyebrow {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+
+        .people-heading {
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            color: var(--text-primary);
+            line-height: 1.22;
+            margin-bottom: 16px;
+        }
+
+        .people-subtext {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .people-grid-col {
+            display: flex;
+            justify-content: center;
+        }
+
+        .people-tiles-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .people-tile {
+            aspect-ratio: 1 / 1;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .people-tile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+        }
+
+        .people-tile svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Specified pastel backgrounds */
+        .tile-elec { background-color: #FDF1E7; }
+        .tile-plumb { background-color: #E9F3FB; }
+        .tile-carp { background-color: #F3EEFB; }
+        .tile-maid { background-color: #EEF7EA; }
+        .tile-laun { background-color: #FDEEF3; }
+        .tile-cook { background-color: #FBEAEA; }
+
         /* ── 5. "HOW IT WORKS" (4-STEP) SECTION ── */
         .steps-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            gap: 28px;
         }
 
-        .step-card {
-            background: #FFFFFF;
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-md);
-            padding: 24px 20px;
+        .step-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .step-photo-wrap {
             position: relative;
-            transition: var(--transition);
+            width: 100%;
+            margin-bottom: 26px;
         }
 
-        .step-card:hover {
-            border-color: var(--text-primary);
-            transform: translateY(-2px);
+        .step-photo-card {
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            border-radius: 14px;
+            overflow: hidden;
+            background-color: #F3F4F6;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            position: relative;
         }
 
-        .step-badge {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--text-primary);
-            color: #FFFFFF;
+        .step-photo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .step-col:hover .step-photo-img {
+            transform: scale(1.03);
+        }
+
+        .step-icon-badge {
+            position: absolute;
+            left: 16px;
+            bottom: 0;
+            transform: translateY(50%);
+            width: 44px;
+            height: 44px;
+            background: #FFFFFF;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
-            font-weight: 800;
-            margin-bottom: 18px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            color: var(--text-primary);
+            z-index: 2;
+            transition: var(--transition);
+        }
+
+        .step-col:hover .step-icon-badge {
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+            border-color: rgba(0, 0, 0, 0.12);
+        }
+
+        .step-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
         .step-title {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+            margin: 0;
         }
 
         .step-desc {
-            font-size: 13.5px;
+            font-size: 14px;
             color: var(--text-secondary);
             line-height: 1.5;
+            margin: 0;
         }
 
         /* ── 6. "WHY GHARFIX" SECTION ── */
@@ -1196,6 +1436,7 @@
             }
             .steps-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 32px 24px;
             }
             .why-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -1246,9 +1487,37 @@
             }
             .steps-grid {
                 grid-template-columns: 1fr;
+                gap: 32px;
+                max-width: 380px;
+                margin: 0 auto;
             }
             .why-grid {
                 grid-template-columns: 1fr;
+            }
+            .people-section {
+                padding: 44px 16px;
+            }
+            .people-container {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+            .people-text-col {
+                max-width: 100%;
+            }
+            .people-heading {
+                font-size: 28px;
+            }
+            .people-subtext {
+                font-size: 15px;
+            }
+            .people-tiles-grid {
+                max-width: 320px;
+                gap: 14px;
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .people-tile {
+                padding: 18px;
+                border-radius: 14px;
             }
             .section {
                 padding: 40px 16px;
@@ -1258,6 +1527,15 @@
         @media (max-width: 480px) {
             .services-grid {
                 grid-template-columns: 1fr;
+            }
+            .people-tiles-grid {
+                max-width: 280px;
+                gap: 12px;
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .people-tile {
+                padding: 14px;
+                border-radius: 12px;
             }
             .footer-inner {
                 flex-direction: column;
@@ -1325,7 +1603,7 @@
                 </div>
 
                 <!-- Logged out state -->
-                <div th:if="${currentUser == null}" style="display:flex; align-items:center; gap:8px;">
+                <div th:if="${currentUser == null}" class="header-auth-buttons">
                     <button type="button" class="btn-header-signin" onclick="openPopup('loginBox')">Sign In</button>
                     <button type="button" class="btn-header-primary" onclick="openPopup('signupBox')">Get Started</button>
                 </div>
@@ -1339,6 +1617,15 @@
             <h1 class="hero-title">Home services at your doorstep</h1>
             <p class="hero-subtitle">Book verified, background-checked professionals for repairs, installations and maintenance</p>
 
+            <!-- AI Problem Diagnostic Bar -->
+            <div class="hero-ai-search-wrap" onclick="if (window.openGharFixAI) window.openGharFixAI();" title="Ask GharFix AI">
+                <div class="hero-ai-search-inner">
+                    <div class="hero-ai-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <span class="hero-ai-text">Have a home repair issue? Ask AI or upload a defect photo for instant diagnosis &amp; cost estimate</span>
+                    <button type="button" class="hero-ai-btn">Ask AI &rarr;</button>
+                </div>
+            </div>
+
             <!-- Row of circular category icons in soft pastel backgrounds -->
             <div class="category-row-wrapper">
                 <div class="category-row">
@@ -1349,7 +1636,17 @@
                        th:title="${service.name}">
                         <div class="cat-circle"
                              th:classappend="'cat-' + ${#strings.toLowerCase(#strings.replace(service.name, ' ', '-'))}">
-                            <i class="fa-solid" th:classappend="${service.icon != null ? service.icon : 'fa-wrench'}"></i>
+                            <th:block th:switch="${#strings.toLowerCase(service.name)}">
+                                <svg th:case="'electrician'" viewBox="0 0 160 160" width="44" height="44"><circle cx="80" cy="80" r="58" fill="#FDF1E7"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#F5A623"/><circle cx="80" cy="54" r="17" fill="#F1C27D"/><path d="M63 50 Q80 28 97 50 Z" fill="#2A1E14"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><polygon points="101,87 108,87 104,93 109,93 99,103 102,94 98,94" fill="#E08E0B"/></svg>
+                                <svg th:case="'plumber'" viewBox="0 0 160 160" width="44" height="44"><circle cx="80" cy="80" r="58" fill="#E9F3FB"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#3B7DA8"/><circle cx="80" cy="54" r="17" fill="#D9A066"/><path d="M63 50 Q80 30 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><line x1="99" y1="100" x2="108" y2="89" stroke="#2E5C8A" stroke-width="3" stroke-linecap="round"/><circle cx="98" cy="101" r="2.4" fill="none" stroke="#2E5C8A" stroke-width="1.6"/><circle cx="109" cy="88" r="2.4" fill="none" stroke="#2E5C8A" stroke-width="1.6"/></svg>
+                                <svg th:case="'carpenter'" viewBox="0 0 160 160" width="44" height="44"><circle cx="80" cy="80" r="58" fill="#F3EEFB"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#7357B0"/><circle cx="80" cy="54" r="17" fill="#8D5524"/><path d="M63 50 Q80 28 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#F5EFE6"/><circle cx="86" cy="54" r="2" fill="#F5EFE6"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#F5EFE6" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><line x1="99" y1="100" x2="107" y2="90" stroke="#5B3F94" stroke-width="3" stroke-linecap="round"/><rect x="103" y="84" width="9" height="6" rx="1" fill="#5B3F94" transform="rotate(30 107 87)"/></svg>
+                                <svg th:case="'ac service'" viewBox="0 0 160 160" width="44" height="44"><circle cx="80" cy="80" r="58" fill="#EAF7FB"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#4FB3D9"/><circle cx="80" cy="54" r="17" fill="#F1C27D"/><path d="M63 50 Q80 28 97 50 Z" fill="#2A1E14"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><line x1="97" y1="94" x2="111" y2="94" stroke="#2E8CB0" stroke-width="2" stroke-linecap="round"/><line x1="99" y1="89" x2="109" y2="99" stroke="#2E8CB0" stroke-width="2" stroke-linecap="round"/><line x1="99" y1="99" x2="109" y2="89" stroke="#2E8CB0" stroke-width="2" stroke-linecap="round"/></svg>
+                                <svg th:case="'house maid'" viewBox="0 0 160 160" width="44" height="44"><circle cx="80" cy="80" r="58" fill="#EEF7EA"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#4C8C3B"/><circle cx="80" cy="54" r="17" fill="#D9A066"/><path d="M63 50 Q80 30 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><line x1="98" y1="100" x2="108" y2="88" stroke="#3B6E2E" stroke-width="2.4" stroke-linecap="round"/><polygon points="96,101 100,101 98,105" fill="#3B6E2E"/></svg>
+                                <svg th:case="'laundry'" viewBox="0 0 160 160" width="44" height="44"><circle cx="80" cy="80" r="58" fill="#FDEEF3"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#D6336C"/><circle cx="80" cy="54" r="17" fill="#8D5524"/><path d="M63 50 Q80 28 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#F5EFE6"/><circle cx="86" cy="54" r="2" fill="#F5EFE6"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#F5EFE6" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><path d="M98 90 L101 87 104 89 107 87 110 90 108 93 108 100 100 100 100 93 Z" fill="#A8265A"/></svg>
+                                <svg th:case="'labour'" viewBox="0 0 160 160" width="44" height="44"><circle cx="80" cy="80" r="58" fill="#F7EFE7"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#C2703D"/><circle cx="80" cy="54" r="17" fill="#F1C27D"/><path d="M63 50 Q80 30 97 50 Z" fill="#2A1E14"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><path d="M98 96 A7 5 0 0 1 112 96 Z" fill="#8F5228"/><rect x="97" y="96" width="16" height="2" fill="#8F5228"/></svg>
+                                <svg th:case="'cook'" viewBox="0 0 160 160" width="44" height="44"><circle cx="80" cy="80" r="58" fill="#FBEAEA"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#F5EFE6"/><circle cx="80" cy="54" r="17" fill="#D9A066"/><path d="M63 50 Q80 28 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><rect x="92" y="88" width="4" height="20" fill="#D64545"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><rect x="100" y="97" width="8" height="4" rx="1" fill="#B23333"/><ellipse cx="104" cy="93" rx="6" ry="5" fill="#B23333"/></svg>
+                                <i th:case="*" class="fa-solid" th:classappend="${service.icon != null ? service.icon : 'fa-wrench'}"></i>
+                            </th:block>
                         </div>
                         <span class="cat-label" th:text="${service.name}">Service</span>
                     </a>
@@ -1415,10 +1712,109 @@
                      class="service-card"
                      th:data-service="${service.name}"
                      onclick="window.location.href='/book/' + encodeURIComponent(this.getAttribute('data-service'))">
-                    <!-- Placeholder Media Banner -->
+                    <!-- Placeholder Media Banner with Custom Inline SVG Illustration -->
                     <div class="service-card-media"
                          th:classappend="'card-' + ${#strings.toLowerCase(#strings.replace(service.name, ' ', '-'))}">
-                        <i class="fa-solid" th:classappend="${service.icon != null ? service.icon : 'fa-wrench'}"></i>
+                        <th:block th:switch="${#strings.toLowerCase(service.name)}">
+                            <!-- ELECTRICIAN -->
+                            <svg th:case="'electrician'" viewBox="0 0 160 160" width="64" height="64">
+                                <circle cx="80" cy="80" r="58" fill="#FDF1E7"/>
+                                <rect x="60" y="71" width="40" height="44" rx="14" fill="#F5A623"/>
+                                <circle cx="80" cy="54" r="17" fill="#F1C27D"/>
+                                <path d="M63 50 Q80 28 97 50 Z" fill="#2A1E14"/>
+                                <circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/>
+                                <path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/>
+                                <circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/>
+                                <polygon points="101,87 108,87 104,93 109,93 99,103 102,94 98,94" fill="#E08E0B"/>
+                            </svg>
+                            <!-- PLUMBER -->
+                            <svg th:case="'plumber'" viewBox="0 0 160 160" width="64" height="64">
+                                <circle cx="80" cy="80" r="58" fill="#E9F3FB"/>
+                                <rect x="60" y="71" width="40" height="44" rx="14" fill="#3B7DA8"/>
+                                <circle cx="80" cy="54" r="17" fill="#D9A066"/>
+                                <path d="M63 50 Q80 30 97 50 Z" fill="#1A1A1A"/>
+                                <circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/>
+                                <path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/>
+                                <circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/>
+                                <line x1="99" y1="100" x2="108" y2="89" stroke="#2E5C8A" stroke-width="3" stroke-linecap="round"/>
+                                <circle cx="98" cy="101" r="2.4" fill="none" stroke="#2E5C8A" stroke-width="1.6"/>
+                                <circle cx="109" cy="88" r="2.4" fill="none" stroke="#2E5C8A" stroke-width="1.6"/>
+                            </svg>
+                            <!-- CARPENTER -->
+                            <svg th:case="'carpenter'" viewBox="0 0 160 160" width="64" height="64">
+                                <circle cx="80" cy="80" r="58" fill="#F3EEFB"/>
+                                <rect x="60" y="71" width="40" height="44" rx="14" fill="#7357B0"/>
+                                <circle cx="80" cy="54" r="17" fill="#8D5524"/>
+                                <path d="M63 50 Q80 28 97 50 Z" fill="#1A1A1A"/>
+                                <circle cx="74" cy="54" r="2" fill="#F5EFE6"/><circle cx="86" cy="54" r="2" fill="#F5EFE6"/>
+                                <path d="M73 61 Q80 67 87 61" fill="none" stroke="#F5EFE6" stroke-width="2" stroke-linecap="round"/>
+                                <circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/>
+                                <line x1="99" y1="100" x2="107" y2="90" stroke="#5B3F94" stroke-width="3" stroke-linecap="round"/>
+                                <rect x="103" y="84" width="9" height="6" rx="1" fill="#5B3F94" transform="rotate(30 107 87)"/>
+                            </svg>
+                            <!-- AC SERVICE -->
+                            <svg th:case="'ac service'" viewBox="0 0 160 160" width="64" height="64">
+                                <circle cx="80" cy="80" r="58" fill="#EAF7FB"/>
+                                <rect x="60" y="71" width="40" height="44" rx="14" fill="#4FB3D9"/>
+                                <circle cx="80" cy="54" r="17" fill="#F1C27D"/>
+                                <path d="M63 50 Q80 28 97 50 Z" fill="#2A1E14"/>
+                                <circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/>
+                                <path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/>
+                                <circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/>
+                                <line x1="97" y1="94" x2="111" y2="94" stroke="#2E8CB0" stroke-width="2" stroke-linecap="round"/>
+                                <line x1="99" y1="89" x2="109" y2="99" stroke="#2E8CB0" stroke-width="2" stroke-linecap="round"/>
+                                <line x1="99" y1="99" x2="109" y2="89" stroke="#2E8CB0" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <!-- HOUSE MAID -->
+                            <svg th:case="'house maid'" viewBox="0 0 160 160" width="64" height="64">
+                                <circle cx="80" cy="80" r="58" fill="#EEF7EA"/>
+                                <rect x="60" y="71" width="40" height="44" rx="14" fill="#4C8C3B"/>
+                                <circle cx="80" cy="54" r="17" fill="#D9A066"/>
+                                <path d="M63 50 Q80 30 97 50 Z" fill="#1A1A1A"/>
+                                <circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/>
+                                <path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/>
+                                <circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/>
+                                <line x1="98" y1="100" x2="108" y2="88" stroke="#3B6E2E" stroke-width="2.4" stroke-linecap="round"/>
+                                <polygon points="96,101 100,101 98,105" fill="#3B6E2E"/>
+                            </svg>
+                            <!-- LAUNDRY -->
+                            <svg th:case="'laundry'" viewBox="0 0 160 160" width="64" height="64">
+                                <circle cx="80" cy="80" r="58" fill="#FDEEF3"/>
+                                <rect x="60" y="71" width="40" height="44" rx="14" fill="#D6336C"/>
+                                <circle cx="80" cy="54" r="17" fill="#8D5524"/>
+                                <path d="M63 50 Q80 28 97 50 Z" fill="#1A1A1A"/>
+                                <circle cx="74" cy="54" r="2" fill="#F5EFE6"/><circle cx="86" cy="54" r="2" fill="#F5EFE6"/>
+                                <path d="M73 61 Q80 67 87 61" fill="none" stroke="#F5EFE6" stroke-width="2" stroke-linecap="round"/>
+                                <circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/>
+                                <path d="M98 90 L101 87 104 89 107 87 110 90 108 93 108 100 100 100 100 93 Z" fill="#A8265A"/>
+                            </svg>
+                            <!-- LABOUR -->
+                            <svg th:case="'labour'" viewBox="0 0 160 160" width="64" height="64">
+                                <circle cx="80" cy="80" r="58" fill="#F7EFE7"/>
+                                <rect x="60" y="71" width="40" height="44" rx="14" fill="#C2703D"/>
+                                <circle cx="80" cy="54" r="17" fill="#F1C27D"/>
+                                <path d="M63 50 Q80 30 97 50 Z" fill="#2A1E14"/>
+                                <circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/>
+                                <path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/>
+                                <circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/>
+                                <path d="M98 96 A7 5 0 0 1 112 96 Z" fill="#8F5228"/>
+                                <rect x="97" y="96" width="16" height="2" fill="#8F5228"/>
+                            </svg>
+                            <!-- COOK -->
+                            <svg th:case="'cook'" viewBox="0 0 160 160" width="64" height="64">
+                                <circle cx="80" cy="80" r="58" fill="#FBEAEA"/>
+                                <rect x="60" y="71" width="40" height="44" rx="14" fill="#F5EFE6"/>
+                                <circle cx="80" cy="54" r="17" fill="#D9A066"/>
+                                <path d="M63 50 Q80 28 97 50 Z" fill="#1A1A1A"/>
+                                <circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/>
+                                <path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/>
+                                <rect x="92" y="88" width="4" height="20" fill="#D64545"/>
+                                <circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/>
+                                <rect x="100" y="97" width="8" height="4" rx="1" fill="#B23333"/>
+                                <ellipse cx="104" cy="93" rx="6" ry="5" fill="#B23333"/>
+                            </svg>
+                            <i th:case="*" class="fa-solid" th:classappend="${service.icon != null ? service.icon : 'fa-wrench'}"></i>
+                        </th:block>
                     </div>
                     <!-- Body: Name and Price ONLY -->
                     <div class="service-card-body">
@@ -1435,6 +1831,107 @@
         </div>
     </section>
 
+    <!-- 4b. "OUR PEOPLE" SECTION (Uber 2-column pattern: text left, calm 2x3 image grid right) -->
+    <section class="section people-section" id="our-people">
+        <div class="sec-container people-container">
+            <!-- LEFT COLUMN -->
+            <div class="people-text-col">
+                <span class="people-eyebrow">Our people</span>
+                <h2 class="people-heading">The right hands for every job</h2>
+                <p class="people-subtext">From a flickering switch to a full home clean — every GharFix professional is verified, trained, and genuinely good at what they do.</p>
+            </div>
+
+            <!-- RIGHT COLUMN: 2-column x 3-row grid (6 equal-sized square tiles) -->
+            <div class="people-grid-col">
+                <div class="people-tiles-grid">
+                    <!-- TILE 1 (Electrician), background #FDF1E7 -->
+                    <div class="people-tile tile-elec">
+                        <svg viewBox="0 0 160 160" width="100%" height="100%">
+                            <rect x="60" y="71" width="40" height="44" rx="14" fill="#F5A623"/>
+                            <circle cx="80" cy="54" r="17" fill="#F1C27D"/>
+                            <path d="M63 50 Q80 28 97 50 Z" fill="#2A1E14"/>
+                            <circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/>
+                            <path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/>
+                            <polygon points="101,87 108,87 104,93 109,93 99,103 102,94 98,94" fill="#E08E0B"/>
+                        </svg>
+                    </div>
+
+                    <!-- TILE 2 (Plumber), background #E9F3FB -->
+                    <div class="people-tile tile-plumb">
+                        <svg viewBox="0 0 160 160" width="100%" height="100%">
+                            <rect x="60" y="71" width="40" height="44" rx="14" fill="#3B7DA8"/>
+                            <circle cx="80" cy="54" r="17" fill="#D9A066"/>
+                            <path d="M63 50 Q80 30 97 50 Z" fill="#1A1A1A"/>
+                            <circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/>
+                            <path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/>
+                            <line x1="99" y1="100" x2="108" y2="89" stroke="#2E5C8A" stroke-width="3" stroke-linecap="round"/>
+                            <circle cx="98" cy="101" r="2.4" fill="none" stroke="#2E5C8A" stroke-width="1.6"/>
+                            <circle cx="109" cy="88" r="2.4" fill="none" stroke="#2E5C8A" stroke-width="1.6"/>
+                        </svg>
+                    </div>
+
+                    <!-- TILE 3 (Carpenter), background #F3EEFB -->
+                    <div class="people-tile tile-carp">
+                        <svg viewBox="0 0 160 160" width="100%" height="100%">
+                            <rect x="60" y="71" width="40" height="44" rx="14" fill="#7357B0"/>
+                            <circle cx="80" cy="54" r="17" fill="#8D5524"/>
+                            <path d="M63 50 Q80 28 97 50 Z" fill="#1A1A1A"/>
+                            <circle cx="74" cy="54" r="2" fill="#F5EFE6"/><circle cx="86" cy="54" r="2" fill="#F5EFE6"/>
+                            <path d="M73 61 Q80 67 87 61" fill="none" stroke="#F5EFE6" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/>
+                            <line x1="99" y1="100" x2="107" y2="90" stroke="#5B3F94" stroke-width="3" stroke-linecap="round"/>
+                            <rect x="103" y="84" width="9" height="6" rx="1" fill="#5B3F94" transform="rotate(30 107 87)"/>
+                        </svg>
+                    </div>
+
+                    <!-- TILE 4 (House Maid), background #EEF7EA -->
+                    <div class="people-tile tile-maid">
+                        <svg viewBox="0 0 160 160" width="100%" height="100%">
+                            <rect x="60" y="71" width="40" height="44" rx="14" fill="#4C8C3B"/>
+                            <circle cx="80" cy="54" r="17" fill="#D9A066"/>
+                            <path d="M63 50 Q80 30 97 50 Z" fill="#1A1A1A"/>
+                            <circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/>
+                            <path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/>
+                            <line x1="98" y1="100" x2="108" y2="88" stroke="#3B6E2E" stroke-width="2.4" stroke-linecap="round"/>
+                            <polygon points="96,101 100,101 98,105" fill="#3B6E2E"/>
+                        </svg>
+                    </div>
+
+                    <!-- TILE 5 (Laundry), background #FDEEF3 -->
+                    <div class="people-tile tile-laun">
+                        <svg viewBox="0 0 160 160" width="100%" height="100%">
+                            <rect x="60" y="71" width="40" height="44" rx="14" fill="#D6336C"/>
+                            <circle cx="80" cy="54" r="17" fill="#8D5524"/>
+                            <path d="M63 50 Q80 28 97 50 Z" fill="#1A1A1A"/>
+                            <circle cx="74" cy="54" r="2" fill="#F5EFE6"/><circle cx="86" cy="54" r="2" fill="#F5EFE6"/>
+                            <path d="M73 61 Q80 67 87 61" fill="none" stroke="#F5EFE6" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/>
+                            <path d="M98 90 L101 87 104 89 107 87 110 90 108 93 108 100 100 100 100 93 Z" fill="#A8265A"/>
+                        </svg>
+                    </div>
+
+                    <!-- TILE 6 (Cook), background #FBEAEA -->
+                    <div class="people-tile tile-cook">
+                        <svg viewBox="0 0 160 160" width="100%" height="100%">
+                            <rect x="60" y="71" width="40" height="44" rx="14" fill="#F5EFE6"/>
+                            <circle cx="80" cy="54" r="17" fill="#D9A066"/>
+                            <path d="M63 50 Q80 28 97 50 Z" fill="#1A1A1A"/>
+                            <circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/>
+                            <path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/>
+                            <rect x="92" y="88" width="4" height="20" fill="#D64545"/>
+                            <circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/>
+                            <rect x="100" y="97" width="8" height="4" rx="1" fill="#B23333"/>
+                            <ellipse cx="104" cy="93" rx="6" ry="5" fill="#B23333"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- 5. "HOW IT WORKS" (4-STEP) SECTION -->
     <section class="section section-alt" id="how-it-works">
         <div class="sec-container">
@@ -1444,25 +1941,83 @@
             </div>
 
             <div class="steps-grid">
-                <div class="step-card">
-                    <div class="step-badge">1</div>
-                    <h3 class="step-title">Choose a Service</h3>
-                    <p class="step-desc">Pick from our verified home service categories and describe your requirement.</p>
+                <!-- Step 1 -->
+                <div class="step-col">
+                    <div class="step-photo-wrap">
+                        <div class="step-photo-card">
+                            <img src="/images/steps/step1.png" th:src="@{/images/steps/step1.png}" alt="Choose a Service" class="step-photo-img">
+                        </div>
+                        <div class="step-icon-badge" title="Choose a Service">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="step-info">
+                        <h3 class="step-title">Choose a Service</h3>
+                        <p class="step-desc">Pick from our verified home service categories and describe your requirement.</p>
+                    </div>
                 </div>
-                <div class="step-card">
-                    <div class="step-badge">2</div>
-                    <h3 class="step-title">Pick a Slot</h3>
-                    <p class="step-desc">Select a convenient date and time window that best fits your daily routine.</p>
+
+                <!-- Step 2 -->
+                <div class="step-col">
+                    <div class="step-photo-wrap">
+                        <div class="step-photo-card">
+                            <img src="/images/steps/step2.png" th:src="@{/images/steps/step2.png}" alt="Pick a Slot" class="step-photo-img">
+                        </div>
+                        <div class="step-icon-badge" title="Pick a Slot">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                                <circle cx="12" cy="16" r="2"></circle>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="step-info">
+                        <h3 class="step-title">Pick a Slot</h3>
+                        <p class="step-desc">Select a convenient date and time window that best fits your daily routine.</p>
+                    </div>
                 </div>
-                <div class="step-card">
-                    <div class="step-badge">3</div>
-                    <h3 class="step-title">Pro Accepts</h3>
-                    <p class="step-desc">Nearby verified experts are alerted and confirm your appointment instantly.</p>
+
+                <!-- Step 3 -->
+                <div class="step-col">
+                    <div class="step-photo-wrap">
+                        <div class="step-photo-card">
+                            <img src="/images/steps/step3.png" th:src="@{/images/steps/step3.png}" alt="Pro Accepts" class="step-photo-img">
+                        </div>
+                        <div class="step-icon-badge" title="Pro Accepts">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                <path d="m9 12 2 2 4-4"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="step-info">
+                        <h3 class="step-title">Pro Accepts</h3>
+                        <p class="step-desc">Nearby verified experts are alerted and confirm your appointment instantly.</p>
+                    </div>
                 </div>
-                <div class="step-card">
-                    <div class="step-badge">4</div>
-                    <h3 class="step-title">Relax &amp; Done</h3>
-                    <p class="step-desc">Your dedicated technician arrives on schedule and completes the work reliably.</p>
+
+                <!-- Step 4 -->
+                <div class="step-col">
+                    <div class="step-photo-wrap">
+                        <div class="step-photo-card">
+                            <img src="/images/steps/step4.png" th:src="@{/images/steps/step4.png}" alt="Relax &amp; Done" class="step-photo-img">
+                        </div>
+                        <div class="step-icon-badge" title="Relax &amp; Done">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="step-info">
+                        <h3 class="step-title">Relax &amp; Done</h3>
+                        <p class="step-desc">Your dedicated professional arrives on schedule and completes the work reliably.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1512,20 +2067,7 @@
     </section>
 
     <!-- FOOTER -->
-    <footer class="footer">
-        <div class="footer-inner">
-            <div class="footer-left">
-                <div class="footer-logo">Ghar<em>Fix</em></div>
-                <div class="footer-copy">© 2026 GharFix Technologies Inc. All rights reserved.</div>
-            </div>
-            <div class="footer-links">
-                <a href="/worker">Partner with Us</a>
-                <a href="#most-booked">Services</a>
-                <a href="#how-it-works">How It Works</a>
-                <a href="#why-gharfix">Why Us</a>
-            </div>
-        </div>
-    </footer>
+    <div th:replace="~{fragments/footer :: siteFooter}"></div>
 
     <!-- ── POPUPS: LOGIN ── -->
     <div class="popup" id="loginBox">
@@ -1540,7 +2082,7 @@
             <div class="pb">
                 <div class="modal-toggle-wrap">
                     <button type="button" class="toggle-btn-active">I'm a Customer</button>
-                    <button type="button" onclick="window.location.href='/worker'" class="toggle-btn-inactive">I'm a Worker <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px; margin-left:3px;"></i></button>
+                    <button type="button" onclick="window.location.href='/worker'" class="toggle-btn-inactive">I'm a Worker <i class="fa-solid fa-arrow-up-right-from-square worker-link-icon"></i></button>
                 </div>
                 <form id="loginForm" action="/login" method="POST">
                     <div class="fg">
@@ -1571,7 +2113,7 @@
             <div class="pb">
                 <div class="modal-toggle-wrap">
                     <button type="button" class="toggle-btn-active">I'm a Customer</button>
-                    <button type="button" onclick="window.location.href='/worker'" class="toggle-btn-inactive">I'm a Worker <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px; margin-left:3px;"></i></button>
+                    <button type="button" onclick="window.location.href='/worker'" class="toggle-btn-inactive">I'm a Worker <i class="fa-solid fa-arrow-up-right-from-square worker-link-icon"></i></button>
                 </div>
                 <form id="userSignupForm" action="/register" method="POST">
                     <div class="fg">
@@ -1612,7 +2154,7 @@
                 <button type="button" class="ph-close" onclick="closePopup('bookingBox')" aria-label="Close dialog"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="pb">
-                <div class="worker-preview" id="workerPreview" style="display:none;">
+                <div class="worker-preview d-none" id="workerPreview">
                     <img id="previewImg" src="" alt="">
                     <div>
                         <div class="wp-name" id="previewName"></div>
@@ -1649,6 +2191,9 @@
 
     <!-- User Negotiation Notification Bar Fragment -->
     <div th:if="${currentUser != null}" th:replace="~{fragments/negotiation-bar :: userNegotiationBar}"></div>
+
+    <!-- GharFix AI Assistant Fragment -->
+    <div th:replace="~{fragments/ai-assistant-modal :: aiAssistant}"></div>
 
     <!-- Modal Scripts & Handlers -->
     <script>

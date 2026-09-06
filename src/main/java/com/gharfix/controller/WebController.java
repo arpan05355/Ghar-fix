@@ -340,4 +340,20 @@ public class WebController {
             return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
         }
     }
+
+    @GetMapping("/terms-of-service")
+    public String termsOfService(Model model, @AuthenticationPrincipal Object principal) {
+        if (principal instanceof CustomUserDetails) {
+            model.addAttribute("currentUser", principal);
+        }
+        return "terms-of-service";
+    }
+
+    @GetMapping("/privacy-policy")
+    public String privacyPolicy(Model model, @AuthenticationPrincipal Object principal) {
+        if (principal instanceof CustomUserDetails) {
+            model.addAttribute("currentUser", principal);
+        }
+        return "privacy-policy";
+    }
 }

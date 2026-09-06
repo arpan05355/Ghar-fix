@@ -11,7 +11,6 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -80,10 +79,13 @@ public class SecurityConfig {
         http
             .securityMatcher("/api/**")
             .csrf(csrf -> csrf.disable())
-            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.NEVER))
+            .securityContext(sc -> sc.securityContextRepository(securityContextRepository()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/services", "/api/workers", "/api/search").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/ai/**").permitAll()
+                .requestMatchers("/api/create-order", "/api/verify-payment", "/api/razorpay/**").permitAll()
                 .requestMatchers("/api/worker/**").hasRole("WORKER")
                 .requestMatchers("/api/bookings", "/api/bookings/**").hasRole("USER")
                 .anyRequest().authenticated()
