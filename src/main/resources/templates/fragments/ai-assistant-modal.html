@@ -27,6 +27,7 @@
         }
 
         /* ── FLOATING LAUNCHER BUTTON ── */
+        /* ── FLOATING LAUNCHER BUTTON (Icon-only default, smooth hover expand) ── */
         .gf-ai-launcher {
             position: fixed;
             bottom: 28px;
@@ -34,8 +35,9 @@
             z-index: 1100;
             display: inline-flex;
             align-items: center;
-            gap: 9px;
-            padding: 10px 18px;
+            height: 48px;
+            width: 48px;
+            padding: 0;
             background: var(--gf-ai-primary);
             color: #FFFFFF;
             border: 1px solid var(--gf-ai-gold-border);
@@ -46,17 +48,17 @@
             font-size: 13.5px;
             font-weight: 600;
             letter-spacing: -0.2px;
-            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, background 0.15s ease;
+            overflow: hidden;
+            white-space: nowrap;
+            transition: width 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.25s ease,
+                        background 0.2s ease,
+                        border-color 0.2s ease;
             -webkit-user-select: none;
             user-select: none;
             text-decoration: none;
-        }
-
-        .gf-ai-launcher:hover {
-            background: var(--gf-ai-primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22), 0 2px 6px rgba(0, 0, 0, 0.1);
-            border-color: rgba(245, 158, 11, 0.6);
+            outline: none;
         }
 
         .gf-ai-launcher:active {
@@ -64,31 +66,53 @@
         }
 
         .gf-ai-launcher-icon-wrap {
+            width: 46px;
+            height: 46px;
+            min-width: 46px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--gf-ai-gold);
-            font-size: 14px;
+            font-size: 17px;
+            flex-shrink: 0;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .gf-ai-launcher-text {
             color: #FFFFFF;
             white-space: nowrap;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+            opacity: 0;
+            transform: translateX(-6px);
+            padding-right: 0;
+            transition: opacity 0.22s ease,
+                        transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
         }
 
-        .gf-ai-launcher-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2px 6px;
-            background: var(--gf-ai-gold-subtle);
-            color: #FBBF24;
-            border: 1px solid rgba(245, 158, 11, 0.25);
-            border-radius: 6px;
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
+        @media (hover: hover) and (pointer: fine) {
+            .gf-ai-launcher:hover,
+            .gf-ai-launcher:focus-visible {
+                width: 172px;
+                background: var(--gf-ai-primary-hover);
+                transform: translateY(-2px);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22), 0 2px 6px rgba(0, 0, 0, 0.1);
+                border-color: rgba(245, 158, 11, 0.6);
+            }
+
+            .gf-ai-launcher:hover .gf-ai-launcher-icon-wrap,
+            .gf-ai-launcher:focus-visible .gf-ai-launcher-icon-wrap {
+                transform: scale(1.05);
+            }
+
+            .gf-ai-launcher:hover .gf-ai-launcher-text,
+            .gf-ai-launcher:focus-visible .gf-ai-launcher-text {
+                opacity: 1;
+                transform: translateX(0);
+                padding-right: 16px;
+            }
         }
 
         /* ── BACKDROP (FOR MOBILE) ── */
@@ -873,8 +897,13 @@
             .gf-ai-launcher {
                 bottom: 20px;
                 right: 16px;
-                padding: 9px 14px;
-                font-size: 12.5px;
+                width: 48px !important;
+                height: 48px !important;
+                padding: 0 !important;
+            }
+
+            .gf-ai-launcher-text {
+                display: none !important;
             }
 
             .gf-ai-drawer {
@@ -901,11 +930,10 @@
 
     <!-- FLOATING LAUNCHER BUTTON -->
     <button type="button" class="gf-ai-launcher" id="gfAiLauncher" title="Ask GharFix AI" aria-label="Ask GharFix AI" aria-expanded="false">
-        <div class="gf-ai-launcher-icon-wrap">
+        <span class="gf-ai-launcher-icon-wrap" aria-hidden="true">
             <i class="fa-solid fa-wand-magic-sparkles"></i>
-        </div>
+        </span>
         <span class="gf-ai-launcher-text">Ask GharFix AI</span>
-        <span class="gf-ai-launcher-badge">AI</span>
     </button>
 
     <!-- AI ASSISTANT DRAWER MODAL -->
