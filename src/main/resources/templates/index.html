@@ -189,50 +189,58 @@
             gap: 14px;
         }
 
-        /* ── PRO DROPDOWN (Uber style) ── */
-        .pro-menu-wrap {
+        /* ── SIGN IN + PRO TRIGGER STACKED GROUP ── */
+        .signin-stacked-wrap {
             position: relative;
-            display: inline-block;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        .btn-pro-dropdown {
-            font-size: 13.5px;
-            font-weight: 600;
+        .btn-pro-trigger {
+            font-size: 11px;
+            font-weight: 500;
             font-family: inherit;
-            color: var(--text-secondary);
+            color: var(--text-muted, #6B7280);
             background: transparent;
             border: none;
-            padding: 8px 12px;
-            border-radius: var(--radius-sm);
+            padding: 3px 6px 0;
+            margin-top: 1px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             transition: var(--transition);
             -webkit-user-select: none;
             user-select: none;
+            line-height: 1;
         }
 
-        .btn-pro-dropdown:hover {
-            color: var(--text-primary);
-            background: var(--bg-subtle);
+        .btn-pro-trigger:hover {
+            color: var(--text-primary, #111827);
         }
 
-        .pro-chevron {
-            font-size: 10px;
-            color: var(--text-muted);
-            transition: transform 0.2s ease;
+        .btn-pro-trigger .pro-chevron {
+            font-size: 8.5px;
+            color: var(--text-muted, #9CA3AF);
+            transition: transform 0.2s ease, color 0.2s ease;
         }
 
-        .btn-pro-dropdown[aria-expanded="true"] .pro-chevron {
+        .btn-pro-trigger:hover .pro-chevron {
+            color: var(--text-primary, #111827);
+        }
+
+        .btn-pro-trigger[aria-expanded="true"] .pro-chevron {
             transform: rotate(180deg);
         }
 
         .pro-dropdown {
             position: absolute;
-            top: calc(100% + 8px);
-            right: 0;
-            width: 220px;
+            top: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
             background: #FFFFFF;
             border: 1px solid var(--border-light);
             border-radius: 12px;
@@ -246,7 +254,18 @@
 
         .pro-dropdown.active {
             display: flex;
-            animation: dropFade 0.2s ease;
+            animation: dropFadeCenter 0.2s ease;
+        }
+
+        @keyframes dropFadeCenter {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -6px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
         }
 
         .pro-dropdown-list {
@@ -1541,22 +1560,19 @@
             .header-right {
                 gap: 8px;
             }
-            .btn-pro-dropdown {
-                font-size: 12.5px;
-                padding: 6px 8px;
-                gap: 4px;
-            }
             .btn-header-signin {
                 padding: 6px 14px;
                 font-size: 12.5px;
+            }
+            .btn-pro-trigger {
+                font-size: 10px;
             }
             .btn-header-primary {
                 padding: 6px 14px;
                 font-size: 12.5px;
             }
             .pro-dropdown {
-                width: 200px;
-                right: 0;
+                width: 190px;
             }
             .brand-logo {
                 font-size: 19px;
@@ -1645,22 +1661,19 @@
             .header-right {
                 gap: 6px;
             }
-            .btn-pro-dropdown {
-                font-size: 11.5px;
-                padding: 5px 6px;
-                gap: 3px;
-            }
             .btn-header-signin {
-                padding: 5px 10px;
-                font-size: 11.5px;
+                padding: 5px 12px;
+                font-size: 12px;
+            }
+            .btn-pro-trigger {
+                font-size: 9.5px;
             }
             .btn-header-primary {
-                padding: 5px 10px;
-                font-size: 11.5px;
+                padding: 5px 12px;
+                font-size: 12px;
             }
             .pro-dropdown {
-                width: 195px;
-                right: -6px;
+                width: 180px;
             }
             .services-grid {
                 grid-template-columns: 1fr;
@@ -1710,36 +1723,6 @@
 
             <!-- Right user avatar / sign in buttons -->
             <div class="header-right">
-                <!-- For Professionals Dropdown (Logged out state) -->
-                <div th:if="${currentUser == null}" class="pro-menu-wrap">
-                    <button type="button" class="btn-pro-dropdown" id="proDropdownBtn" onclick="toggleProDropdown(event)" aria-expanded="false" aria-haspopup="true">
-                        <span>For Professionals</span>
-                        <i class="fa-solid fa-chevron-down pro-chevron"></i>
-                    </button>
-                    <div class="pro-dropdown" id="proDropdown">
-                        <ul class="pro-dropdown-list">
-                            <li>
-                                <a href="#services" class="pro-dropdown-item" onclick="closeProDropdown()">
-                                    <span class="pro-item-label">Book a service</span>
-                                    <i class="fa-solid fa-house-circle-check pro-item-icon"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/worker" class="pro-dropdown-item" onclick="closeProDropdown()">
-                                    <span class="pro-item-label">Become a Professional</span>
-                                    <i class="fa-solid fa-briefcase pro-item-icon"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="pro-dropdown-item" onclick="closeProDropdown(); return false;">
-                                    <span class="pro-item-label">Help</span>
-                                    <i class="fa-solid fa-circle-question pro-item-icon"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
                 <!-- Logged in state -->
                 <div th:if="${currentUser != null}" class="user-menu-wrap">
                     <button type="button" class="u-avatar" id="userAvatarBtn" onclick="toggleUserDropdown(event)" aria-label="User profile menu">
@@ -1769,7 +1752,29 @@
 
                 <!-- Logged out state -->
                 <div th:if="${currentUser == null}" class="header-auth-buttons">
-                    <button type="button" class="btn-header-signin" onclick="openPopup('loginBox')">Sign In</button>
+                    <div class="signin-stacked-wrap">
+                        <button type="button" class="btn-header-signin" onclick="openPopup('loginBox')">Sign In</button>
+                        <button type="button" class="btn-pro-trigger" id="proDropdownBtn" onclick="toggleProDropdown(event)" aria-expanded="false" aria-haspopup="true">
+                            <span>For Professionals</span>
+                            <i class="fa-solid fa-chevron-down pro-chevron"></i>
+                        </button>
+                        <div class="pro-dropdown" id="proDropdown">
+                            <ul class="pro-dropdown-list">
+                                <li>
+                                    <a href="#services" class="pro-dropdown-item" onclick="closeProDropdown()">
+                                        <span class="pro-item-label">Book a service</span>
+                                        <i class="fa-solid fa-house-circle-check pro-item-icon"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/worker" class="pro-dropdown-item" onclick="closeProDropdown()">
+                                        <span class="pro-item-label">Become a Professional</span>
+                                        <i class="fa-solid fa-briefcase pro-item-icon"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                     <button type="button" class="btn-header-primary" onclick="openPopup('signupBox')">Get Started</button>
                 </div>
             </div>
@@ -2418,7 +2423,7 @@
 
             const pd = document.getElementById('proDropdown');
             if (pd && pd.classList.contains('active')) {
-                const proWrap = document.querySelector('.pro-menu-wrap');
+                const proWrap = document.querySelector('.signin-stacked-wrap');
                 if (proWrap && !proWrap.contains(e.target)) {
                     closeProDropdown();
                 }
