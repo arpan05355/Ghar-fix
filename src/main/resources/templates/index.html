@@ -189,29 +189,116 @@
             gap: 14px;
         }
 
-        .nav-link-partner {
-            font-size: 13.5px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            padding: 8px 12px;
-            border-radius: var(--radius-sm);
-            transition: var(--transition);
+        /* ── PRO DROPDOWN (Uber style) ── */
+        .pro-menu-wrap {
+            position: relative;
+            display: inline-block;
         }
 
-        .nav-link-partner:hover {
+        .btn-pro-dropdown {
+            font-size: 13.5px;
+            font-weight: 600;
+            font-family: inherit;
+            color: var(--text-secondary);
+            background: transparent;
+            border: none;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .btn-pro-dropdown:hover {
             color: var(--text-primary);
             background: var(--bg-subtle);
         }
 
+        .pro-chevron {
+            font-size: 10px;
+            color: var(--text-muted);
+            transition: transform 0.2s ease;
+        }
+
+        .btn-pro-dropdown[aria-expanded="true"] .pro-chevron {
+            transform: rotate(180deg);
+        }
+
+        .pro-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 220px;
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04);
+            padding: 6px;
+            z-index: 1020;
+            display: none;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .pro-dropdown.active {
+            display: flex;
+            animation: dropFade 0.2s ease;
+        }
+
+        .pro-dropdown-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .pro-dropdown-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .pro-dropdown-item:hover {
+            background: var(--bg-subtle);
+            color: var(--text-primary);
+        }
+
+        .pro-item-label {
+            font-size: 13.5px;
+            font-weight: 500;
+        }
+
+        .pro-item-icon {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .pro-dropdown-item:hover .pro-item-icon {
+            color: var(--text-primary);
+        }
+
         .btn-header-signin {
-            padding: 8px 16px;
+            padding: 8px 18px;
             font-size: 13.5px;
             font-weight: 600;
             font-family: inherit;
             color: var(--text-primary);
             background: transparent;
             border: 1px solid var(--border-light);
-            border-radius: var(--radius-sm);
+            border-radius: 999px;
             cursor: pointer;
             transition: var(--transition);
         }
@@ -222,20 +309,21 @@
         }
 
         .btn-header-primary {
-            padding: 8px 18px;
+            padding: 8px 20px;
             font-size: 13.5px;
             font-weight: 600;
             font-family: inherit;
             color: #FFFFFF;
             background: var(--btn-primary);
-            border: none;
-            border-radius: var(--radius-sm);
+            border: 1px solid var(--btn-primary);
+            border-radius: 999px;
             cursor: pointer;
             transition: var(--transition);
         }
 
         .btn-header-primary:hover {
             background: var(--btn-primary-hover);
+            border-color: var(--btn-primary-hover);
         }
 
         .header-auth-buttons {
@@ -1450,6 +1538,26 @@
             .header-inner {
                 padding: 0 16px;
             }
+            .header-right {
+                gap: 8px;
+            }
+            .btn-pro-dropdown {
+                font-size: 12.5px;
+                padding: 6px 8px;
+                gap: 4px;
+            }
+            .btn-header-signin {
+                padding: 6px 14px;
+                font-size: 12.5px;
+            }
+            .btn-header-primary {
+                padding: 6px 14px;
+                font-size: 12.5px;
+            }
+            .pro-dropdown {
+                width: 200px;
+                right: 0;
+            }
             .brand-logo {
                 font-size: 19px;
             }
@@ -1525,6 +1633,35 @@
         }
 
         @media (max-width: 480px) {
+            .header-inner {
+                padding: 0 10px;
+            }
+            .header-left {
+                gap: 8px;
+            }
+            .location-picker {
+                display: none;
+            }
+            .header-right {
+                gap: 6px;
+            }
+            .btn-pro-dropdown {
+                font-size: 11.5px;
+                padding: 5px 6px;
+                gap: 3px;
+            }
+            .btn-header-signin {
+                padding: 5px 10px;
+                font-size: 11.5px;
+            }
+            .btn-header-primary {
+                padding: 5px 10px;
+                font-size: 11.5px;
+            }
+            .pro-dropdown {
+                width: 195px;
+                right: -6px;
+            }
             .services-grid {
                 grid-template-columns: 1fr;
             }
@@ -1573,7 +1710,35 @@
 
             <!-- Right user avatar / sign in buttons -->
             <div class="header-right">
-                <a href="/worker" class="nav-link-partner">Become a Professional</a>
+                <!-- For Professionals Dropdown (Logged out state) -->
+                <div th:if="${currentUser == null}" class="pro-menu-wrap">
+                    <button type="button" class="btn-pro-dropdown" id="proDropdownBtn" onclick="toggleProDropdown(event)" aria-expanded="false" aria-haspopup="true">
+                        <span>For Professionals</span>
+                        <i class="fa-solid fa-chevron-down pro-chevron"></i>
+                    </button>
+                    <div class="pro-dropdown" id="proDropdown">
+                        <ul class="pro-dropdown-list">
+                            <li>
+                                <a href="#services" class="pro-dropdown-item" onclick="closeProDropdown()">
+                                    <span class="pro-item-label">Book a service</span>
+                                    <i class="fa-solid fa-house-circle-check pro-item-icon"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/worker" class="pro-dropdown-item" onclick="closeProDropdown()">
+                                    <span class="pro-item-label">Become a Professional</span>
+                                    <i class="fa-solid fa-briefcase pro-item-icon"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="pro-dropdown-item" onclick="closeProDropdown(); return false;">
+                                    <span class="pro-item-label">Help</span>
+                                    <i class="fa-solid fa-circle-question pro-item-icon"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
 
                 <!-- Logged in state -->
                 <div th:if="${currentUser != null}" class="user-menu-wrap">
@@ -1700,6 +1865,7 @@
     </section>
 
     <!-- 4. "MOST BOOKED SERVICES" SECTION (Responsive grid: icon, name, price ONLY) -->
+    <div id="services"></div>
     <section class="section" id="most-booked">
         <div class="sec-container">
             <div class="sec-head">
@@ -2224,12 +2390,37 @@
             if (ud) ud.classList.toggle('active');
         }
 
+        function toggleProDropdown(e) {
+            if (e) e.stopPropagation();
+            const pd = document.getElementById('proDropdown');
+            const btn = document.getElementById('proDropdownBtn');
+            if (pd) {
+                const isActive = pd.classList.toggle('active');
+                if (btn) btn.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+            }
+        }
+
+        function closeProDropdown() {
+            const pd = document.getElementById('proDropdown');
+            const btn = document.getElementById('proDropdownBtn');
+            if (pd) pd.classList.remove('active');
+            if (btn) btn.setAttribute('aria-expanded', 'false');
+        }
+
         document.addEventListener('click', function (e) {
             const ud = document.getElementById('userDropdown');
             if (ud && ud.classList.contains('active')) {
                 const wrap = document.querySelector('.user-menu-wrap');
                 if (wrap && !wrap.contains(e.target)) {
                     ud.classList.remove('active');
+                }
+            }
+
+            const pd = document.getElementById('proDropdown');
+            if (pd && pd.classList.contains('active')) {
+                const proWrap = document.querySelector('.pro-menu-wrap');
+                if (proWrap && !proWrap.contains(e.target)) {
+                    closeProDropdown();
                 }
             }
         });
