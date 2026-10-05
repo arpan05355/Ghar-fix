@@ -14,6 +14,7 @@ public class BookingResponseDto {
     private String userName;
     private Long workerId;
     private String workerName;
+    private String description;
 
     public BookingResponseDto() {
     }
@@ -27,6 +28,7 @@ public class BookingResponseDto {
         dto.setServiceName(b.getServiceName());
         dto.setAddress(b.getAddress());
         dto.setCity(b.getCity());
+        dto.setDescription(b.getDescription());
         dto.setDate(b.getBookingDate() != null ? b.getBookingDate().toString() : null);
         dto.setTime(b.getBookingTime() != null ? b.getBookingTime().toString() : null);
         dto.setStatus(b.getStatus());
@@ -127,5 +129,13 @@ public class BookingResponseDto {
 
     public void setWorkerName(String workerName) {
         this.workerName = workerName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

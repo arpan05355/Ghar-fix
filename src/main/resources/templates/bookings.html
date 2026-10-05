@@ -10,6 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+    <!-- GharFix Theme Engine — loaded before styles to prevent flash -->
+    <link rel="stylesheet" href="/css/theme.css">
+    <script src="/js/theme.js"></script>
+
     <style>
         :root {
             --ink:      #0f0f0f;
@@ -357,7 +361,7 @@
                     </span>
                     <button type="button" class="btn btn-ghost btn-ai-help"
                             th:data-booking-id="${booking.id}"
-                            th:data-service="${booking.service}"
+                            th:data-service="${booking.serviceName}"
                             onclick="if (window.openGharFixAI) window.openGharFixAI('I need help with my ' + this.getAttribute('data-service') + ' booking #' + this.getAttribute('data-booking-id'), this.getAttribute('data-booking-id'))"
                             title="Ask AI Assistant about this booking">
                         <i class="fa-solid fa-wand-magic-sparkles ai-help-icon"></i> AI Help

@@ -58,6 +58,9 @@ public class Booking {
     @Column(name = "razorpay_payment_id", length = 100)
     private String razorpayPaymentId;
 
+    @Column(name = "description", length = 1000)
+    private String description;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -195,6 +198,14 @@ public class Booking {
 
     public void setRazorpayPaymentId(String razorpayPaymentId) {
         this.razorpayPaymentId = razorpayPaymentId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public LocalDateTime getCreatedAt() {

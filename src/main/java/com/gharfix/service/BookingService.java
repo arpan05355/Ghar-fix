@@ -83,6 +83,7 @@ public class BookingService {
         booking.setServiceName(request.getService());
         booking.setAddress(request.getAddress());
         booking.setCity(request.getCity());
+        booking.setDescription(request.getDescription());
         booking.setBookingDate(bookingDate);
         booking.setBookingTime(bookingTime);
 

@@ -78,7 +78,7 @@ public class WebController {
         model.addAttribute("reviews", reviews);
 
         // Support both CustomUserDetails (User) and WorkerUserDetails (Worker) principals
-        if (principal instanceof CustomUserDetails) {
+        if (principal instanceof CustomUserDetails || principal instanceof WorkerUserDetails) {
             model.addAttribute("currentUser", principal);
         }
 

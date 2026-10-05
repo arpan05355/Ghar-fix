@@ -1,11 +1,19 @@
 package com.gharfix;
 
+import com.gharfix.entity.Booking;
+import com.gharfix.entity.User;
+import com.gharfix.repository.BookingRepository;
+import com.gharfix.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -18,6 +26,12 @@ class WebControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private BookingRepository bookingRepository;
 
     @Test
     void testHomePage() throws Exception {
@@ -64,6 +78,34 @@ class WebControllerTests {
         mockMvc.perform(get("/my-bookings"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
+    }
+
+    @Test
+    @WithUserDetails(value = "demo@gharfix.com", userDetailsServiceBeanName = "customUserDetailsService")
+    void testMyBookingsAuthenticatedWithBookings() throws Exception {
+        User user = userRepository.findByEmail("demo@gharfix.com").orElse(null);
+        if (user != null && bookingRepository.findByUserIdWithWorkerOrderByDateDesc(user.getId()).isEmpty()) {
+            Booking booking = new Booking(user, null, "Plumber", "456 Test Street", "Vadodara",
+                    LocalDate.now(), LocalTime.of(10, 0), "requested");
+            bookingRepository.save(booking);
+        }
+
+        mockMvc.perform(get("/my-bookings"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("bookings"))
+                .andExpect(model().attributeExists("bookings", "currentUser"))
+                .andExpect(content().string(containsString("My Bookings")))
+                .andExpect(content().string(containsString("AI Help")));
+    }
+
+    @Test
+    @WithUserDetails(value = "suresh@gharfix.com", userDetailsServiceBeanName = "workerUserDetailsService")
+    void testHomePageAuthenticatedWithWorker() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("index"))
+                .andExpect(model().attributeExists("currentUser"))
+                .andExpect(content().string(containsString("Suresh Patel")));
     }
 
     @Test

@@ -7,8 +7,17 @@ public class BookingRequestDto {
     private String city;
     private String date;
     private String time;
+    private String description;
 
     public BookingRequestDto() {
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Long getWorkerId() {

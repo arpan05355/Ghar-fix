@@ -14,6 +14,10 @@
     <!-- Leaflet CSS for Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
+    <!-- GharFix Theme Engine — loaded before styles to prevent flash -->
+    <link rel="stylesheet" href="/css/theme.css">
+    <script src="/js/theme.js"></script>
+
     <style>
         :root {
             --bg-page: #FFFFFF;
@@ -106,7 +110,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            background: #FFFFFF;
+            background: var(--bg-card, #FFFFFF);
             border-bottom: 1px solid var(--border-subtle);
             height: 72px;
         }
@@ -272,8 +276,8 @@
             position: absolute;
             right: 0;
             top: calc(100% + 10px);
-            width: 220px;
-            background: #FFFFFF;
+            width: 240px;
+            background: var(--bg-card, #FFFFFF);
             border: 1px solid var(--border-light);
             border-radius: var(--radius-md);
             box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
@@ -610,247 +614,122 @@
             white-space: nowrap;
         }
 
-        /* Uber Ride-Option Subcategory Rows */
-        .subcategories-section-title {
+        /* ── Real Estimate Line & Requirement Box ── */
+        .category-estimate-line {
             font-size: 15px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-top: 14px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 6px;
         }
 
-        .subcategories-section-subtitle {
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-muted);
+        .category-estimate-line strong {
+            color: var(--text-primary);
+            font-weight: 700;
         }
 
-        .subcategories-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        .describe-req-container {
             margin-bottom: 24px;
         }
 
-        .subcategory-row {
-            display: flex;
+        .btn-describe-req {
+            display: inline-flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 16px 18px;
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-md);
+            gap: 8px;
+            padding: 9px 18px;
+            font-size: 13.5px;
+            font-weight: 600;
+            font-family: inherit;
+            color: var(--text-primary);
             background: #FFFFFF;
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-md);
             cursor: pointer;
             transition: var(--transition);
-            gap: 16px;
-            position: relative;
         }
 
-        .subcategory-row:hover {
-            border-color: var(--text-primary);
+        .btn-describe-req:hover {
             background: var(--bg-subtle);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-        }
-
-        .subcategory-row.selected {
-            border-color: var(--text-primary);
-            background: #FAFAFA;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .sub-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex-grow: 1;
-        }
-
-        .custom-checkbox {
-            position: relative;
-            width: 22px;
-            height: 22px;
-            border: 2px solid var(--border-light);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #FFFFFF;
-            transition: var(--transition);
-            flex-shrink: 0;
-        }
-
-        .subcategory-row:hover .custom-checkbox {
             border-color: var(--text-secondary);
+            color: var(--text-primary);
         }
 
-        .subcategory-row.selected .custom-checkbox {
-            background: var(--btn-primary);
-            border-color: var(--btn-primary);
-        }
-
-        .custom-checkbox i {
-            color: #FFFFFF;
-            font-size: 11px;
+        .describe-req-wrapper {
             display: none;
+            margin-top: 12px;
+            background: #FAFAFA;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            animation: fadeIn 0.2s ease;
         }
 
-        .subcategory-row.selected .custom-checkbox i {
+        .describe-req-wrapper.open {
             display: block;
         }
 
-        .sub-icon {
-            width: 40px;
-            height: 40px;
+        .describe-req-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .describe-req-label {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .describe-req-close-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px;
+            font-size: 14px;
             border-radius: var(--radius-sm);
-            background: var(--bg-subtle);
-            border: 1px solid var(--border-light);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .describe-req-close-btn:hover {
             color: var(--text-primary);
-            flex-shrink: 0;
+            background: #E5E7EB;
         }
 
-        .sub-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .sub-name {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .sub-desc {
-            font-size: 12.5px;
-            color: var(--text-muted);
-            line-height: 1.4;
-        }
-
-        .sub-right {
-            text-align: right;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 3px;
-            flex-shrink: 0;
-        }
-
-        .sub-price {
-            font-size: 16px;
-            font-weight: 800;
-            color: var(--text-primary);
-            letter-spacing: -0.2px;
-        }
-
-        .sub-duration {
-            font-size: 11.5px;
-            font-weight: 600;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* ── RUNNING SUMMARY OF SELECTED SERVICES ── */
-        .cart-summary-box {
-            background: var(--bg-subtle);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-md);
-            padding: 18px 20px;
-            margin-bottom: 24px;
-        }
-
-        .cs-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .cs-title {
+        .describe-req-textarea {
+            width: 100%;
+            padding: 10px 14px;
             font-size: 13.5px;
-            font-weight: 700;
+            font-family: inherit;
             color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .cs-chips-wrap {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 14px;
-            min-height: 32px;
-        }
-
-        .cs-service-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
             background: #FFFFFF;
             border: 1px solid var(--border-light);
-            padding: 5px 12px;
-            border-radius: var(--radius-full);
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-primary);
-            box-shadow: var(--shadow-subtle);
-        }
-
-        .cs-chip-remove {
-            color: var(--text-light);
-            cursor: pointer;
+            border-radius: var(--radius-sm);
+            resize: vertical;
+            min-height: 75px;
+            outline: none;
             transition: var(--transition);
-            margin-left: 2px;
+            box-sizing: border-box;
         }
 
-        .cs-chip-remove:hover {
-            color: #DC2626;
+        .describe-req-textarea:focus {
+            border-color: var(--text-primary);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
         }
 
-        .cs-empty-text {
-            font-size: 12.5px;
+        .describe-req-textarea::placeholder {
             color: var(--text-muted);
-            font-style: italic;
-        }
-
-        .cs-metrics-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-top: 12px;
-            border-top: 1px dashed var(--border-light);
-        }
-
-        .cs-metric-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .cs-metric-label {
-            font-size: 12.5px;
-            color: var(--text-muted);
-        }
-
-        .cs-metric-val {
-            font-size: 14.5px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .cs-total-val {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--text-primary);
+            font-size: 13px;
         }
 
         /* ── SECTION: DATE & TIME SLOT PICKER ── */
@@ -998,10 +877,33 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            min-width: 72px;
+            justify-content: center;
         }
 
         .btn-detect-loc:hover {
             background: var(--border-light);
+        }
+
+        .btn-detect-loc:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        @keyframes spinIcon {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-detect-loc .spin {
+            display: inline-block;
+            animation: spinIcon 0.8s linear infinite;
+        }
+
+        .detect-loc-error {
+            font-size: 11.5px;
+            color: #DC2626;
+            margin-top: 4px;
+            display: none;
         }
 
         /* ── COLUMN 3: RIGHT PANEL (Leaflet Map & Nearby Workers) ── */
@@ -1504,6 +1406,22 @@
                                 </a>
                             </li>
                             <li>
+                                <div class="ud-item ud-theme-row" role="group" aria-label="Theme setting">
+                                    <i class="fa-solid fa-circle-half-stroke ud-theme-icon"></i>
+                                    <span class="ud-theme-label">Theme</span>
+                                    <div class="ud-theme-selector">
+                                        <button type="button" class="ud-theme-btn" data-gf-theme-btn="light"
+                                                onclick="GFTheme.set('light')" aria-label="Light theme" aria-pressed="true" title="Light mode">
+                                            <i class="fa-solid fa-sun"></i>
+                                        </button>
+                                        <button type="button" class="ud-theme-btn" data-gf-theme-btn="dark"
+                                                onclick="GFTheme.set('dark')" aria-label="Dark theme" aria-pressed="false" title="Dark mode">
+                                            <i class="fa-solid fa-moon"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
                                 <a href="/logout" class="ud-item ud-logout">
                                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                                     <span>Logout</span>
@@ -1573,6 +1491,9 @@
                 <input type="hidden" name="service" id="formServiceInput" th:value="${serviceName}">
                 <input type="hidden" name="time" id="formTimeSlotInput" value="09:00">
                 <input type="hidden" name="worker_id" id="formWorkerIdInput" value="">
+                <!-- Coordinates stored when Detect is used or map is clicked -->
+                <input type="hidden" name="latitude" id="formLatInput" value="">
+                <input type="hidden" name="longitude" id="formLngInput" value="">
 
                 <!-- Active Category Header Card -->
                 <div class="main-card">
@@ -1605,36 +1526,28 @@
                         </div>
                     </div>
 
-                    <!-- Uber Option Rows: Subcategories -->
-                    <div class="subcategories-section-title">
-                        <span>Select Services</span>
-                        <span class="subcategories-section-subtitle">Select one or more options</span>
+                    <!-- Real Price & Duration Estimate Line -->
+                    <div class="category-estimate-line" id="categoryEstimateLine"
+                         th:text="'Estimated: ₹' + (${selectedService != null && selectedService.basePricePerHour != null ? selectedService.basePricePerHour : 299}) + ' · ~' + (${selectedService != null && selectedService.estimatedDurationMinutes != null ? selectedService.estimatedDurationMinutes : 60}) + ' mins'">
+                        Estimated: ₹299 · ~60 mins
                     </div>
 
-                    <div class="subcategories-list" id="subcategoriesList">
-                        <!-- Subcategory cards dynamically populated via JS -->
-                    </div>
-
-                    <!-- Live Running Summary Box -->
-                    <div class="cart-summary-box">
-                        <div class="cs-header">
-                            <span class="cs-title">
-                                <i class="fa-solid fa-cart-shopping"></i> Selected services
-                            </span>
-                            <span class="sidebar-count-badge" id="selectedCountBadge">0 selected</span>
-                        </div>
-                        <div class="cs-chips-wrap" id="selectedChipsContainer">
-                            <span class="cs-empty-text">No services selected yet. Please check one or more services above.</span>
-                        </div>
-                        <div class="cs-metrics-row">
-                            <div class="cs-metric-item">
-                                <span class="cs-metric-label">Total Duration:</span>
-                                <span class="cs-metric-val" id="summaryTotalDuration">0 mins</span>
+                    <!-- Describe Requirement Option -->
+                    <div class="describe-req-container">
+                        <button type="button" class="btn-describe-req" id="toggleDescriptionBtn" onclick="toggleDescriptionBox()">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                            <span>Describe your requirement</span>
+                        </button>
+                        <div class="describe-req-wrapper" id="describeReqWrapper">
+                            <div class="describe-req-header">
+                                <label for="bookingDescription" class="describe-req-label">
+                                    <i class="fa-regular fa-comment-dots"></i> Describe your requirement (optional)
+                                </label>
+                                <button type="button" class="describe-req-close-btn" onclick="toggleDescriptionBox()" title="Close" aria-label="Close requirement box">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
                             </div>
-                            <div class="cs-metric-item">
-                                <span class="cs-metric-label">Estimated Total:</span>
-                                <span class="cs-total-val" id="summaryTotalPrice">₹0</span>
-                            </div>
+                            <textarea name="description" id="bookingDescription" class="describe-req-textarea" rows="3" placeholder="e.g., My kitchen tap is leaking and needs a washer replacement"></textarea>
                         </div>
                     </div>
 
@@ -1673,10 +1586,11 @@
                             <label for="bookingAddress"><i class="fa-solid fa-location-dot"></i> Street Address</label>
                             <div class="input-with-button">
                                 <input type="text" name="address" id="bookingAddress" placeholder="Flat / House no., street, area" required>
-                                <button type="button" class="btn-detect-loc" onclick="requestCurrentLocation()" title="Detect current address">
-                                    <i class="fa-solid fa-crosshairs"></i> Detect
+                                <button type="button" class="btn-detect-loc" id="detectLocBtn" onclick="requestCurrentLocation()" title="Detect current address" aria-label="Detect my location">
+                                    <i class="fa-solid fa-crosshairs" id="detectLocIcon"></i> <span id="detectLocLabel">Detect</span>
                                 </button>
                             </div>
+                            <div class="detect-loc-error" id="detectLocError">Could not detect location. Please enter manually.</div>
                         </div>
                     </div>
                 </div>
@@ -1710,12 +1624,12 @@
         <div class="confirm-bar-inner">
             <div class="bar-left">
                 <div class="bar-summary-text">
-                    <div class="bar-service-names" id="barServiceSummary">Select services to proceed</div>
-                    <div class="bar-detail-meta" id="barDurationSummary">0 services selected · ~0 mins</div>
+                    <div class="bar-service-names" id="barServiceSummary" th:text="${(selectedService != null && selectedService.name != null ? selectedService.name : serviceName) + ' service'}">Electrician service</div>
+                    <div class="bar-detail-meta" id="barDurationSummary" th:text="'Estimated duration: ~' + (${selectedService != null && selectedService.estimatedDurationMinutes != null ? selectedService.estimatedDurationMinutes : 60}) + ' mins'">Estimated duration: ~60 mins</div>
                 </div>
                 <div class="bar-price-box">
                     <span class="bar-price-label">Estimated:</span>
-                    <span class="bar-price-amount" id="barTotalPrice">₹0</span>
+                    <span class="bar-price-amount" id="barTotalPrice" th:text="'₹' + (${selectedService != null && selectedService.basePricePerHour != null ? selectedService.basePricePerHour : 299})">₹299</span>
                 </div>
             </div>
             <div class="bar-right">
@@ -1826,65 +1740,6 @@
             'cook': '<svg viewBox="0 0 160 160" width="36" height="36"><circle cx="80" cy="80" r="58" fill="#FBEAEA"/><rect x="60" y="71" width="40" height="44" rx="14" fill="#F5EFE6"/><circle cx="80" cy="54" r="17" fill="#D9A066"/><path d="M63 50 Q80 28 97 50 Z" fill="#1A1A1A"/><circle cx="74" cy="54" r="2" fill="#2A1E14"/><circle cx="86" cy="54" r="2" fill="#2A1E14"/><path d="M73 61 Q80 67 87 61" fill="none" stroke="#2A1E14" stroke-width="2" stroke-linecap="round"/><rect x="92" y="88" width="4" height="20" fill="#D64545"/><circle cx="104" cy="94" r="12" fill="#fff" stroke="#00000012"/><rect x="100" y="97" width="8" height="4" rx="1" fill="#B23333"/><ellipse cx="104" cy="93" rx="6" ry="5" fill="#B23333"/></svg>'
         };
 
-        /*
-         * PLACEHOLDER subcategories per category using literal bracket placeholders
-         * as requested: "[Subcategory Name 1]" — ₹[Price] — [Duration] mins
-         * with fallback numeric values for live cart calculations.
-         */
-        const SUBCATEGORIES_DATA = {
-            'electrician': [
-                { id: 'elec_1', name: '[Subcategory Name 1]', price: 149, priceDisplay: '₹[Price]', duration: 45, durationDisplay: '[Duration] mins', desc: 'Standard inspection, switchboard repair, and wiring check' },
-                { id: 'elec_2', name: '[Subcategory Name 2]', price: 199, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Fan installation, regulator replacement, and chandelier hanging' },
-                { id: 'elec_3', name: '[Subcategory Name 3]', price: 249, priceDisplay: '₹[Price]', duration: 45, durationDisplay: '[Duration] mins', desc: 'MCB tripping fix, fuse renewal, and main board servicing' },
-                { id: 'elec_4', name: '[Subcategory Name 4]', price: 499, priceDisplay: '₹[Price]', duration: 90, durationDisplay: '[Duration] mins', desc: 'Comprehensive full-home electrical safety assessment' }
-            ],
-            'plumber': [
-                { id: 'plumb_1', name: '[Subcategory Name 1]', price: 149, priceDisplay: '₹[Price]', duration: 45, durationDisplay: '[Duration] mins', desc: 'Tap washer replacement, minor leak repair, and drain clearance' },
-                { id: 'plumb_2', name: '[Subcategory Name 2]', price: 229, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Washbasin pipe fitting, trap cleaning, and angle valve change' },
-                { id: 'plumb_3', name: '[Subcategory Name 3]', price: 299, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Toilet cistern repair, jet spray installation, and seat hinge fix' },
-                { id: 'plumb_4', name: '[Subcategory Name 4]', price: 599, priceDisplay: '₹[Price]', duration: 90, durationDisplay: '[Duration] mins', desc: 'Overhead water tank connection and motorized pump line check' }
-            ],
-            'carpenter': [
-                { id: 'carp_1', name: '[Subcategory Name 1]', price: 199, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Door lock fitting, hinge tightening, and latch alignment' },
-                { id: 'carp_2', name: '[Subcategory Name 2]', price: 349, priceDisplay: '₹[Price]', duration: 90, durationDisplay: '[Duration] mins', desc: 'Bed, table, and modular furniture assembly with leveling' },
-                { id: 'carp_3', name: '[Subcategory Name 3]', price: 249, priceDisplay: '₹[Price]', duration: 45, durationDisplay: '[Duration] mins', desc: 'Cabinet door handle fixing, drawer channel lubrication' },
-                { id: 'carp_4', name: '[Subcategory Name 4]', price: 649, priceDisplay: '₹[Price]', duration: 120, durationDisplay: '[Duration] mins', desc: 'Custom shelf cutting, wood trimming, and polish touchup' }
-            ],
-            'ac-service': [
-                { id: 'ac_1', name: '[Subcategory Name 1]', price: 399, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Power-jet foam wash, filter cleaning, and indoor unit sanitization' },
-                { id: 'ac_2', name: '[Subcategory Name 2]', price: 799, priceDisplay: '₹[Price]', duration: 90, durationDisplay: '[Duration] mins', desc: 'Freon gas leak detection, brazing test, and optimal pressure refill' },
-                { id: 'ac_3', name: '[Subcategory Name 3]', price: 699, priceDisplay: '₹[Price]', duration: 90, durationDisplay: '[Duration] mins', desc: 'Split AC safe uninstallation and copper piping bracket setup' },
-                { id: 'ac_4', name: '[Subcategory Name 4]', price: 499, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Compressor capacitor replacement and PCB sensor diagnostics' }
-            ],
-            'house-maid': [
-                { id: 'maid_1', name: '[Subcategory Name 1]', price: 299, priceDisplay: '₹[Price]', duration: 90, durationDisplay: '[Duration] mins', desc: 'Living room and bedroom floor mopping, dusting, and trash clearance' },
-                { id: 'maid_2', name: '[Subcategory Name 2]', price: 399, priceDisplay: '₹[Price]', duration: 120, durationDisplay: '[Duration] mins', desc: 'Kitchen degreasing, slab scrubbing, and appliance exterior wipe' },
-                { id: 'maid_3', name: '[Subcategory Name 3]', price: 249, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Bathroom tile scaling removal, fixture descaling, and disinfectant' },
-                { id: 'maid_4', name: '[Subcategory Name 4]', price: 349, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Sofa dry vacuuming, cushion beating, and curtain dust removal' }
-            ],
-            'laundry': [
-                { id: 'laun_1', name: '[Subcategory Name 1]', price: 199, priceDisplay: '₹[Price]', duration: 45, durationDisplay: '[Duration] mins', desc: 'Wash, fold & crisp steam ironing for up to 10 garments' },
-                { id: 'laun_2', name: '[Subcategory Name 2]', price: 349, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Delicate dry cleaning for suits, blazers, and ethnic wear' },
-                { id: 'laun_3', name: '[Subcategory Name 3]', price: 299, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Heavy comforter, duvet, and curtain antimicrobial wash' },
-                { id: 'laun_4', name: '[Subcategory Name 4]', price: 249, priceDisplay: '₹[Price]', duration: 45, durationDisplay: '[Duration] mins', desc: 'Sneaker deep scrubbing, sole whitening, and deodorizing' }
-            ],
-            'labour': [
-                { id: 'lab_1', name: '[Subcategory Name 1]', price: 349, priceDisplay: '₹[Price]', duration: 120, durationDisplay: '[Duration] mins', desc: 'Heavy household carton shifting and furniture rearrangement' },
-                { id: 'lab_2', name: '[Subcategory Name 2]', price: 449, priceDisplay: '₹[Price]', duration: 150, durationDisplay: '[Duration] mins', desc: 'Garden clearing, renovation debris packing, and safe disposal' },
-                { id: 'lab_3', name: '[Subcategory Name 3]', price: 399, priceDisplay: '₹[Price]', duration: 120, durationDisplay: '[Duration] mins', desc: 'Loading/unloading luggage and household appliances from vehicle' },
-                { id: 'lab_4', name: '[Subcategory Name 4]', price: 799, priceDisplay: '₹[Price]', duration: 240, durationDisplay: '[Duration] mins', desc: 'Half-day dedicated handyman helper for miscellaneous home jobs' }
-            ],
-            'cook': [
-                { id: 'cook_1', name: '[Subcategory Name 1]', price: 250, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Daily home meal preparation (breakfast, lunch, or dinner)' },
-                { id: 'cook_2', name: '[Subcategory Name 2]', price: 399, priceDisplay: '₹[Price]', duration: 90, durationDisplay: '[Duration] mins', desc: 'Special multi-course meal and family gathering cooking' },
-                { id: 'cook_3', name: '[Subcategory Name 3]', price: 299, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Healthy dietary and regional specialty meal preparation' },
-                { id: 'cook_4', name: '[Subcategory Name 4]', price: 599, priceDisplay: '₹[Price]', duration: 120, durationDisplay: '[Duration] mins', desc: 'Full-day dedicated chef for festival or party catering' }
-            ]
-        };
-
-        // Cart state: map of subcategoryId -> { id, name, price, duration, category }
-        const selectedCart = new Map();
-
         /* ── INITIALIZATION ON DOM READY ── */
         document.addEventListener('DOMContentLoaded', () => {
             // Set min date to today for HTML5 date picker
@@ -1895,12 +1750,10 @@
                 dateInput.value = todayStr;
             }
 
-            // Render subcategories for initial active category
-            renderSubcategoriesForCategory(activeCategoryName);
-
             // Initialize Leaflet map
             initLeafletMap(_currentLat, _currentLng);
-            requestCurrentLocation();
+            // Auto-detect silently on page load (no button spinner)
+            silentDetectLocation();
 
             // Setup popstate for back/forward navigation
             window.addEventListener('popstate', (e) => {
@@ -1920,12 +1773,14 @@
             const slug = targetCategoryName.toLowerCase().replace(/\s+/g, '-');
 
             // 1. Update visual highlight on sidebar
+            let matchedItem = null;
             document.querySelectorAll('.category-nav-item').forEach(el => {
                 el.classList.remove('active', 'tint-electrician', 'tint-plumber', 'tint-carpenter', 'tint-ac-service', 'tint-house-maid', 'tint-laundry', 'tint-labour', 'tint-cook');
                 const name = el.getAttribute('data-service-name');
                 if (name && name.toLowerCase() === targetCategoryName.toLowerCase()) {
                     el.classList.add('active', 'tint-' + slug);
                     activeCategoryIcon = el.getAttribute('data-service-icon') || 'fa-wrench';
+                    matchedItem = el;
                 }
             });
 
@@ -1941,8 +1796,32 @@
             document.getElementById('mainCatTitle').textContent = 'Book ' + targetCategoryName;
             document.title = 'Book ' + targetCategoryName + ' - GharFix';
 
-            // 3. Render subcategories for target category
-            renderSubcategoriesForCategory(targetCategoryName);
+            // 3. Update estimate line, bottom confirm bar, and form service input
+            if (matchedItem) {
+                const price = matchedItem.getAttribute('data-service-price');
+                const duration = matchedItem.getAttribute('data-service-duration');
+                const desc = matchedItem.getAttribute('data-service-desc');
+                if (desc) {
+                    const descEl = document.getElementById('mainCatDesc');
+                    if (descEl) descEl.textContent = desc;
+                }
+                if (price && duration) {
+                    const estLine = document.getElementById('categoryEstimateLine');
+                    if (estLine) estLine.textContent = `Estimated: ₹${price} · ~${duration} mins`;
+                }
+                if (price) {
+                    const barPrice = document.getElementById('barTotalPrice');
+                    if (barPrice) barPrice.textContent = `₹${price}`;
+                }
+                if (duration) {
+                    const barDur = document.getElementById('barDurationSummary');
+                    if (barDur) barDur.textContent = `Estimated duration: ~${duration} mins`;
+                }
+                const barSummary = document.getElementById('barServiceSummary');
+                if (barSummary) barSummary.textContent = `${targetCategoryName} service`;
+                const sInput = document.getElementById('formServiceInput');
+                if (sInput) sInput.value = targetCategoryName;
+            }
 
             // 4. Update browser URL without full page reload
             if (pushState) {
@@ -1954,149 +1833,15 @@
             renderMockWorkerMarkers(_currentLat, _currentLng, targetCategoryName);
         }
 
-        /* ── RENDER SUBCATEGORIES ROWS ── */
-        function renderSubcategoriesForCategory(categoryName) {
-            const container = document.getElementById('subcategoriesList');
-            if (!container) return;
-
-            const slug = categoryName.toLowerCase().replace(/\s+/g, '-');
-            const items = SUBCATEGORIES_DATA[slug] || [
-                { id: slug + '_1', name: '[Subcategory Name 1]', price: 149, priceDisplay: '₹[Price]', duration: 45, durationDisplay: '[Duration] mins', desc: 'Standard verified ' + categoryName + ' home service' },
-                { id: slug + '_2', name: '[Subcategory Name 2]', price: 199, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Advanced ' + categoryName + ' repair and testing' },
-                { id: slug + '_3', name: '[Subcategory Name 3]', price: 299, priceDisplay: '₹[Price]', duration: 60, durationDisplay: '[Duration] mins', desc: 'Comprehensive ' + categoryName + ' installation & maintenance' },
-                { id: slug + '_4', name: '[Subcategory Name 4]', price: 499, priceDisplay: '₹[Price]', duration: 90, durationDisplay: '[Duration] mins', desc: 'Premium deep care and safety inspection' }
-            ];
-
-            // If user has not selected anything yet, default-select the first subcategory
-            if (selectedCart.size === 0 && items.length > 0) {
-                const first = items[0];
-                selectedCart.set(first.id, {
-                    id: first.id,
-                    name: first.name,
-                    price: first.price,
-                    duration: first.duration,
-                    category: categoryName
-                });
+        /* ── TOGGLE REQUIREMENT TEXTAREA ── */
+        function toggleDescriptionBox() {
+            const wrapper = document.getElementById('describeReqWrapper');
+            if (!wrapper) return;
+            const isOpened = wrapper.classList.toggle('open');
+            if (isOpened) {
+                const textarea = document.getElementById('bookingDescription');
+                if (textarea) textarea.focus();
             }
-
-            container.innerHTML = '';
-            items.forEach((item, index) => {
-                const isSelected = selectedCart.has(item.id);
-                const row = document.createElement('div');
-                row.className = 'subcategory-row' + (isSelected ? ' selected' : '');
-                row.setAttribute('data-id', item.id);
-                row.onclick = () => toggleSubcategory(item, categoryName, row);
-
-                row.innerHTML = `
-                    <div class="sub-left">
-                        <div class="custom-checkbox">
-                            <i class="fa-solid fa-check"></i>
-                        </div>
-                        <div class="sub-icon">
-                            <i class="fa-solid ${activeCategoryIcon}"></i>
-                        </div>
-                        <div class="sub-info">
-                            <div class="sub-name">${item.name}</div>
-                            <div class="sub-desc">${item.desc}</div>
-                        </div>
-                    </div>
-                    <div class="sub-right">
-                        <div class="sub-price">${item.priceDisplay}</div>
-                        <div class="sub-duration">
-                            <i class="fa-regular fa-clock"></i> ${item.durationDisplay}
-                        </div>
-                    </div>
-                `;
-                container.appendChild(row);
-            });
-
-            updateCartSummaryUI();
-        }
-
-        /* ── TOGGLE SUBCATEGORY (MULTI-SELECT CART) ── */
-        function toggleSubcategory(item, categoryName, rowElement) {
-            if (selectedCart.has(item.id)) {
-                selectedCart.delete(item.id);
-                rowElement.classList.remove('selected');
-            } else {
-                selectedCart.set(item.id, {
-                    id: item.id,
-                    name: item.name,
-                    price: item.price,
-                    duration: item.duration,
-                    category: categoryName
-                });
-                rowElement.classList.add('selected');
-            }
-            updateCartSummaryUI();
-        }
-
-        function removeCartItem(itemId) {
-            selectedCart.delete(itemId);
-            // Refresh rows selection state
-            document.querySelectorAll('.subcategory-row').forEach(row => {
-                if (row.getAttribute('data-id') === itemId) {
-                    row.classList.remove('selected');
-                }
-            });
-            updateCartSummaryUI();
-        }
-
-        /* ── UPDATE LIVE RUNNING SUMMARY & STICKY BAR ── */
-        function updateCartSummaryUI() {
-            const chipsContainer = document.getElementById('selectedChipsContainer');
-            const countBadge = document.getElementById('selectedCountBadge');
-            const totalDurationEl = document.getElementById('summaryTotalDuration');
-            const totalPriceEl = document.getElementById('summaryTotalPrice');
-
-            // Bottom bar elements
-            const barServiceSummary = document.getElementById('barServiceSummary');
-            const barDurationSummary = document.getElementById('barDurationSummary');
-            const barTotalPrice = document.getElementById('barTotalPrice');
-            const confirmBtn = document.getElementById('confirmBookingBtn');
-
-            let totalPrice = 0;
-            let totalDuration = 0;
-            const names = [];
-
-            chipsContainer.innerHTML = '';
-
-            if (selectedCart.size === 0) {
-                chipsContainer.innerHTML = '<span class="cs-empty-text">No services selected yet. Please check one or more services above.</span>';
-                countBadge.textContent = '0 selected';
-                totalDurationEl.textContent = '0 mins';
-                totalPriceEl.textContent = '₹0';
-
-                barServiceSummary.textContent = 'Select services to proceed';
-                barDurationSummary.textContent = '0 services selected · ~0 mins';
-                barTotalPrice.textContent = '₹0';
-                confirmBtn.disabled = true;
-                return;
-            }
-
-            confirmBtn.disabled = false;
-            countBadge.textContent = selectedCart.size + ' selected';
-
-            selectedCart.forEach((item) => {
-                totalPrice += (item.price || 150);
-                totalDuration += (item.duration || 45);
-                names.push(item.name);
-
-                const chip = document.createElement('span');
-                chip.className = 'cs-service-chip';
-                chip.innerHTML = `
-                    <span>${item.category}: ${item.name}</span>
-                    <i class="fa-solid fa-xmark cs-chip-remove" onclick="removeCartItem('${item.id}')" title="Remove"></i>
-                `;
-                chipsContainer.appendChild(chip);
-            });
-
-            totalDurationEl.textContent = `~${totalDuration} mins`;
-            totalPriceEl.textContent = `₹${totalPrice}`;
-
-            barServiceSummary.textContent = names.join(', ');
-            barDurationSummary.textContent = `${selectedCart.size} selected · ~${totalDuration} mins`;
-            barTotalPrice.textContent = `₹${totalPrice}`;
         }
 
         /* ── TIME SLOT SELECTION ── */
@@ -2127,25 +1872,151 @@
             }).addTo(_bMap);
 
             renderMockWorkerMarkers(lat, lng, activeCategoryName);
+
+            // Allow user to manually click/tap on map to pick a different location
+            _bMap.on('click', function(e) {
+                const lat = e.latlng.lat;
+                const lng = e.latlng.lng;
+                _currentLat = lat;
+                _currentLng = lng;
+                renderMockWorkerMarkers(lat, lng, activeCategoryName);
+                storeCoordinates(lat, lng);
+                reverseGeocode(lat, lng, function(city, address) {
+                    if (city) document.getElementById('bookingCity').value = city;
+                    if (address) document.getElementById('bookingAddress').value = address;
+                });
+            });
         }
 
-        function requestCurrentLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                        _currentLat = pos.coords.latitude;
-                        _currentLng = pos.coords.longitude;
-                        if (_bMap) {
-                            _bMap.setView([_currentLat, _currentLng], 14);
-                            renderMockWorkerMarkers(_currentLat, _currentLng, activeCategoryName);
+        /* ── REVERSE GEOCODING via OpenStreetMap Nominatim ── */
+        function reverseGeocode(lat, lng, callback) {
+            const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1`;
+            fetch(url, {
+                headers: { 'Accept-Language': 'en' }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (!data || !data.address) { callback(null, null); return; }
+                const a = data.address;
+                // City: prefer city > town > village > county > state_district
+                const city = a.city || a.town || a.village || a.county || a.state_district || a.state || '';
+                // Street address: road/pedestrian + suburb/neighbourhood + postcode
+                const road = a.road || a.pedestrian || a.footway || a.path || '';
+                const suburb = a.suburb || a.neighbourhood || a.quarter || '';
+                const postcode = a.postcode || '';
+                let address = [road, suburb, postcode].filter(Boolean).join(', ');
+                if (!address && data.display_name) {
+                    // Fallback: take first two comma-separated parts of display_name
+                    address = data.display_name.split(',').slice(0, 2).join(',').trim();
+                }
+                callback(city, address);
+            })
+            .catch(() => callback(null, null));
+        }
+
+        /* ── STORE COORDINATES IN HIDDEN FORM FIELDS ── */
+        function storeCoordinates(lat, lng) {
+            const latInput = document.getElementById('formLatInput');
+            const lngInput = document.getElementById('formLngInput');
+            if (latInput) latInput.value = lat;
+            if (lngInput) lngInput.value = lng;
+        }
+
+        /* ── SILENT AUTO-DETECT (page load, no button spinner) ── */
+        function silentDetectLocation() {
+            if (!navigator.geolocation) return;
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    _currentLat = pos.coords.latitude;
+                    _currentLng = pos.coords.longitude;
+                    if (_bMap) {
+                        _bMap.setView([_currentLat, _currentLng], 15);
+                        renderMockWorkerMarkers(_currentLat, _currentLng, activeCategoryName);
+                    }
+                    storeCoordinates(_currentLat, _currentLng);
+                    reverseGeocode(_currentLat, _currentLng, function(city, address) {
+                        if (city) {
+                            const cityInput = document.getElementById('bookingCity');
+                            if (cityInput) cityInput.value = city;
                         }
-                    },
-                    (err) => {
-                        console.warn('Geolocation denied or timed out, keeping default Vadodara coordinates');
-                    },
-                    { timeout: 5000 }
-                );
+                        if (address) {
+                            const addrInput = document.getElementById('bookingAddress');
+                            if (addrInput) addrInput.value = address;
+                        }
+                    });
+                },
+                () => { /* silently ignore on page load */ },
+                { timeout: 8000, enableHighAccuracy: false }
+            );
+        }
+
+        /* ── DETECT BUTTON HANDLER ── */
+        function requestCurrentLocation() {
+            const btn = document.getElementById('detectLocBtn');
+            const icon = document.getElementById('detectLocIcon');
+            const label = document.getElementById('detectLocLabel');
+            const errEl = document.getElementById('detectLocError');
+
+            if (!navigator.geolocation) {
+                if (errEl) { errEl.style.display = 'block'; errEl.textContent = 'Geolocation is not supported by your browser.'; }
+                return;
             }
+
+            // Show loading state
+            if (btn) btn.disabled = true;
+            if (icon) { icon.classList.add('spin'); icon.className = 'fa-solid fa-circle-notch spin'; }
+            if (label) label.textContent = '...';
+            if (errEl) errEl.style.display = 'none';
+
+            const resetBtn = () => {
+                if (btn) btn.disabled = false;
+                if (icon) { icon.className = 'fa-solid fa-crosshairs'; }
+                if (label) label.textContent = 'Detect';
+            };
+
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    _currentLat = pos.coords.latitude;
+                    _currentLng = pos.coords.longitude;
+
+                    // Move map to detected location
+                    if (_bMap) {
+                        _bMap.setView([_currentLat, _currentLng], 15);
+                        renderMockWorkerMarkers(_currentLat, _currentLng, activeCategoryName);
+                    }
+
+                    // Save coordinates in hidden form fields
+                    storeCoordinates(_currentLat, _currentLng);
+
+                    // Reverse geocode to fill address fields
+                    reverseGeocode(_currentLat, _currentLng, function(city, address) {
+                        if (city) {
+                            const cityInput = document.getElementById('bookingCity');
+                            if (cityInput) cityInput.value = city;
+                        }
+                        if (address) {
+                            const addrInput = document.getElementById('bookingAddress');
+                            if (addrInput) addrInput.value = address;
+                        }
+                        resetBtn();
+                    });
+                },
+                (err) => {
+                    console.warn('Geolocation error:', err.message);
+                    if (errEl) {
+                        errEl.style.display = 'block';
+                        if (err.code === 1) {
+                            errEl.textContent = 'Location permission denied. Please enter address manually.';
+                        } else if (err.code === 3) {
+                            errEl.textContent = 'Location timed out. Please enter address manually.';
+                        } else {
+                            errEl.textContent = 'Could not detect location. Please enter manually.';
+                        }
+                    }
+                    resetBtn();
+                },
+                { timeout: 10000, enableHighAccuracy: true }
+            );
         }
 
         // TODO: replace mock worker markers with real nearby worker data from backend
@@ -2207,7 +2078,17 @@
 
         /* ── FORM SUBMISSION & BOTTOM BAR TRIGGER ── */
         function triggerBookingForm() {
-            document.getElementById('bookingForm').requestSubmit();
+            const form = document.getElementById('bookingForm');
+            if (form) {
+                if (form.reportValidity && !form.reportValidity()) {
+                    return;
+                }
+                if (form.requestSubmit) {
+                    form.requestSubmit();
+                } else {
+                    form.submit();
+                }
+            }
         }
 
         function handleBookingSubmit(e) {
@@ -2216,20 +2097,6 @@
                 openPopup('loginBox');
                 return false;
             }
-
-            if (selectedCart.size === 0) {
-                e.preventDefault();
-                alert('Please select at least one service subcategory to proceed.');
-                return false;
-            }
-
-            // TODO: support creating multiple booking records for multi-service cart
-            // Concatenate selected subcategory names into one booking's service field as placeholder approach
-            const selectedItems = Array.from(selectedCart.values());
-            const concatenatedNames = selectedItems.map(item => item.name).join(', ');
-            const finalServiceValue = `${activeCategoryName}: ${concatenatedNames}`;
-            document.getElementById('formServiceInput').value = finalServiceValue;
-
             return true;
         }
 
@@ -2282,16 +2149,6 @@
                 setTimeout(() => f.remove(), 400);
             });
         }, 4000);
-
-        function triggerBookingForm() {
-            const form = document.getElementById('bookingForm');
-            if (form) {
-                if (form.reportValidity && !form.reportValidity()) {
-                    return;
-                }
-                form.submit();
-            }
-        }
 
         function triggerRazorpayBookingCheckout() {
             const form = document.getElementById('bookingForm');

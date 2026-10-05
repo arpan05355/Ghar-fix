@@ -15,6 +15,10 @@
     <!-- Leaflet CSS for Map Search -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
+    <!-- GharFix Theme Engine — loaded before styles to prevent flash -->
+    <link rel="stylesheet" href="/css/theme.css">
+    <script src="/js/theme.js"></script>
+
     <style>
         :root {
             --bg-page: #FFFFFF;
@@ -103,7 +107,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            background: #FFFFFF;
+            background: var(--bg-card, #FFFFFF);
             border-bottom: 1px solid var(--border-subtle);
             height: 72px;
         }
@@ -392,8 +396,8 @@
             position: absolute;
             right: 0;
             top: calc(100% + 10px);
-            width: 220px;
-            background: #FFFFFF;
+            width: 240px;
+            background: var(--bg-card, #FFFFFF);
             border: 1px solid var(--border-light);
             border-radius: var(--radius-md);
             box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
@@ -1739,6 +1743,22 @@
                                     <i class="fa-solid fa-calendar-check"></i>
                                     <span>My Bookings</span>
                                 </a>
+                            </li>
+                            <li>
+                                <div class="ud-item ud-theme-row" role="group" aria-label="Theme setting">
+                                    <i class="fa-solid fa-circle-half-stroke ud-theme-icon"></i>
+                                    <span class="ud-theme-label">Theme</span>
+                                    <div class="ud-theme-selector">
+                                        <button type="button" class="ud-theme-btn" data-gf-theme-btn="light"
+                                                onclick="GFTheme.set('light')" aria-label="Light theme" aria-pressed="true" title="Light mode">
+                                            <i class="fa-solid fa-sun"></i>
+                                        </button>
+                                        <button type="button" class="ud-theme-btn" data-gf-theme-btn="dark"
+                                                onclick="GFTheme.set('dark')" aria-label="Dark theme" aria-pressed="false" title="Dark mode">
+                                            <i class="fa-solid fa-moon"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </li>
                             <li>
                                 <a href="/logout" class="ud-item ud-logout">

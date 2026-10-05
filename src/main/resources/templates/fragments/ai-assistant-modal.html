@@ -167,7 +167,7 @@
         .gf-ai-header {
             padding: 14px 18px;
             border-bottom: 1px solid var(--gf-ai-border);
-            background: #FFFFFF;
+            background: var(--gf-ai-bg, #FFFFFF);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -269,7 +269,7 @@
             display: flex;
             flex-direction: column;
             gap: 14px;
-            background: #FDFDFD;
+            background: var(--gf-ai-surface, #FDFDFD);
             scroll-behavior: smooth;
         }
 
@@ -314,7 +314,7 @@
         }
 
         .gf-ai-chip {
-            background: #FFFFFF;
+            background: var(--gf-ai-bg, #FFFFFF);
             border: 1px solid var(--gf-ai-border);
             border-radius: var(--gf-ai-radius-pill);
             padding: 5px 10px;
@@ -480,7 +480,7 @@
 
         /* ── STRUCTURED CARDS (COST ESTIMATE & PROPOSALS) ── */
         .gf-ai-card {
-            background: #FFFFFF;
+            background: var(--gf-ai-bg, #FFFFFF);
             border: 1px solid var(--gf-ai-border);
             border-radius: 10px;
             padding: 12px;
@@ -653,7 +653,7 @@
         }
 
         .gf-ai-btn-dismiss {
-            background: #FFFFFF;
+            background: var(--gf-ai-surface, #FFFFFF);
             color: var(--gf-ai-text);
             border: 1px solid var(--gf-ai-border);
         }
@@ -789,7 +789,7 @@
         .gf-ai-input-area {
             padding: 10px 14px 14px;
             border-top: 1px solid var(--gf-ai-border);
-            background: #FFFFFF;
+            background: var(--gf-ai-bg, #FFFFFF);
             flex-shrink: 0;
         }
 
@@ -807,7 +807,7 @@
         .gf-ai-input-box:focus-within {
             border-color: var(--gf-ai-text);
             box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.08);
-            background: #FFFFFF;
+            background: var(--gf-ai-surface, #FFFFFF);
         }
 
         .gf-ai-textarea {
